@@ -7,7 +7,7 @@
 export default {
   created() {
     // 手机商城
-
+    //aaaaaaaaaaaa
     //localStorage.setItem('http', 'http://of.kurohane.com/api/')
     //localStorage.setItem('url', 'http://of.kurohane.com')
     localStorage.setItem('http', 'http://192.168.1.244/official/public/api/')
