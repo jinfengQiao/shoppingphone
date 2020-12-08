@@ -1,0 +1,432 @@
+<template>
+  <div class="bg">
+    <div class="headBox">
+      <div class="head">
+        <div class="headTitle">个人中心</div>
+        <div class="denglu">
+          <div class="headImg">
+            <img :src="face_url" alt="">
+          </div>
+          <div class="nameBox">
+            <div class="name" @click="nojumpCodeLogin && jumpCodeLogin()">{{ zhuangtai }}</div>
+            <div class="modify" @click="jumpModifyPage" v-show="show1">
+              <img src="../assets/center/modify_icon.png" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="vip" v-show="show1">
+          <div class="vipBox">
+            <img src="../assets/center/vip_icon.png" alt="">
+            <span>{{nicheng}}</span>
+          </div>
+        </div>
+        <div class="tab">
+          <div class="tabBox">
+            <ul>
+              <li @click="jumpMy_order(inx)" v-for="(n,inx) in tabBoxList" :key="inx">
+                <img :src="n.imgurl" alt="">
+                <span>{{ n.text }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="service">
+      <div class="serTitle">我的服务</div>
+      <ul>
+        <li v-for="(n,inx) in serList" :key="inx" @click="jumpJ">
+          <img :src="n.imgurl" alt="">
+          <span>{{n.text}}</span>
+        </li>
+      </ul>
+    </div>
+    <footer_nav></footer_nav>
+  </div>
+</template>
+
+<script>
+import footer_nav from "@/components/footer_bar";
+// token: sessionStorage.getItem('token'),
+export default {
+  name: "center",
+  data() {
+    return{
+      token:'',
+      show1:'',
+      nicheng:'',
+      face_url:'',
+      zhuangtai:'未登录',
+      serList:[
+        {
+          imgurl:require('../assets/center/ser_icon1.png'),
+          text:'返利'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon2.png'),
+          text:'积分'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon3.png'),
+          text:'充值'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon4.png'),
+          text:'我的咨询卡'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon5.png'),
+          text:'我想学'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon6.png'),
+          text:'我的课程'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon7.png'),
+          text:'我的下级'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon8.png'),
+          text:'我的等级'
+        },
+      ],
+      cybermoney:'',
+      status:'',
+      tabBoxList:[
+        {
+          imgurl:require('../assets/center/tab_icon1.png'),
+          text:'待付款'
+        },
+        {
+          imgurl:require('../assets/center/tab_icon2.png'),
+          text:'待服务'
+        },
+        {
+          imgurl:require('../assets/center/tab_icon3.png'),
+          text:'退换货'
+        },
+        {
+          imgurl:require('../assets/center/tab_icon4.png'),
+          text:'全部订单'
+        },
+      ],
+      score:'',
+    }
+  },
+  created() {
+    var token = sessionStorage.getItem('token');
+    console.log(token)
+
+    // 判断token
+    if(token == '' || token == null){
+        this.nojumpCodeLogin=true
+        this.zhuangtai='未登录'
+        this.face_url=require('../assets/center/headImg1.png')
+        this.show1 = false
+    }
+    else{
+      this.nojumpCodeLogin=false
+      // console.log(123)
+      this.show1 = true
+      this.$post(localStorage.getItem('http') + 'user_info/detail',{
+        token: sessionStorage.getItem('token')
+      })
+      .then(res=> {
+        console.log(res.data)
+        this.face_url = res.data.face_url
+        this.zhuangtai= res.data.nickname
+        this.nicheng = res.data.level_name
+        this.cybermoney = res.data.cybermoney
+        this.score = res.data.score
+        // console.log(this.score);
+        sessionStorage.setItem('cybermoney',res.data.cybermoney)
+        if(this.face_url == null){
+          this.face_url=require('../assets/center/headImg.png')
+        }
+        if(this.zhuangtai == null){
+          this.zhuangtai='未命名'
+        }
+      })
+    }
+  },
+  methods: {
+    jumpModifyPage:function (){
+      var that = this;
+      that.$router.push('/modifyPage');
+    },
+    jumpJ:function (e){
+      if(e.target.innerHTML == '返利'){
+        this.$router.push("/rebate");
+      }
+      if(e.target.innerHTML == '积分'){
+        // this.$router.push("/integral");
+        this.$router.push({
+          path:'/integral',
+          query:{
+            score:this.score
+          }
+        })
+      }
+      if(e.target.innerHTML == '充值'){
+        this.$router.push("/recharge");
+      }
+      if(e.target.innerHTML == '我的咨询卡'){
+        this.$router.push("/consultation");
+      }
+      if(e.target.innerHTML == '我想学'){
+        this.$router.push("/wantStudy");
+      }
+      if(e.target.innerHTML == '我的课程'){
+        this.$router.push("/lesson");
+      }
+      if(e.target.innerHTML == '我的下级'){
+        this.$router.push("/subordinate");
+      }
+      if(e.target.innerHTML == '我的等级'){
+        this.$router.push("/member");
+      }
+    },
+    jumpCodeLogin:function(){
+      this.$router.push("/login");
+    },
+    jumpMy_order(inx){
+      console.log(inx)
+      if(inx == 0){
+        this.status = 0
+        this.$router.push({
+          path:'/order/my_order',
+          query:{
+            status:this.status
+          }
+        })
+      }
+      if(inx == 1){
+        this.status = 1
+        this.$router.push({
+          path:'/order/my_order',
+          query:{
+            status:this.status
+          }
+        })
+      }
+      if(inx == 2){
+        this.status = 2
+        console.log(2)
+      }
+      if(inx == 3){
+        this.status = null
+        this.$router.push({
+          path:'/order/my_order',
+          query:{
+            status:this.status
+          }
+        })
+      }
+      // this.$router.push('/order/my_order');
+
+
+    }
+  },
+  components: {
+    footer_nav
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.bg{
+  background-color: #f3f4f6;
+  padding: 0 0 62px 0;
+  box-sizing: border-box;
+}
+.headBox{
+  width: 100%;
+  height: 310px;
+  background-color: #f3f4f6;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+.head{
+  position: relative;
+  width: 100%;
+  height: 260px;
+  background: url("../assets/center/head_bg.png") no-repeat;
+  background-size: 100% 100%;
+  padding: 18px 15px;
+  box-sizing: border-box;
+  .headTitle{
+    width: 100%;
+    text-align: center;
+    font-size: 19px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #FFFFFF;
+  }
+  .denglu{
+    .headImg{
+      width: 100%;
+      height: 70px;
+      margin-top: 18px;
+      text-align: center;
+      img{
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+    .nameBox{
+      width: 100%;
+      height: 28px;
+      line-height: 28px;
+      margin-top: 12px;
+      text-align: center;
+      .name{
+        font-size: 18px;
+        font-family: DengXian;
+        font-weight: bold;
+        color: #FFFFFF;
+        display: inline;
+      }
+      .modify{
+        display: inline;
+        margin-left: 5px;
+        margin-top: 1px;
+        img{
+          width: 15px;
+          height: 17px;
+        }
+      }
+
+    }
+  }
+  .vip{
+    position: relative;
+    width: 100%;
+    margin-top: 12px;
+    .vipBox{
+      position: absolute;
+      left: 50%;
+      top: 0;
+      margin-left: -40px;
+      width: 80px;
+      height: 18px;
+      line-height: 18px;
+      background: linear-gradient(81deg, #BBA36D 0%, #CEC1AB 100%);
+      border-radius: 8px;
+      padding: 0 4px;
+      box-sizing: border-box;
+      img{
+        margin-right: 2px;
+        width: 12px;
+        height: 10px;
+      }
+      span{
+        font-size: 14px;
+        font-family: PingFangSC;
+        font-weight: 500;
+        color: #FFFFFF;
+      }
+    }
+  }
+  .tab{
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    .tabBox{
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.13);
+      border-radius: 15px;
+      ul{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        li{
+          width: 60px;
+          height: 65px;
+          text-align: center;
+          cursor: pointer;
+          img{
+            margin-top: 10px;
+            width: 25px;
+            height: 24px;
+            object-fit: cover;
+          }
+          .img2{
+            width: 30px;
+          }
+          span{
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            color: #666666;
+          }
+        }
+      }
+    }
+  }
+}
+.service{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 310px;
+  padding: 20px 30px 30px 30px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  .serTitle{
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #333333;
+  }
+  ul{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    li{
+      position: relative;
+      margin-top: 24px;
+      width: 72px;
+      //height: 65px;
+      text-align: center;
+      //border: 1px solid #000;
+      img{
+        width: 40px;
+        height: 45px;
+        object-fit: cover;
+      }
+      span{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        margin-top: -4px;
+        display: block;
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+        text-align: center;
+        line-height: 120px;
+      }
+    }
+  }
+}
+</style>

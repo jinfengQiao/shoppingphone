@@ -1,0 +1,239 @@
+<template>
+  <div>
+    <div class="posiBox">
+      <div class="head">
+        <img src="../assets/center/back_icon1.png" alt="" @click="back">
+        <span>我的积分</span>
+      </div>
+      <div class="banner">
+        <div class="bannerBox">
+          <div class="moneyBox">
+            <p>可用积分</p>
+            <span>{{score}}</span>
+            <button type="button" @click="jumpSignIn">签到换积分</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cont">
+      <ul>
+        <li v-for="(n,inx) in jifenList" :key="inx">
+          <div class="left">
+            <template v-if="n.goods_type == '' || n.goods_type == null">
+              <span>{{n.source}}</span>
+            </template>
+            <template v-else>
+              <span>{{n.source + n.goods_type}}</span>
+            </template>
+            <div class="time">{{ n.addtime}}</div>
+          </div>
+          <div class="right">
+            <span>{{ n.num }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="btnBox">
+      <button type="button">兑换积分</button>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "integral",
+  data(){
+    return{
+      jifenList:'',
+      score:'',
+    }
+  },
+  methods:{
+    back:function(){
+      this.$router.go(-1);
+    },
+    jumpSignIn:function (){
+      this.$router.push('/signIn');
+    },
+    // 获取积分记录
+    get_list(page,limit) {
+      this.$post(localStorage.getItem('http') + 'user_score/get_list',{
+        token: sessionStorage.getItem('token'),
+        page:page,
+        limit:limit
+      })
+      .then(res=> {
+        console.log(res.data)
+        this.jifenList= res.data.list
+      })
+    },
+  },
+  created(){
+    this.get_list();
+    let score =this.$route.query.score;
+    this.score = score
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.bg{
+  background-color: #f3f4f6;
+  padding: 0 0 62px 0;
+  box-sizing: border-box;
+}
+.posiBox{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+}
+.head{
+  position: relative;
+  width: 100%;
+  height: 70px;
+  line-height: 70px;
+  img{
+    position: absolute;
+    left: 15px;
+    top: 26px;
+    width: 10px;
+    height: 18px;
+  }
+  span{
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-size: 19px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #333333;
+  }
+}
+.banner{
+  width: 100%;
+  height: 212px;
+  background-color: #f3f4f6;
+  padding: 15px;
+  box-sizing: border-box;
+  .bannerBox{
+    width: 100%;
+    height: 182px;
+    background: url("../assets/center/integral_bg.png") no-repeat;
+    background-size: 100% 100%;
+    .moneyBox{
+      width: 100%;
+      text-align: center;
+      padding: 35px 0 0 0;
+      box-sizing: border-box;
+      span{
+        margin-top: 3px;
+        display: block;
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #FFFFFF;
+      }
+      p{
+        font-size: 16px;
+        font-family: PingFang SC;
+        font-weight: 500;
+        color: #FFFFFF;
+      }
+      button{
+        margin-top: 5px;
+        width: 142px;
+        height: 40px;
+        background: #FFFFFF;
+        border-radius: 20px;
+        font-size: 16px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #4E77EB;
+        border: 0;
+        outline: none;
+      }
+    }
+  }
+}
+.cont{
+  width: 100%;
+  margin-top: 282px;
+  margin-bottom: 76px;
+  background-color: #ffffff;
+  ul{
+    width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+    li:last-child{
+      border: 0;
+    }
+    li{
+      width: 100%;
+      height: 83px;
+      border-bottom: 1px solid #DCDCDC;
+      box-sizing: border-box;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      .left{
+        float: left;
+        //width: 100px;
+        span{
+          width: 100%;
+          font-size: 16px;
+          font-family: PingFang SC;
+          font-weight: 500;
+          color: #333333;
+        }
+        .time{
+          margin-top: 10px;
+          width: 100%;
+          font-size: 12px;
+          font-family: PingFang SC;
+          font-weight: 500;
+          color: #999999;
+        }
+      }
+      .right{
+        float: right;
+        //width: 100px;
+        text-align: right;
+        span{
+          width: 100%;
+          font-size: 20px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #0596EB;
+          line-height: 53px;
+        }
+      }
+    }
+  }
+}
+.btnBox{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 76px;
+  padding: 20px 35px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  text-align: center;
+  button{
+    width: 136px;
+    height: 36px;
+    line-height: 36px;
+    background: #0596EB;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #FFFFFF;
+    outline: none;
+    border: 0;
+  }
+}
+</style>
