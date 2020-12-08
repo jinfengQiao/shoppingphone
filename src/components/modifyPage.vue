@@ -34,22 +34,55 @@
         </li>
         <li>
           <img src="../assets/center/modify_icon3.png" alt="">生日
-          <input type="text" placeholder="请输入您的生日" v-model="birth">
+<!--          <input type="text" placeholder="请输入您的生日" v-model="birth">-->
+          <div class="seller">
+            <van-cell
+                is-link
+                :value-class="className"
+                :value="timeValue"
+                @click="showPopup" />
+            <van-popup v-model="show" position="bottom">
+              <van-datetime-picker
+                  v-model="birth"
+                  type="date"
+                  title="选择时间"
+                  :loading="isLoadingShow"
+                  :min-date="minDate"
+                  :max-date="maxDate"
+                  :formatter="formatter"
+                  @cancel="show = false"
+                  @confirm="confirmPicker"
+              />
+            </van-popup>
+          </div>
         </li>
         <li>
           <img src="../assets/center/modify_icon4.png" alt="">地区
+          <div class="seller1">
+            <van-cell
+                is-link
+                :value-class="className"
+                :value="areaValue"
+                @click="showPopup1" />
+            <van-popup v-model="show1" position="bottom">
+              <van-area title="选择地区" :area-list="areaList" :loading="isLoadingShow" :columns-num="2"
+              @cancel="show1 = false"
+              @confirm="confirmPicker1"
+              />
+            </van-popup>
+          </div>
         </li>
         <li>
           <img src="../assets/center/modify_icon5.png" alt="">简介
         </li>
         <div class="textareaBox">
-          <textarea name="`" id="" placeholder="请输入简介" v-model="info"></textarea>
+          <textarea name="" id="" placeholder="请输入简介" v-model="info"></textarea>
         </div>
 
       </ul>
     </div>
     <div class="btnBox">
-      <button type="button">保存</button>
+      <button type="button" @click="preservation">保存</button>
     </div>
   </div>
 </template>
@@ -63,8 +96,24 @@ export default {
       userInfo: require('../assets/center/headImg.png'),
       zhuangtai:'',
       sex:0,
-      birth:'',
       info:'',
+
+      timeValue: '请选择时间',
+      show: false,
+      isLoadingShow: true,
+      birth: new Date(),
+      minDate: new Date(1900, 1, 1),
+      maxDate: new Date(),
+      className: '',
+
+      areaValue:'请选择地区',
+      show1:false,
+      areaList:{},
+      province_list:'',
+      city_list:'',
+
+      province_id:'',
+      city_id:'',
     }
   },
   methods:{
@@ -87,6 +136,98 @@ export default {
       }
       reader.readAsDataURL(file)
       console.log(this.userInfo)
+
+      this.$post(localStorage.getItem('http') + 'upload/img',{
+        token: sessionStorage.getItem('token'),
+        file:file
+      })
+      .then(res=> {
+        console.log(res.data)
+
+      })
+    },
+    // 显示弹窗
+    showPopup () {
+      this.show = true
+      this.isLoadingShow = true
+      setTimeout(() => {
+        this.isLoadingShow = false
+      }, 500)
+    },
+    // 确认选择的时间
+    confirmPicker (val) {
+      let year = val.getFullYear()
+      let month = val.getMonth() + 1
+      let day = val.getDate()
+      let hour = val.getHours()
+      let minute = val.getMinutes()
+      if (month >= 1 && month <= 9) { month = `0${month}` }
+      if (day >= 1 && day <= 9) { day = `0${day}` }
+      if (hour >= 0 && hour <= 9) { hour = `0${hour}` }
+      if (minute >= 0 && minute <= 9) { minute = `0${minute}` }
+      this.className = 'timeClass'
+      // this.timeValue = `${year}-${month}-${day} ${hour}:${minute}`'
+      this.timeValue = `${year}-${month}-${day}`
+      this.show = false
+    },
+    // 选项格式化函数
+    formatter (type, value) {
+      if (type === 'year') {
+        return `${value}年`
+      } else if (type === 'month') {
+        return `${value}月`
+      } else if (type === 'day') {
+        return `${value}日`
+      } else if (type === 'hour') {
+        return `${value}时`
+      } else if (type === 'minute') {
+        return `${value}分`
+      } else if (type === 'second') {
+        return `${value}秒`
+      }
+      return value
+    },
+    // 显示弹窗
+    showPopup1 () {
+      this.show1 = true
+      this.isLoadingShow = true
+      setTimeout(() => {
+        this.isLoadingShow = false
+      }, 500)
+    },
+    confirmPicker1(e){
+      console.log(e);
+      // console.log(e[0].name);
+      let province_list = e[0].name;
+      let city_list = e[1].name;
+      this.areaValue = `${province_list}-${city_list}`
+      this.show1 = false
+
+      this.province_id = e[0].code;
+      this.city_id = e[1].code;
+    },
+    // 点击保存
+    preservation(){
+      this.$post(localStorage.getItem('http') + 'user_info/edit',{
+        token: sessionStorage.getItem('token'),
+        nickname: this.zhuangtai,
+        face_url: this.face_url,
+        province_id: this.province_id,
+        city_id: this.city_id,
+        sex: this.sex,
+        info: this.info,
+        birth: this.birth
+      })
+      .then(res=> {
+        if(res.code == 1){
+          console.log(res.data)
+          this.$toast.success('修改成功');
+          this.$router.push('./center');
+        } else{
+          this.$toast.error('修改失败');
+        }
+
+      })
     }
 
   },
@@ -110,6 +251,13 @@ export default {
       //   this.zhuangtai='未命名'
       // }
 
+    }),
+    this.$post(localStorage.getItem('http') + 'region/get_region_list',{})
+    .then(res=> {
+      console.log(res.data)
+      this.areaList = res.data
+      this.province_list = res.data.province_list
+      this.city_list = res.data.city_list
     })
   },
 }
@@ -204,7 +352,7 @@ export default {
 }
 .cont{
   position: relative;
-  z-index: 1;
+  //z-index: 1;
   margin-top: 230px;
   width: 100%;
   background-color: #ffffff;
@@ -236,6 +384,25 @@ export default {
       box-sizing: border-box;
       line-height: 52px;
       padding: 0 16px;
+      .seller{
+        float: right;
+        margin-top: 14px;
+        //width: 100px;
+      }
+      .seller1{
+        float: right;
+        margin-top: 14px;
+        //width: 150px;
+      }
+      .van-cell{
+        padding: 0!important;
+      }
+      .van-cell__value--alone{
+        text-align: right!important;
+      }
+      .van-cell::after{
+        border: 0!important;
+      }
       img{
         float: left;
         margin-top: 16px;

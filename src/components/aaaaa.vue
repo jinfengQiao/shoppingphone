@@ -1,276 +1,101 @@
 <template>
-  <div id="calendar">
-    <!-- 年份 月份 -->
-    <div class="month">
-      <ul>
-        <!--点击会触发pickpre函数，重新刷新当前日期 @click(vue v-on:click缩写) -->
-        <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
-        <!-- <li class="year-month" @click="pickYear(currentYear,currentMonth)"> -->
-        <li class="year-month">
-          <span class="choose-year">{{ currentYear }}年</span>
-          <span class="choose-month">{{ currentMonth }}月</span>
-        </li>
-        <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
-      </ul>
-    </div>
-    <!-- 星期 -->
-    <ul class="weekdays">
-      <li>一</li>
-      <li>二</li>
-      <li>三</li>
-      <li>四</li>
-      <li>五</li>
-      <li style="color:red">六</li>
-      <li style="color:red">日</li>
-    </ul>
-    <!-- 日期 -->
-    <ul class="days">
-      <!-- 核心 v-for循环 每一次循环用<li>标签创建一天 -->
-      <li  v-for="(n,dayobject) in days" :key="dayobject">
-        <!--本月-->
-        <!--如果不是本月  改变类名加灰色-->
 
-        <span v-if="n.day.getMonth()+1 != currentMonth" class="other-month">{{ n.day.getDate() }}</span>
+  <van-area title="标题" :area-list="areaList" :columns-num="2" />
 
-        <!--如果是本月  还需要判断是不是这一天-->
-        <span v-else>
-          <!--今天  同年同月同日-->
-                <span v-if=" n.isSign===true" class="active">{{ n.day.getDate() }}</span>
-                <span v-else>{{ n.day.getDate() }}</span>
-            </span>
-
-      </li>
-    </ul>
-  </div>
-
+<!--  <div class="seller">-->
+<!--    <van-cell-->
+<!--        title="生日"-->
+<!--        is-link-->
+<!--        :value-class="className"-->
+<!--        :value="timeValue"-->
+<!--        @click="showPopup" />-->
+<!--    <van-popup v-model="show" position="bottom">-->
+<!--      <van-datetime-picker-->
+<!--          v-model="currentDate"-->
+<!--          type="date"-->
+<!--          title="选择时间"-->
+<!--          :loading="isLoadingShow"-->
+<!--          :min-date="minDate"-->
+<!--          :max-date="maxDate"-->
+<!--          :formatter="formatter"-->
+<!--          @cancel="show = false"-->
+<!--          @confirm="confirmPicker"-->
+<!--      />-->
+<!--    </van-popup>-->
+<!--  </div>-->
 </template>
 
 <script>
 export default {
-  data(){
-    return{
-      currentDay: 1,
-      currentMonth: 1,
-      currentYear: 1970,
-      currentWeek: 1,
-      days: [],
-      arrDate: [10,15],
+  name: 'Seller',
+  data () {
+    return {
+      // timeValue: '请选择时间',
+      // show: false,
+      // isLoadingShow: true,
+      // currentDate: new Date(),
+      // minDate: new Date(1900, 1, 1),
+      // maxDate: new Date(),
+      // className: ''
+      areaList:{},
     }
   },
   methods: {
-    initData: function(cur) {
-      var date;
-      if (cur) {
-        console.log(cur)
-        date = new Date(cur);
-      } else {
-        var now=new Date();
-        var da = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
-        da.setDate(42);
-        date = new Date(this.formatDate(da.getFullYear(),da.getMonth() + 1,1));
-      }
-      this.currentDay = date.getDate();
-      this.currentYear = date.getFullYear();
-      this.currentMonth = date.getMonth() + 1;
+    // // 显示弹窗
+    // showPopup () {
+    //   this.show = true
+    //   this.isLoadingShow = true
+    //   setTimeout(() => {
+    //     this.isLoadingShow = false
+    //   }, 500)
+    // },
+    // // 确认选择的时间
+    // confirmPicker (val) {
+    //   let year = val.getFullYear()
+    //   let month = val.getMonth() + 1
+    //   let day = val.getDate()
+    //   let hour = val.getHours()
+    //   let minute = val.getMinutes()
+    //   if (month >= 1 && month <= 9) { month = `0${month}` }
+    //   if (day >= 1 && day <= 9) { day = `0${day}` }
+    //   if (hour >= 0 && hour <= 9) { hour = `0${hour}` }
+    //   if (minute >= 0 && minute <= 9) { minute = `0${minute}` }
+    //   this.className = 'timeClass'
+    //   // this.timeValue = `${year}-${month}-${day} ${hour}:${minute}`'
+    //   this.timeValue = `${year}-${month}-${day}`
+    //   this.show = false
+    // },
+    // // 选项格式化函数
+    // formatter (type, value) {
+    //   if (type === 'year') {
+    //     return `${value}年`
+    //   } else if (type === 'month') {
+    //     return `${value}月`
+    //   } else if (type === 'day') {
+    //     return `${value}日`
+    //   } else if (type === 'hour') {
+    //     return `${value}时`
+    //   } else if (type === 'minute') {
+    //     return `${value}分`
+    //   } else if (type === 'second') {
+    //     return `${value}秒`
+    //   }
+    //   return value
+    // }
 
-      this.currentWeek = date.getDay(); // 1...6,0
-      if (this.currentWeek == 0) {
-        this.currentWeek = 7;
-      }
-      var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
-      this.days.length = 0;
-      // 今天是周日，放在第一行第7个位置，前面6个
-      //初始化本周
-      for (var i = this.currentWeek - 1; i >= 0; i--) {
-        var d = new Date(str);
-        d.setDate(d.getDate() - i);
-        var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
-        dayobject.day=d;
-        this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
-      }
-      //其他周
-      for (var l = 1; l <= 42 - this.currentWeek; l++) {
-        var db = new Date(str);
-        db.setDate(d.getDate() + l);
-        var dayobject1={};
-        // dayobject.day=d;
-        dayobject1 = {day: db,isSign: this.isVerDate(db.getDate())}
-        this.days.push(dayobject1);
-      }
-    },
-    isVerDate (v) {
-      return this.arrDate.includes(v)
-    },
-    pickPre: function(year, month) {
-
-      // setDate(0); 上月最后一天
-      // setDate(-1); 上月倒数第二天
-      // setDate(dx) 参数dx为 上月最后一天的前后dx天
-      var d = new Date(this.formatDate(year , month , 1));
-      d.setDate(0);
-      this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
-    },
-    pickNext: function(year, month) {
-      var d = new Date(this.formatDate(year , month , 1));
-      d.setDate(42);
-      this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
-    },
-    pickYear: function(year, month) {
-      alert(year + "," + month);
-    },
-
-    // 返回 类似 2016-01-02 格式的字符串
-    formatDate: function(year,month,day){
-      var y = year;
-      var m = month;
-      if(m<10) m = "0" + m;
-      var d = day;
-      if(d<10) d = "0" + d;
-      return y+"-"+m+"-"+d
-    },
   },
-  created: function() {  //在vue初始化时调用
-    this.initData(null);
-  },
+  created() {
+    this.$post(localStorage.getItem('http') + 'region/get_region_list',{
+
+    })
+    .then(res=> {
+      console.log(res.data)
+      this.areaList = res.data
+    })
+  }
 }
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-
-ul {
-  list-style-type: none;
-}
-
-body {
-  font-family: Verdana, sans-serif;
-  background: #E8F0F3;
-}
-#calendar{
-  width:80%;
-  margin: 0 auto;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.12);
-}
-#calendar{
-  width: 100%;
-//width:80%;
-//margin: 0 auto;
-//box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.12);
-}
-.month {
-  width: 100%;
-  background: #ffffff;
-  line-height: 27px;
-}
-
-.month ul {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 10px;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
-.year-month {
-  /* padding: 20px; */
-}
-
-.year-month:hover {
-  background: rgba(150, 2, 12, 0.1);
-}
-
-.choose-year {
-  float: left;
-  /* padding-left: 20px;
-  padding-right: 20px; */
-  font-size: 18px;
-  font-family: Source Han Sans CN;
-  font-weight: 400;
-  color: #333333;
-}
-
-.choose-month {
-  float: left;
-  font-size: 18px;
-  font-family: Source Han Sans CN;
-  font-weight: 400;
-  color: #333333;
-}
-
-.arrow {
-  /* padding: 20px; */
-}
-
-.arrow:hover {
-  background: rgba(100, 2, 12, 0.1);
-}
-
-.month ul li {
-  color: #333333;
-  /* font-size: 20px; */
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.weekdays {
-  margin: 12px 0 0 0;
-  padding: 10px 0;
-  background-color: rgba(244, 247, 255, 1);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  font-size: 16px;
-  font-family: Source Han Sans CN;
-  font-weight: 400;
-  color: #333333;
-}
-
-.weekdays li {
-  display: inline-block;
-  width: 13.6%;
-  text-align: center;
-}
-
-.days {
-  padding: 0;
-  background: #FFFFFF;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.days li {
-  list-style-type: none;
-  display: inline-block;
-  width: 14.2%;
-  height: 45px;
-  line-height: 45px;
-  text-align: center;
-  font-size: 1rem;
-  color: #000;
-  cursor: pointer;
-}
-
-.days li .active {
-  padding: 6px 10px;
-  border-radius: 50%;
-  /*background: #00B8EC;*/
-  background: url("../assets/center/qiandao_bgImg.png") no-repeat;
-  background-size: 100% 100%;
-  /*color: #fff;*/
-}
-.days li .other-month {
-  padding: 5px;
-  color: gainsboro;
-}
-
-.days li:hover {
-  background: #e1e1e1;
-}
 
 </style>

@@ -54,7 +54,7 @@ export default {
   },
   methods:{
     hh(){
-      this.height.height = window.innerHeight-70 +'px'
+      this.height.height = window.innerHeight-125 +'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -79,6 +79,8 @@ export default {
           this.contContCont1 = ''
           res.data.list = ''
           this.show12 = true;
+          // this.$toast.success('输入为空');
+          this.$toast.error('输入为空');
         }else{
           this.contContCont1 = res.data.list
           this.show12 = false;

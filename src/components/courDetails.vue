@@ -8,10 +8,12 @@
 <!--      <img src="../assets/buSchool/videoBox_btn.png" alt="">-->
 <!--      <video :src="video"></video>-->
 
-      <video id="myVideo" class="video-js mu-refresh-control" preload="auto"
-             :poster="video_cover">
-          <source :src="video" type="video/mp4">
-      </video>
+<!--      <video id="myVideo" class="video-js mu-refresh-control" preload="auto"-->
+<!--             :poster="video_cover">-->
+<!--          <source :src="video" type="video/mp4">-->
+<!--      </video>-->
+
+
 
 
     </div>

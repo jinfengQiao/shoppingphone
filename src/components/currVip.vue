@@ -32,7 +32,7 @@
         </div>
         <div class="cont13">
           <ul>
-            <li v-for="(n,index) in contContCont" :key="index">
+            <li v-for="(n,index) in contContCont" :key="index" :class="{contContContAdd:index==isSelect11}" @click="toggleAddCls(index)">
               <img :src="n.video_cover" alt="">
               <div class="box1">
                 <div class="title">{{n.title}}</div>
@@ -135,6 +135,7 @@ export default {
       isActive:'',
       isSelect:'',
       isSelect1:'',
+      isSelect11:'',
       isSelect2:'',
       tabList:[
           '入门VIP','贵宾VIP','至尊VIP'
@@ -208,6 +209,10 @@ export default {
       this.index=idx;
       var index1 = idx + 1
       console.log(index1);
+    },
+    toggleAddCls(index){
+      console.log(index);
+      this.isSelect11 = index;
     },
     // 获取课程卡
     get_courCard() {
@@ -353,7 +358,7 @@ export default {
   z-index: 1;
   margin-top: 105px;
   width: 100%;
-  padding: 15px;
+  padding: 15px 0;
   box-sizing: border-box;
   background-color: #f3f4f6;
   .cont1{
@@ -363,6 +368,8 @@ export default {
     .bgImg{
       width: 100%;
       height: 143px;
+      padding: 0 15px;
+      box-sizing: border-box;
       img{
         width: 100%;
         height: 100%;
@@ -374,6 +381,8 @@ export default {
       width: 100%;
       height: 72px;
       margin-top: 15px;
+      padding: 0 15px;
+      box-sizing: border-box;
       ul{
         width: 100%;
         display: flex;
@@ -428,6 +437,8 @@ export default {
     .cont12{
       width: 100%;
       margin-top: 5px;
+      padding: 0 15px;
+      box-sizing: border-box;
       ul{
         width: 100%;
         display: flex;
@@ -455,7 +466,8 @@ export default {
           width: 100%;
           height: 110px;
           border-bottom: 1px solid rgba(220, 220, 220, 0.34);
-          padding: 15px 0 14px;
+          padding: 15px;
+          box-sizing: border-box;
           box-sizing: border-box;
           display: flex;
           //justify-content: space-between;
@@ -524,7 +536,7 @@ export default {
   }
   .cont2{
     width: 100%;
-    padding: 0 0 45px 0;
+    padding: 0 15px 45px 15px;
     box-sizing: border-box;
     .bgImg{
       width: 100%;
@@ -598,7 +610,7 @@ export default {
   }
   .cont3{
     width: 100%;
-    padding: 0 0 45px 0;
+    padding: 0 15px 45px 15px;
     box-sizing: border-box;
     .bgImg{
       width: 100%;
