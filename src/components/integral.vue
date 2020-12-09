@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="cont">
+    <div class="cont" id="cont">
       <ul>
         <li v-for="(n,inx) in jifenList" :key="inx">
           <div class="left">
@@ -44,8 +44,10 @@ export default {
   name: "integral",
   data(){
     return{
-      jifenList:'',
+      jifenList:[],
       score:'',
+      page:1,
+      limit:15,
     }
   },
   methods:{
@@ -55,16 +57,43 @@ export default {
     jumpSignIn:function (){
       this.$router.push('/signIn');
     },
+    onScroll () {
+      // 内容元素的总高度
+      let innerHeight = document.querySelector('#cont').clientHeight
+      // 浏览器可见区域高度
+      let outerHeight = document.documentElement.clientHeight
+      // 滚动条的位置高度
+      let scrollTop = document.documentElement.scrollTop
+      console.log(scrollTop + outerHeight );
+      console.log(innerHeight + 358);
+      if(scrollTop + outerHeight == innerHeight + 358){
+        this.page++;
+        this.get_list();
+      }
+    },
     // 获取积分记录
-    get_list(page,limit) {
+    get_list() {
       this.$post(localStorage.getItem('http') + 'user_score/get_list',{
         token: sessionStorage.getItem('token'),
-        page:page,
-        limit:limit
+        page:this.page,
+        limit:this.limit
       })
       .then(res=> {
         console.log(res.data)
-        this.jifenList= res.data.list
+        // this.jifenList= res.data.list
+
+        if (res.data.list.length != 0){
+          var arr = [];
+          arr = this.jifenList;
+          res.data.list.forEach(function(v){
+            arr.push(v);
+          })
+          this.jifenList = arr;
+        }else{
+          this.$toast.error('没有更多了!');
+          res.data.list = ''
+          window.removeEventListener("scroll",this.onScroll);
+        }
       })
     },
   },
@@ -72,6 +101,7 @@ export default {
     this.get_list();
     let score =this.$route.query.score;
     this.score = score
+    window.addEventListener('scroll', this.onScroll);
   },
 }
 </script>

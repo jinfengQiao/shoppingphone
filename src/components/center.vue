@@ -3,6 +3,9 @@
     <div class="headBox">
       <div class="head">
         <div class="headTitle">个人中心</div>
+        <div class="tuichuBtn">
+          <img src="../assets/center/tuichuBtn.png" alt="" @click="tuichuBtn">
+        </div>
         <div class="denglu">
           <div class="headImg">
             <img :src="face_url" alt="">
@@ -226,6 +229,15 @@ export default {
       // this.$router.push('/order/my_order');
 
 
+    },
+    tuichuBtn(){
+      if(!sessionStorage.getItem('token')){
+        this.$toast.error('请登录!')
+      }else{
+        window.sessionStorage.clear();
+        this.$toast.success('退出成功!')
+        location.reload();
+      }
     }
   },
   components: {
@@ -264,6 +276,15 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #FFFFFF;
+  }
+  .tuichuBtn{
+    position: absolute;
+    right: 15px;
+    top: 23px;
+    img{
+      width: 16px;
+      height: 17px;
+    }
   }
   .denglu{
     .headImg{

@@ -7,7 +7,7 @@
       </div>
       <div class="headImg">
         <div class="imgBox">
-          <img :src="userInfo" alt="">
+          <img :src="face_url" alt="">
         </div>
         <div class="fileBox">
           <input type="file" @change="handleFile" class="fileBtn">
@@ -65,9 +65,13 @@
                 :value="areaValue"
                 @click="showPopup1" />
             <van-popup v-model="show1" position="bottom">
-              <van-area title="选择地区" :area-list="areaList" :loading="isLoadingShow" :columns-num="2"
-              @cancel="show1 = false"
-              @confirm="confirmPicker1"
+              <van-area title="选择地区"
+                        :area-list="areaList"
+                        :loading="isLoadingShow"
+                        :columns-num="2"
+                        @cancel="show1 = false"
+                        @confirm="confirmPicker1"
+                        :value="city_id"
               />
             </van-popup>
           </div>
@@ -88,12 +92,14 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
+
   name: "modifyPage",
   data(){
     return{
-      face_url:'',
-      userInfo: require('../assets/center/headImg.png'),
+      axios:axios,
+      face_url:require('../assets/center/headImg.png'),
       zhuangtai:'',
       sex:0,
       info:'',
@@ -101,8 +107,8 @@ export default {
       timeValue: '请选择时间',
       show: false,
       isLoadingShow: true,
-      birth: new Date(),
-      minDate: new Date(1900, 1, 1),
+      birth: new Date(2010,1,1),
+      minDate: new Date(1950, 1, 1),
       maxDate: new Date(),
       className: '',
 
@@ -114,6 +120,8 @@ export default {
 
       province_id:'',
       city_id:'',
+      file:"",
+
     }
   },
   methods:{
@@ -125,25 +133,27 @@ export default {
       this.$el.querySelector('.fileBtn').click()
     },
     handleFile(e){
-      // console.log(456)
-      console.log(e)
       let $target = e.target || e.srcElement
       let file = $target.files[0]
+      this.file = file;
       var reader = new FileReader()
       reader.onload = (data) => {
         let res = data.target || data.srcElement
         this.userInfo = res.result
       }
+
       reader.readAsDataURL(file)
-      console.log(this.userInfo)
+      let formData = new FormData() // 创建form对象
+      formData.append('file', file);
+      formData.append('token', sessionStorage.getItem("token"));
 
-      this.$post(localStorage.getItem('http') + 'upload/img',{
-        token: sessionStorage.getItem('token'),
-        file:file
-      })
-      .then(res=> {
-        console.log(res.data)
-
+      this.axios({
+        method:"POST",
+        url:localStorage.getItem('http') + 'upload/img',
+        header:{'Content-Type':'multipart/form-data'},
+        data:formData,
+      }).then((res)=>{
+        this.face_url = res.data.data.save_name
       })
     },
     // 显示弹窗
@@ -157,7 +167,7 @@ export default {
     // 确认选择的时间
     confirmPicker (val) {
       let year = val.getFullYear()
-      let month = val.getMonth() + 1
+      let month = val.getMonth()
       let day = val.getDate()
       let hour = val.getHours()
       let minute = val.getMinutes()
@@ -167,7 +177,7 @@ export default {
       if (minute >= 0 && minute <= 9) { minute = `0${minute}` }
       this.className = 'timeClass'
       // this.timeValue = `${year}-${month}-${day} ${hour}:${minute}`'
-      this.timeValue = `${year}-${month}-${day}`
+      this.timeValue = `${year}/${month}/${day}`
       this.show = false
     },
     // 选项格式化函数
@@ -177,13 +187,7 @@ export default {
       } else if (type === 'month') {
         return `${value}月`
       } else if (type === 'day') {
-        return `${value}日`
-      } else if (type === 'hour') {
-        return `${value}时`
-      } else if (type === 'minute') {
-        return `${value}分`
-      } else if (type === 'second') {
-        return `${value}秒`
+        return `${value}日 `
       }
       return value
     },
@@ -200,7 +204,7 @@ export default {
       // console.log(e[0].name);
       let province_list = e[0].name;
       let city_list = e[1].name;
-      this.areaValue = `${province_list}-${city_list}`
+      this.areaValue = `${province_list} - ${city_list}`
       this.show1 = false
 
       this.province_id = e[0].code;
@@ -208,6 +212,10 @@ export default {
     },
     // 点击保存
     preservation(){
+      var da = new Date();
+      var birth = da.getFullYear(this.birth) +  "/" + da.getMonth(this.birth) +  "/" + da.getDay(this.birth);
+
+      console.log(this.zhuangtai)
       this.$post(localStorage.getItem('http') + 'user_info/edit',{
         token: sessionStorage.getItem('token'),
         nickname: this.zhuangtai,
@@ -216,11 +224,12 @@ export default {
         city_id: this.city_id,
         sex: this.sex,
         info: this.info,
-        birth: this.birth
+        birth: birth
       })
       .then(res=> {
         if(res.code == 1){
           console.log(res.data)
+          // console.log(res.data.save_name)
           this.$toast.success('修改成功');
           this.$router.push('./center');
         } else{
@@ -228,18 +237,36 @@ export default {
         }
 
       })
-    }
-
+    },
   },
   created(){
     this.$post(localStorage.getItem('http') + 'user_info/detail',{
       token: sessionStorage.getItem('token')
     })
     .then(res=> {
+
       console.log(res.data)
       this.face_url = res.data.face_url
       this.zhuangtai = res.data.nickname
-      this.birth = res.data.birth
+      if(res.data.birth){
+        let arr = res.data.birth.split("/");
+        this.birth = new Date(arr[0],arr[1],arr[2]);
+        this.timeValue = res.data.birth;
+      }
+
+      this.province_name = res.data.province_name
+      this.city_name = res.data.city_name
+
+      console.log(this.province_name)
+      console.log(this.city_name)
+      this.areaValue = `${this.province_name}-${this.city_name}`
+      this.province_id = res.data.province_id
+      this.city_id = res.data.city_id
+      console.log(this.province_id)
+      console.log(this.city_id)
+
+
+
       this.info = res.data.info
       if (res.data.sex){
         this.sex = res.data.sex

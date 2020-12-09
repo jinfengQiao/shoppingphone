@@ -16,6 +16,7 @@ import 'vant/lib/index.css'
 import Toast from 'muse-ui-toast';
 import VueSocketIO from 'vue-socket.io'
 
+
 // socket * 3.0.7 必须是这个版本
 Vue.use(new VueSocketIO({
   debug: true,
@@ -28,6 +29,7 @@ Vue.use(DatetimePicker).use(Calendar).use(Area);
 theme.add('custom-theme', {
   whites: colors.grey50
 });
+
 
 // 去重
 Vue.prototype.Set = function(arr) {

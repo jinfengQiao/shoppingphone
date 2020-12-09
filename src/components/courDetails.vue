@@ -5,17 +5,14 @@
       <span>课程详情</span>
     </div>
     <div class="videoBox">
-<!--      <img src="../assets/buSchool/videoBox_btn.png" alt="">-->
-<!--      <video :src="video"></video>-->
-
-<!--      <video id="myVideo" class="video-js mu-refresh-control" preload="auto"-->
-<!--             :poster="video_cover">-->
-<!--          <source :src="video" type="video/mp4">-->
-<!--      </video>-->
-
-
-
-
+      <video id="myVideo"
+       class="video-js"
+       controls
+       preload="auto"
+       :poster="video_cover"
+       :src="video"
+       >
+      </video>
     </div>
     <div class="cont">
       <div class="titleBox">
@@ -77,34 +74,6 @@ export default {
         width:'',
         height:'',
       },
-      // currListTitleList:[
-      //   {
-      //     title:'01【财税入门课程】第一节'
-      //   },
-      //   {
-      //     title:'01【财税入门课程】第二节'
-      //   },
-      //   {
-      //     title:'01【财税入门课程】第二节'
-      //   },
-      //   {
-      //     title:'01【财税入门课程】第二节'
-      //   },
-      // ],
-      // currListContList:[
-      //   {
-      //     text:'简单介绍此节课的主要内容(5分钟)'
-      //   },
-      //   {
-      //     text:'简单介绍此节课的主要内容(4分钟)'
-      //   },
-      //   {
-      //     text:'简单介绍此节课的主要内容(3分钟)'
-      //   },
-      //   {
-      //     text:'简单介绍此节课的主要内容(5分钟)'
-      //   },
-      // ],
       lay_type:0,
       lay_type1:0,
       id:'',
@@ -139,12 +108,6 @@ export default {
       }
     },
     layOut1(){
-      // var that = this
-      // if(that.lay_type1 == 0){
-      //   that.lay_type1 = 1
-      // }else{
-      //   that.lay_type1 = 0
-      // }
 
       // console.log(this.course_id)
       this.$post(localStorage.getItem('http') + 'school/want_study',{
@@ -170,28 +133,6 @@ export default {
         }
       })
     },
-    // 获取想学状态
-    // get_want_study(){
-    //   this.$post(localStorage.getItem('http') + 'school/want_study',{
-    //     token: sessionStorage.getItem('token'),
-    //     course_id:this.course_id,
-    //   })
-    //   .then(res=> {
-    //     console.log(res.data)
-    //     var data = res.data
-    //     console.log(data)
-    //     if(this.data == 1){
-    //       this.lay_type1 = 1
-    //       // this.data = 1
-    //       // this.want_study = 1
-    //     }
-    //     if(this.data == 0){
-    //       this.lay_type1 = 0
-    //       // this.data = 0
-    //       // this.want_study = 0
-    //     }
-    //   })
-    // },
     // 获取课程详情
     get_courDetails(id) {
       // console.log(id);

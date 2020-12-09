@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <div class="posiBox">
       <div class="head">
         <img src="../assets/center/back_icon1.png" alt="" @click="back">
@@ -18,7 +18,12 @@
       <ul>
         <li v-for="(n,inx) in contList" :key="inx">
           <div class="left">
-            <span>{{ n.source_name }}</span>
+            <template v-if="n.source_name == '' || n.source_name == null">
+              <span>未命名</span>
+            </template>
+            <template v-else>
+              <span>{{ n.source_name }}</span>
+            </template>
             <p>成功返利</p>
           </div>
           <div class="right">
@@ -50,27 +55,62 @@ export default {
       addtime:'',
       num:'',
       cybermoney:'',
+
+      page: 1,
+      show:false,
     }
   },
   methods:{
     back:function(){
       this.$router.go(-1);
     },
+    onScroll () {
+      // 内容元素的总高度
+      let innerHeight = document.querySelector('#app').clientHeight
+      // 浏览器可见区域高度
+      let outerHeight = document.documentElement.clientHeight
+      // 滚动条的位置高度
+      let scrollTop = document.documentElement.scrollTop
+      // console.log(scrollTop + outerHeight );
+      // console.log(innerHeight + 308);
+      if(scrollTop + outerHeight == innerHeight + 308){
+        this.page++;
+        this.getData();
+      }
+    },
+    getData(){
+      console.log(this.page);
+      this.$post(localStorage.getItem('http') + 'user_cybermoney/get_log',{
+        token: this.token,
+        page:this.page,
+        limit:15
+      })
+      .then(res=> {
+        if(res.data.list.length != 0){
+          var arr = [];
+          arr = this.contList;
+          res.data.list.forEach(function(v){
+            arr.push(v);
+          })
+          this.contList = arr;
+        }else{
+          //没有了
+          this.$toast.error('没有更多了!');
+          window.removeEventListener("scroll",this.onScroll);
+        }
+
+
+      })
+    }
   },
   created(){
     this.token = sessionStorage.getItem('token');
     console.log(this.token)
     this.cybermoney = sessionStorage.getItem('cybermoney');
     console.log(this.cybermoney)
-    this.$post(localStorage.getItem('http') + 'user_cybermoney/get_log',{
-      token: this.token
-    })
-    .then(res=> {
-      console.log(res.data)
-
-      this.contList = res.data.list
-      console.log(this.contList)
-    })
+    this.getData();
+    //先在这里监听scroll事件
+    window.addEventListener('scroll', this.onScroll)
   },
 }
 </script>

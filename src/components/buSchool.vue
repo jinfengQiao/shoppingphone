@@ -1,5 +1,5 @@
 <template>
-  <div class="bg" :style="height">
+  <div class="bg" id="app">
     <div class="head">
 <!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
       <span>商学院</span>
@@ -28,7 +28,7 @@
               <li v-for="(n,index) in contContHead" :key="index" :class="{contContHeadAdd:index==isSelect}" @click="changeCls(index,n.id)">{{n.name}}</li>
             </ul>
           </div>
-          <div class="contContCont">
+          <div class="contContCont" id="contContCont" :style="height">
             <ul>
               <li @click="jumpCourDetails(n.id)" v-for="(n,index) in contContCont" :key="index">
                 <img :src="n.video_cover" alt="">
@@ -55,7 +55,7 @@
           </ul>
           <img src="../assets/buSchool/search_icon.png" alt="" @click="jumpSearch">
         </div>
-        <div class="cont2Cont">
+        <div class="cont2Cont" id="contContCont1">
           <div class="cont2Cont1" v-for="(n,inx) in contContCont1" :key="inx" @click="jumpArtiDetails(n.id)">
             <span>{{ n.title }}</span>
             <p>{{ n.info }}</p>
@@ -115,46 +115,24 @@ export default {
       cont2HeadLi:[
           // '精选','税率','日常','饮食',
       ],
-      contContCont:[
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // },
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // },
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // },
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // }
-      ],
+      contContCont:[],
       contContCont11:[],
       keyword:'',
       category_id:'',
+      category_id1:1,
       title:'',
       info:'',
       publishtime:'',
       hit:'',
       id:'',
-      contContCont1:'',
+      contContCont1:[],
+
+      page:1,
     }
   },
   methods:{
     hh(){
-      this.height.height = window.innerHeight +'px'
+      this.height.height = window.innerHeight-359 +'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -165,24 +143,29 @@ export default {
     listGo(index){
       var that = this
       that.isActive = index;
-      console.log(index + 1);
+      // console.log(index + 1);
       var index1 = index + 1
       that.tabState = index1;
-      if(that.tabState == 2){
-        this.get_clsTextList1();
-      }
+      this.category_id = index1;
+      this.contContCont1 = [];
+      this.page = 1;
+      this.get_clsTextList();
     },
     changeCls(index,id){
       this.isSelect = index;
-      console.log(id);
+      // console.log(id);
       this.category_id = id;
-      console.log(this.category_id);
+      // console.log(this.category_id);
+      this.contContCont = [];
+      this.page = 1;
       this.get_clsList();
     },
     liAddCls(index,id){
       this.isliAddCls = index;
       this.category_id1 = id;
       console.log(this.category_id1);
+      this.contContCont1 = [];
+      this.page = 1;
       this.get_clsTextList();
     },
     jumpCurrVip(){
@@ -219,22 +202,61 @@ export default {
         // console.log(this.category_id)
       })
     },
+    onScroll () {
+      // 内容元素的总高度
+      let innerHeight = document.querySelector('#contContCont').clientHeight
+      // 浏览器可见区域高度
+      let outerHeight = document.documentElement.clientHeight
+      // 滚动条的位置高度
+      let scrollTop = document.documentElement.scrollTop
+      // console.log(scrollTop + outerHeight );
+      // console.log(innerHeight + 359);
+      if(scrollTop + outerHeight == innerHeight + 359){
+        this.page++;
+        this.get_clsList();
+      }
+    },
+    onScroll1 () {
+      // 内容元素的总高度
+      let innerHeight = document.querySelector('#contContCont1').clientHeight
+      // 浏览器可见区域高度
+      let outerHeight = document.documentElement.clientHeight
+      // 滚动条的位置高度
+      let scrollTop = document.documentElement.scrollTop
+      console.log(scrollTop + outerHeight );
+      console.log(innerHeight + 95);
+      if(scrollTop + outerHeight == innerHeight + 95){
+        this.page++;
+        this.get_clsTextList();
+      }
+    },
     // 获取课程列表
-    get_clsList(page,limit) {
+    get_clsList() {
+      console.log(this.page)
       this.$post(localStorage.getItem('http') + 'school/get_course',{
-        page:page,
-        limit:limit,
+        page:this.page,
+        limit:15,
         category_id:this.category_id,
         keyword:this.keyword
       })
       .then(res=> {
         console.log(res.data.list)
-        this.contContCont= res.data.list
-        console.log(this.contContCont);
-        if(res.data.list == '' || res.data.list == null){
+        if (res.data.list.length == 0 && this.page == 1){
           this.show12 = true;
         }else{
           this.show12 = false;
+          if (res.data.list.length != 0){
+              var arr = [];
+              arr = this.contContCont;
+              res.data.list.forEach(function(v){
+                arr.push(v);
+              })
+              this.contContCont = arr;
+          }else{
+              this.$toast.error('没有更多了!');
+              res.data.list = ''
+              window.removeEventListener("scroll",this.onScroll);
+          }
         }
       })
     },
@@ -249,38 +271,33 @@ export default {
       })
     },
     // 获取文章列表
-    get_clsTextList(page,limit) {
+    get_clsTextList() {
+      // console.log(this.page)
       this.$post(localStorage.getItem('http') + 'school/get_article',{
-        page:page,
-        limit:limit,
+        page:this.page,
+        limit:15,
         category_id:this.category_id1,
         keyword:this.keyword
       })
       .then(res=> {
         console.log(res.data.list)
-        this.contContCont1= res.data.list
-        if(res.data.list == '' || res.data.list == null){
+        if (res.data.list.length == 0 && this.page == 1){
           this.show13 = true;
         }else{
           this.show13 = false;
+          if (res.data.list.length != 0){
+            var arr = [];
+            arr = this.contContCont1;
+            res.data.list.forEach(function(v){
+              arr.push(v);
+            })
+            this.contContCont1 = arr;
+          }else{
+            this.$toast.error('没有更多了!');
+            res.data.list = ''
+            window.removeEventListener("scroll",this.onScroll1);
+          }
         }
-      })
-    },
-    get_clsTextList1(page,limit) {
-      this.$post(localStorage.getItem('http') + 'school/get_article',{
-        page:page,
-        limit:limit,
-        category_id:1,
-        keyword:this.keyword
-      })
-      .then(res=> {
-        console.log(res.data.list)
-        this.contContCont1= res.data.list
-        // if(res.data.list == '' || res.data.list == null){
-        //   this.show12 = true;
-        // }else{
-        //   this.show12 = false;
-        // }
       })
     },
   },
@@ -290,6 +307,8 @@ export default {
     this.hh();
     this.get_classText();
     this.get_clsTextList();
+    window.addEventListener('scroll', this.onScroll);
+    window.addEventListener('scroll', this.onScroll1);
   },
   components: {
     footer_nav
@@ -379,11 +398,15 @@ export default {
   width: 100%;
   margin-top: 95px;
   .banner{
+    position: fixed;
+    top: 95px;
+    left: 0;
     float: left;
     width: 100%;
     padding: 15px;
     box-sizing: border-box;
     background-color: #f3f4f6;
+    z-index: 11;
     .bannerBox{
       float: left;
       width: 100%;
@@ -433,13 +456,22 @@ export default {
     }
   }
   .contCont{
+    position: relative;
     float: left;
+    margin-top: 120px;
     width: 100%;
     background-color: #ffffff;
     padding: 0 15px 62px;
     box-sizing: border-box;
     .contContHead{
+      padding: 0 15px;
+      box-sizing: border-box;
+      position: fixed;
+      top: 215px;
+      left: 0;
+      z-index: 11;
       width: 100%;
+      background-color: #ffffff;
       ul{
         width: 100%;
         display: flex;
@@ -463,9 +495,14 @@ export default {
       background: rgba(13, 104, 255, 0.27)!important;
       color: #0E69FF!important;
     }
+    .contContCont::-webkit-scrollbar {
+      display: none;
+    }
     .contContCont{
       width: 100%;
-      margin-top: 20px;
+      margin-top: 82px;
+      overflow: auto;
+
       ul{
         width: 100%;
         li{
@@ -548,14 +585,19 @@ export default {
   background-color: #ffffff;
   //display: none;
   .cont2Head{
-    margin-top: 15px;
+    position: fixed;
+    top: 95px;
+    left: 0;
+    z-index: 2;
+
     width: 100%;
-    height: 42px;
+    height: 57px;
     line-height: 42px;
-    padding: 0 15px;
+    padding: 15px 15px 0 15px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
+    background-color: #ffffff;
     ul{
       float: left;
       height: 42px;
@@ -582,8 +624,9 @@ export default {
     }
   }
   .cont2Cont{
+    position: relative;
     width: 100%;
-    padding: 0 0 62px 0;
+    padding: 57px 0 62px 0;
     box-sizing: border-box;
     .cont2Cont1{
       width: 100%;
@@ -682,7 +725,7 @@ export default {
       }
     }
     .nullBox{
-      padding: 20px 0 0 0;box-sizing: border-box;
+      padding: 100px 0 0 0;box-sizing: border-box;
       width: 100%;
       text-align: center;
       img{
