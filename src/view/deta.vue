@@ -8,7 +8,7 @@
             <div class="deta_header_state">
                 <div class="deta_header_state_left">
                     <h2>{{ deta_title }}</h2>
-                    <p>剩余23小时59分钟自动关闭</p>
+                    <p>剩余 <van-count-down :time="time11" style="display: inline-block;color:#ffffff;" /> 自动关闭</p>
                 </div>
                 <img src="" alt="">
             </div>
@@ -81,8 +81,13 @@
                             </svg>
                         </div>
                         <div v-if="radio == '2'" class="pay_content">
-                            <svg class="icon zhifubao" aria-hidden="true">
-                                <use xlink:href="#icon-zhifubao"></use>
+                          <svg class="icon zhifubao" aria-hidden="true">
+                            <use xlink:href="#icon-zhifubao"></use>
+                          </svg>
+                        </div>
+                        <div v-if="radio == '3'" class="pay_content">
+                            <svg class="icon yue" aria-hidden="true">
+                                <use xlink:href="#icon-yanzhengma"></use>
                             </svg>
                         </div>
                     </div>
@@ -116,13 +121,33 @@
                     <van-radio name="2" icon-size="24px"></van-radio>
                   </div>
                   </template>
+                  <div class="pay_modes">
+                    <div class="pay_mode">
+                      <svg class="icon yue" aria-hidden="true">
+                        <use xlink:href="#icon-yanzhengma"></use>
+                      </svg>
+                      <p>余额支付</p>
+                    </div>
+                    <van-radio name="3" icon-size="24px"></van-radio>
+                  </div>
                 </van-radio-group>
-
-
             </div>
-
         </div>
-
+        <div class="renxinghua">
+          <div class="renxinghua1">
+            <div class="rxhLeft">
+              <div class="rxhLeftBox">任性花</div>
+              <span>积分</span>
+            </div>
+            <div class="rxhRight">100积分 = 1元</div>
+          </div>
+        </div>
+        <div class="myjifen">
+          <div class="myjifenLeft">
+            我的总积分 <span>200000</span>
+          </div>
+          <input type="number" placeholder="输入兑换积分">
+        </div>
         <div v-if="order_info_show" :style="{marginTop: order_info_show? '12px' : ''}">
           <!--订单信息-->
 
@@ -222,7 +247,9 @@
                 // 总价
                 num_price: 0,
                 // 微信浏览器标识
-                is_weixin: false
+                is_weixin: false,
+
+                time11:24 * 60 * 60 * 1000,
             }
         },
         created() {
@@ -711,7 +738,8 @@
                     margin-left: 12px;
                 }
                 .deta_address_p{
-                    width: 304px;
+                    //width: 304px;
+                    max-width: 250px;
                     font-size: 13px;
                     overflow: hidden;
                     text-overflow:ellipsis;
@@ -812,10 +840,10 @@
     .pays{
         padding: 0 16px 16px;
         background: #FCFCFC;
-        height: 40px;
+        height: 42px;
         overflow: hidden;
         transition: all .2s ease-in-out;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
         .pay{
             display: flex;
             justify-content: space-between;
@@ -846,6 +874,9 @@
                 .pay_content{
                     .weixin{
                         font-size: 16px;
+                    }
+                    .yue{
+                      font-size: 16px;
                     }
                     .zhifubao{
                         font-size: 16px;
@@ -879,6 +910,9 @@
                         .weixin{
                             font-size: 16px;
                         }
+                        .yue{
+                          font-size: 16px;
+                        }
                         .zhifubao{
                             font-size: 16px;
                         }
@@ -896,9 +930,81 @@
                 margin-bottom: 0;
             }
         }
+
     }
+    .renxinghua{
+      padding: 0 16px;
+      box-sizing: border-box;
+      height: 42px;
+      .renxinghua1{
+        padding: 9px 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #DDDDDD;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .rxhLeft{
+          font-size: 14px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #FFFFFF;
+          display: inline-block;
+          .rxhLeftBox{
+            width: 80px;
+            display: inline-block;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            background: url("../assets/deta/rxhLeftBox_bg.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
+          span{
+            margin-left: 5px;
+            font-size: 16px;
+            color: #333333;
+          }
+        }
+        .rxhRight{
+          font-size: 14px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #FF4F58;
+        }
+      }
+    }
+    .myjifen{
+      width: 100%;
+      height: 42px;
+      padding: 9px 16px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #333333;
+      .myjifenLeft{
+        line-height: 24px;
+      }
+      input{
+        width: 100px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        outline: none;
+        border: 1px solid #999999;
+        border-radius: 2px;
+        font-size: 12px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #333333;
+      }
+    }
+
     .pays_into{
-        height: 108px!important;
+        //height: 108px!important;
+        height: 124px!important;
     }
 
     // 订单信息

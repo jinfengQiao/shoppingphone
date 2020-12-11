@@ -1,6 +1,6 @@
 <template>
     <header style="position: fixed;
-    z-index: 99999;
+    z-index: 1999;
     width: 100%;
     left: 0;
     top: 0;">

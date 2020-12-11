@@ -36,14 +36,18 @@
     <div class="btnBox">
       <button type="button">兑换积分</button>
     </div>
+<!--    <payComp v-show="show"></payComp>-->
   </div>
 </template>
 
 <script>
+// import payComp from "@/components/payComp";
+
 export default {
   name: "integral",
   data(){
     return{
+      // show:true,
       jifenList:[],
       score:'',
       page:1,
@@ -92,10 +96,12 @@ export default {
         }else{
           this.$toast.error('没有更多了!');
           res.data.list = ''
-          window.removeEventListener("scroll",this.onScroll);
         }
       })
     },
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll",this.onScroll);
   },
   created(){
     this.get_list();
@@ -103,6 +109,9 @@ export default {
     this.score = score
     window.addEventListener('scroll', this.onScroll);
   },
+  components: {
+    // payComp
+  }
 }
 </script>
 

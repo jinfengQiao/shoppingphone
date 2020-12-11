@@ -59,17 +59,79 @@
         <img v-else src="../assets/buSchool/xiangxue_icon.png" alt="">
         <span>想学</span>
       </div>
-      <button>+ 加入学习</button>
+      <button @click="payClick">+ 加入学习</button>
     </div>
+
+<!--    弹窗-->
+    <div class="tanchuang" v-show="tcShow">
+      <div class="tanchuangBox">
+        <div class="tanchuangBox1">
+          <div class="tanchuangBox1Head">
+            <img :src="video_cover" alt="">
+            <div class="tanBoxCont">
+              <p>{{title}}</p>
+              <span>￥{{ price }}</span>
+            </div>
+            <div class="guanbi">
+              <img src="../assets/center/zhifuTancTuichu.png" alt="" @click="guanbi">
+            </div>
+          </div>
+          <div class="payMethod">
+            <p>选择支付方式</p>
+            <div class="zhifuBox">
+              <div class="weixinZhifu" @click="weixinZhifu">
+                <div class="weixinZhifuLeft">
+                  <img src="../assets/center/wechat.png" alt="" class="img1">
+                  <span>微信支付</span>
+                </div>
+                <div class="weixinZhifuRight">
+                  <input type="radio" name="zhifu" checked>
+                  <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="weixinSelect">
+                </div>
+              </div>
+              <div class="yueZhifu" name="zhifu" @click="yueZhifu">
+                <div class="yueZhifuLeft">
+                  <img src="../assets/center/yue.png" alt="" class="img1">
+                  <span>余额支付</span>
+                </div>
+                <div class="yueZhifuRight">
+                  <input type="radio" name="zhifu">
+                  <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="yueSelect">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="jifenBox">
+            <div class="jifenBox1">
+              <div class="duihuan">
+                <!--                <img src="../assets/center/duihuan_bg.png" alt=""> -->
+                积分兑换
+              </div>
+              <div class="jifenBox1Ri">100积分 = 1元</div>
+            </div>
+            <div class="jifenBox2">
+              <div class="jifenBox2Le">我的积分 <span>{{ score }}</span></div>
+              <input type="number" placeholder="输入兑换积分">
+            </div>
+          </div>
+          <div class="btnBox">
+            <button @click="buyBtn">立即购买</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<!--    <payComp></payComp>-->
   </div>
 </template>
 
 <script>
+// import payComp from "@/components/payComp";
 export default {
   name: "courDetails",
   data(){
     return{
       show:true,
+      // show1:false,
       height:{
         width:'',
         height:'',
@@ -86,7 +148,15 @@ export default {
       video_cover:'',
       want_study:'',
       lesson:'',
+      lesson_id:'',
       course_id:'',
+      tcShow:false,
+      weixinSelect:true,
+      yueSelect:false,
+      order_id:'',
+      order_type:'',
+      code:'',
+      openid_code:'',
     }
   },
   methods:{
@@ -150,8 +220,9 @@ export default {
         this.video = res.data.video
         this.video_cover = res.data.video_cover
         this.want_study = res.data.want_study
-        console.log(this.want_study)
+        // console.log(this.want_study)
         this.lesson = res.data.lesson
+        this.lesson_id = this.lesson[0].id
         this.course_id = res.data.id
         if(this.want_study == 1){
           this.lay_type1 = 1
@@ -162,16 +233,116 @@ export default {
     jumpCurrVip(){
       this.$router.push('./currVip');
     },
+    payClick(){
+      // this.show1 = true
+      // console.log(payComp.tcShow)
+      // payComp.tcShow = true
+      this.tcShow = true
+    },
+    guanbi(){
+      this.tcShow = false
+    },
+    weixinZhifu(){
+      this.weixinSelect = true
+      this.yueSelect = false
+      // console.log('微信支付')
+    },
+    yueZhifu(){
+      this.weixinSelect = false
+      this.yueSelect = true
+      // console.log('余额支付')
+    },
+    buyBtn(){
+      this.$post(localStorage.getItem('http') + 'school/make_course_order',{
+        token: sessionStorage.getItem('token'),
+        course_id: this.course_id,
+        // lesson_id: this.lesson_id
+        lesson_id:0
+      })
+      .then(res=> {
+        console.log(res.data)
+        if(res.code == 1){
+          // console.log('下单成功');
+          this.order_id = res.data.order_id
+          console.log(this.order_id);
+          this.order_type = res.data.order_type
+          console.log(this.order_type);
+          // 余额支付
+          if(this.weixinSelect == true){
+            console.log('微信支付')
+            // 获取网页授权code
+            // this.$post(localStorage.getItem('http') + 'wechat/get_code',)
+            // .then(res=> {
+            //   // console.log(res)
+            //   this.openid_code = res
+            //   console.log(this.openid_code)
+            // })
+            // 获取用户id
+            // console.log(this.openid_code)
+            // this.$post(localStorage.getItem('http') + 'wechat/get_openid',{
+            //   code:this.openid_code
+            // })
+            // .then(res=> {
+            //   console.log(res)
+            //   localStorage.setItem("openid",res.data);
+            //
+            // })
+
+
+            // this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+            //   token: sessionStorage.getItem('token'),
+            //   order_id: this.order_id,
+            //   openid:this.openid
+            // })
+            // .then(res=> {
+            //   console.log(res)
+            //   if(res.code == 0){
+            //     // console.log('余额不足')
+            //     this.$toast.error(res.msg)
+            //   }
+            //   if(res.code == 1){
+            //     this.$toast.success(res.msg);
+            //     this.$router.push('./lesson');
+            //   }
+            // })
+          }else{
+            console.log('余额支付')
+            this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id: this.order_id,
+              order_type: this.order_type
+            })
+            .then(res=> {
+              console.log(res)
+              if(res.code == 0){
+                // console.log('余额不足')
+                this.$toast.error(res.msg)
+              }
+              if(res.code == 1){
+                this.$toast.success(res.msg);
+                this.$router.push('./lesson');
+              }
+            })
+          }
+        }else{
+          this.$toast.error(res.msg)
+        }
+      })
+    }
   },
   created(){
+    var score = sessionStorage.getItem('score');
+    this.score = score
+    console.log(this.score)
     let id =this.$route.query.id;
     // console.log(id);
     this.hh();
     this.get_courDetails(id);
     // this.get_want_study();
-
-
   },
+  components: {
+    // payComp
+  }
 }
 </script>
 
@@ -461,6 +632,254 @@ export default {
     color: #FFFFFF;
     outline: none;
     border: 0;
+  }
+}
+
+//弹窗
+.tanchuang{
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 99999;
+  color: #ffffff;
+  .tanchuangBox{
+    position: absolute;
+    top: 50%;
+    margin-top: -180px;
+    width: 100%;
+    //height: 360px;
+    padding: 0 30px;
+    box-sizing: border-box;
+    .tanchuangBox1{
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      box-shadow: 0px 2px 10px rgba(204, 204, 204, 0.5);
+      opacity: 1;
+      border-radius: 5px;
+      padding: 15px;
+      box-sizing: border-box;
+      .tanchuangBox1Head{
+        position: relative;
+        width: 100%;
+        height: 78px;
+        display: flex;
+        justify-content: flex-start;
+        img{
+          width: 78px;
+          height: 78px;
+          object-fit: cover;
+        }
+        .tanBoxCont{
+          margin-left: 12px;
+          p{
+            font-size: 16px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #333333;
+            display: -webkit-box;
+            -webkit-line-clamp:2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            padding: 0 20px 0 0;
+            box-sizing: border-box;
+          }
+          span{
+            font-size: 18px;
+            font-family: Roboto;
+            font-weight: 400;
+            line-height: 36px;
+            color: #EA610E;
+          }
+        }
+        .guanbi{
+          position: absolute;
+          right: -6px;
+          top: -6px;
+          img{
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+          }
+        }
+      }
+      .payMethod{
+        padding: 16px 0 0 0;
+        box-sizing: border-box;
+        width: 100%;
+        p{
+          width: 100%;
+          font-size: 16px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #333333;
+        }
+        .zhifuBox{
+          margin-top: 14px;
+          padding: 0 0 15px 0;
+          box-sizing: border-box;
+          border-bottom: 1px solid #dddddd;
+          .weixinZhifu{
+            position: relative;
+            display: flex;
+            height: 35px;
+            justify-content: space-between;
+            //align-items: center;
+            margin-bottom: 15px;
+            .weixinZhifuLeft{
+              img{
+                float: left;
+                width: 35px;height: 35px;
+              }
+              span{
+                float: left;
+                margin-left: 7px;
+                line-height: 35px;
+                font-size: 14px;
+                font-family: PingFang SC;
+                font-weight: 500;
+                color: #333333;
+              }
+            }
+            .weixinZhifuRight{
+              img{
+                float: right;
+                width: 18px;height: 18px;
+                margin-top: 8px;
+              }
+              input{
+                opacity: 0;
+                position: absolute;
+                right:0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
+          .yueZhifu{
+            position: relative;
+            display: flex;
+            height: 35px;
+            justify-content: space-between;
+            align-items: center;
+            .yueZhifuLeft{
+              img{
+                float: left;
+                width: 35px;height: 35px;
+              }
+              span{
+                float: left;
+                margin-left: 7px;
+                line-height: 35px;
+                font-size: 14px;
+                font-family: PingFang SC;
+                font-weight: 500;
+                color: #333333;
+              }
+            }
+            .yueZhifuRight{
+              img{
+                float: right;
+                width: 18px;height: 18px;
+                margin-top: 8px;
+              }
+              input{
+                opacity: 0;
+                position: absolute;
+                right:0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.jifenBox{
+  width: 100%;
+  //height: 100px;
+  padding: 12px 0;
+  box-sizing: border-box;
+  .jifenBox1{
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .duihuan{
+      font-size: 13px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #333333;
+      img{
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+      }
+    }
+    .jifenBox1Ri{
+      font-size: 12px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #1672F9;
+    }
+  }
+  .jifenBox2{
+    width: 100%;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .jifenBox2Le{
+      font-size: 12px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #666666;
+      span{
+        font-size: 14px;
+        font-family: PingFang SC;
+        font-weight: 500;
+      }
+    }
+    input{
+      font-size: 12px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #666666;
+      width: 100px;
+      border: 1px solid #999999;
+      border-radius: 2px;
+      outline: none;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+  }
+}
+.btnBox{
+  width: 100%;
+  padding: 0 30px;
+  box-sizing: border-box;
+  button{
+    //margin-top: 20px;
+    width: 100%;
+    height: 38px;
+    line-height: 38px;
+    border: 0;
+    outline: none;
+    background: #1672F9;
+    border-radius: 20px;
+    font-size: 18px;
+    font-family: PingFang SC;
+    color: #FFFFFF;
   }
 }
 </style>

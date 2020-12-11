@@ -138,12 +138,25 @@
                 })
             },
             details_list(e) {
-              this.$router.push({
-                path: '/order_list',
-                query: {
-                  id: e.id
-                }
-              })
+              if(!sessionStorage.getItem('token')){
+                this.$dialog.confirm({
+                  title:'登录状态',
+                  message:'未登录，请登录',
+                })
+                    .then(()=>{
+                      this.$router.push('/login')
+                    })
+                    .catch(()=>{
+                      console.log('未登录')
+                    });
+              }else{
+                this.$router.push({
+                  path: '/order_list',
+                  query: {
+                    id: e.id
+                  }
+                })
+              }
             },
             all_list() {
               this.$router.push({

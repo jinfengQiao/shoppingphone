@@ -36,7 +36,7 @@
 
 
         <div class="submit">
-            <div class="submit_left">
+            <div class="submit_left" @click="cellKefu">
                 <i class="iconfont icon-dianhua"></i>
                 <p>联系客服</p>
             </div>
@@ -298,7 +298,37 @@
             },
             // 立即下单 打开对话框
             submit() {
+              if(!sessionStorage.getItem('token')){
+                this.$dialog.confirm({
+                  title:'登录状态',
+                  message:'未登录，请登录',
+                })
+                    .then(()=>{
+                      this.$router.push('/login')
+                    })
+                    .catch(()=>{
+                      console.log('未登录')
+                    });
+              }else{
                 this.openSimple= true
+              }
+            },
+            // 点击联系客服
+            cellKefu(){
+              if(!sessionStorage.getItem('token')){
+                this.$dialog.confirm({
+                  title:'登录状态',
+                  message:'未登录，请登录',
+                })
+                    .then(()=>{
+                      this.$router.push('/login')
+                    })
+                    .catch(()=>{
+                      console.log('未登录')
+                    });
+              }else{
+                this.$toast.success('联系客服');
+              }
             },
             // 关闭对话框
             closeSimpleDialog() {

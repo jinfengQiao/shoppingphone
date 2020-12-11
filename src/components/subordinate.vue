@@ -10,7 +10,7 @@
         <span>我得收益</span>
         <div class="btnBox">
           <img src="../assets/center/subordinate_btnIcon.png" alt="">
-          <button type="button">邀请好友</button>
+          <button type="button" @click="inviteFriends">邀请好友</button>
         </div>
       </div>
     </div>
@@ -72,6 +72,14 @@
         </div>
       </div>
     </div>
+
+    <van-cell title="显示分享面板" @click="showShare = true" />
+    <van-share-sheet
+        v-model="showShare"
+        title="-- 分享到 --"
+        :options="options"
+        @select="onSelect"
+    />
   </div>
 </template>
 
@@ -80,6 +88,14 @@ export default {
   name: "subordinate",
   data(){
     return{
+      showShare: false,
+      options: [
+        { name: '微信', icon: 'wechat' },
+        { name: '微博', icon: 'weibo' },
+        { name: '复制链接', icon: 'link' },
+        { name: '分享海报', icon: 'poster' },
+        { name: '二维码', icon: 'qrcode' },
+      ],
       tabState: 1,
       isActive:'',
       height:{
@@ -158,6 +174,15 @@ export default {
         // console.log(res.data)
         this.erjiList = res.data
       })
+    },
+
+    // 邀请好友
+    inviteFriends(){
+      this.showShare = true
+    },
+    onSelect(option) {
+      this.$toast.success(option.name);
+      this.showShare = false;
     },
   },
   created(){
@@ -256,7 +281,7 @@ export default {
   top: 285px;
   left: 0;
   width: 100%;
-  z-index: 99999;
+  z-index: 3;
   padding: 25px 15px 0 15px;
   box-sizing: border-box;
   background: #E8F1FF;
@@ -442,7 +467,6 @@ export default {
     }
   }
 }
-
 
 
 </style>

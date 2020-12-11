@@ -35,6 +35,7 @@ import currVip from "../components/currVip";
 import search from "../components/search";
 import courDetails from "../components/courDetails";
 import artiDetails from "../components/artiDetails";
+import payComp from "../components/payComp";
 
 import deta from "../view/deta";
 import refund from "../view/refund";
@@ -309,6 +310,13 @@ const router = new VueRouter({
             component: artiDetails,
             meta: {
                 title: '文章详情'
+            }
+        },
+        {
+            path:'/payComp',
+            component: payComp,
+            meta: {
+                title: '支付组件'
             }
         },
 

@@ -45,12 +45,25 @@
         methods: {
             // 精选优品跳转列表
             selected() {
-              this.$router.push({
-                path: '/order_list',
-                query: {
-                  quality: 1
-                }
-              })
+              if(!sessionStorage.getItem('token')){
+                this.$dialog.confirm({
+                  title:'登录状态',
+                  message:'未登录，请登录',
+                })
+                    .then(()=>{
+                      this.$router.push('/login')
+                    })
+                    .catch(()=>{
+                      console.log('未登录')
+                    });
+              }else{
+                this.$router.push({
+                  path: '/order_list',
+                  query: {
+                    quality: 1
+                  }
+                })
+              }
             },
             goods_router(e) {
               // console.log(e)

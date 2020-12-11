@@ -103,6 +103,9 @@ export default {
       })
     }
   },
+  beforeDestroy() {
+    window.removeEventListener("scroll",this.onScroll);
+  },
   created(){
     this.token = sessionStorage.getItem('token');
     console.log(this.token)

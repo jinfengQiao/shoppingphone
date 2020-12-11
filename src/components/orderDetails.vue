@@ -220,7 +220,8 @@ export default {
               this.$router.push({
                 path: '/deta',
                 query:{
-                  id: res.data
+                  id: res.data.order_id
+
                 }
               })
             }else{
@@ -472,6 +473,9 @@ export default {
         .weixin{
           font-size: 16px;
         }
+        .yue{
+          font-size: 16px;
+        }
         .zhifubao{
           font-size: 16px;
         }
@@ -502,6 +506,9 @@ export default {
           display: flex;
           align-items: center;
           .weixin{
+            font-size: 16px;
+          }
+          .yue{
             font-size: 16px;
           }
           .zhifubao{

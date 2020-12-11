@@ -1,4 +1,4 @@
-# shoppingphone
+## shoppingphone
 
 ## Project setup
 ```

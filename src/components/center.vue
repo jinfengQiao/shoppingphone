@@ -122,7 +122,7 @@ export default {
     console.log(token)
 
     // 判断token
-    if(token == '' || token == null){
+    if(!token){
         this.nojumpCodeLogin=true
         this.zhuangtai='未登录'
         this.face_url=require('../assets/center/headImg1.png')
@@ -143,6 +143,7 @@ export default {
         this.cybermoney = res.data.cybermoney
         this.score = res.data.score
         // console.log(this.score);
+        sessionStorage.setItem('score',res.data.score)
         sessionStorage.setItem('cybermoney',res.data.cybermoney)
         if(this.face_url == null){
           this.face_url=require('../assets/center/headImg.png')
@@ -159,73 +160,104 @@ export default {
       that.$router.push('/modifyPage');
     },
     jumpJ:function (e){
-      if(e.target.innerHTML == '返利'){
-        this.$router.push("/rebate");
-      }
-      if(e.target.innerHTML == '积分'){
-        // this.$router.push("/integral");
-        this.$router.push({
-          path:'/integral',
-          query:{
-            score:this.score
-          }
+      if(!sessionStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
         })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        if(e.target.innerHTML == '返利'){
+          this.$router.push("/rebate");
+        }
+        if(e.target.innerHTML == '积分'){
+          // this.$router.push("/integral");
+          this.$router.push({
+            path:'/integral',
+            query:{
+              score:this.score
+            }
+          })
+        }
+        if(e.target.innerHTML == '充值'){
+          this.$router.push("/recharge");
+        }
+        if(e.target.innerHTML == '我的咨询卡'){
+          this.$router.push("/consultation");
+        }
+        if(e.target.innerHTML == '我想学'){
+          this.$router.push("/wantStudy");
+        }
+        if(e.target.innerHTML == '我的课程'){
+          this.$router.push("/lesson");
+        }
+        if(e.target.innerHTML == '我的下级'){
+          this.$router.push("/subordinate");
+        }
+        if(e.target.innerHTML == '我的等级'){
+          this.$router.push("/member");
+        }
       }
-      if(e.target.innerHTML == '充值'){
-        this.$router.push("/recharge");
-      }
-      if(e.target.innerHTML == '我的咨询卡'){
-        this.$router.push("/consultation");
-      }
-      if(e.target.innerHTML == '我想学'){
-        this.$router.push("/wantStudy");
-      }
-      if(e.target.innerHTML == '我的课程'){
-        this.$router.push("/lesson");
-      }
-      if(e.target.innerHTML == '我的下级'){
-        this.$router.push("/subordinate");
-      }
-      if(e.target.innerHTML == '我的等级'){
-        this.$router.push("/member");
-      }
+
+
+
+
     },
     jumpCodeLogin:function(){
       this.$router.push("/login");
     },
     jumpMy_order(inx){
-      console.log(inx)
-      if(inx == 0){
-        this.status = 0
-        this.$router.push({
-          path:'/order/my_order',
-          query:{
-            status:this.status
-          }
+      if(!sessionStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
         })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        console.log(inx)
+        if(inx == 0){
+          this.status = 0
+          this.$router.push({
+            path:'/order/my_order',
+            query:{
+              status:this.status
+            }
+          })
+        }
+        if(inx == 1){
+          this.status = 1
+          this.$router.push({
+            path:'/order/my_order',
+            query:{
+              status:this.status
+            }
+          })
+        }
+        if(inx == 2){
+          this.status = 2
+          console.log(2)
+        }
+        if(inx == 3){
+          this.status = null
+          this.$router.push({
+            path:'/order/my_order',
+            query:{
+              status:this.status
+            }
+          })
+        }
       }
-      if(inx == 1){
-        this.status = 1
-        this.$router.push({
-          path:'/order/my_order',
-          query:{
-            status:this.status
-          }
-        })
-      }
-      if(inx == 2){
-        this.status = 2
-        console.log(2)
-      }
-      if(inx == 3){
-        this.status = null
-        this.$router.push({
-          path:'/order/my_order',
-          query:{
-            status:this.status
-          }
-        })
-      }
+
       // this.$router.push('/order/my_order');
 
 

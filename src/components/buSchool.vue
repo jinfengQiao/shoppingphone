@@ -126,13 +126,16 @@ export default {
       hit:'',
       id:'',
       contContCont1:[],
-
       page:1,
+      list_type:1,
+      scroll_element:"#contContCont",
+      plus_height:359,
+      sell:'',
     }
   },
   methods:{
     hh(){
-      this.height.height = window.innerHeight-359 +'px'
+      this.height.height = window.innerHeightc +'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -141,15 +144,25 @@ export default {
       this.$router.push('./moneyDetailed');
     },
     listGo(index){
-      var that = this
-      that.isActive = index;
+      this.isActive = index;
       // console.log(index + 1);
       var index1 = index + 1
-      that.tabState = index1;
+      this.tabState = index1;
       this.category_id = index1;
-      this.contContCont1 = [];
-      this.page = 1;
-      this.get_clsTextList();
+      // this.contContCont1 = [];
+      // this.page = 1;
+      // this.get_clsTextList();
+      if(index1 == 1){
+        this.list_type = 1;
+        this.scroll_element = "#contContCont";
+        this.plus_height = 359;
+      }else{
+        this.list_type = 2;
+        this.scroll_element = "#contContCont1";
+        this.plus_height = 95;
+      }
+
+
     },
     changeCls(index,id){
       this.isSelect = index;
@@ -169,26 +182,78 @@ export default {
       this.get_clsTextList();
     },
     jumpCurrVip(){
-      this.$router.push('/currVip');
+      if(!sessionStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
+        })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        this.$router.push('/currVip');
+      }
     },
     jumpSearch(){
-      this.$router.push('/search');
+      if(!sessionStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
+        })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        this.$router.push('/search');
+      }
     },
     jumpCourDetails(id){
-      this.$router.push({
-        path:'courDetails',
-        query:{
-          id:id
-        }
-      })
+      if(!sessionStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
+        })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        this.$router.push({
+          path:'courDetails',
+          query:{
+            id:id
+          }
+        })
+      }
     },
     jumpArtiDetails(id){
-      this.$router.push({
-        path:'artiDetails',
-        query:{
-          id:id
-        }
-      })
+      if(!sessionStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
+        })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        this.$router.push({
+          path:'artiDetails',
+          query:{
+            id:id
+          }
+        })
+      }
     },
 
 
@@ -204,30 +269,21 @@ export default {
     },
     onScroll () {
       // 内容元素的总高度
-      let innerHeight = document.querySelector('#contContCont').clientHeight
+      var innerHeight = document.querySelector(this.scroll_element).clientHeight
       // 浏览器可见区域高度
-      let outerHeight = document.documentElement.clientHeight
+      var outerHeight = document.documentElement.clientHeight
       // 滚动条的位置高度
-      let scrollTop = document.documentElement.scrollTop
-      // console.log(scrollTop + outerHeight );
-      // console.log(innerHeight + 359);
-      if(scrollTop + outerHeight == innerHeight + 359){
-        this.page++;
-        this.get_clsList();
-      }
-    },
-    onScroll1 () {
-      // 内容元素的总高度
-      let innerHeight = document.querySelector('#contContCont1').clientHeight
-      // 浏览器可见区域高度
-      let outerHeight = document.documentElement.clientHeight
-      // 滚动条的位置高度
-      let scrollTop = document.documentElement.scrollTop
+      var scrollTop = document.documentElement.scrollTop
       console.log(scrollTop + outerHeight );
-      console.log(innerHeight + 95);
-      if(scrollTop + outerHeight == innerHeight + 95){
+      console.log(innerHeight + this.plus_height);
+      if(scrollTop + outerHeight == innerHeight + this.plus_height){
         this.page++;
-        this.get_clsTextList();
+        if(this.list_type == 1){
+          this.get_clsList();
+        }else{
+          this.get_clsTextList();
+        }
+
       }
     },
     // 获取课程列表
@@ -255,7 +311,7 @@ export default {
           }else{
               this.$toast.error('没有更多了!');
               res.data.list = ''
-              window.removeEventListener("scroll",this.onScroll);
+              // window.removeEventListener("scroll",this.onScroll);
           }
         }
       })
@@ -295,20 +351,25 @@ export default {
           }else{
             this.$toast.error('没有更多了!');
             res.data.list = ''
-            window.removeEventListener("scroll",this.onScroll1);
+            // window.removeEventListener("scroll1",this.onScroll1);
           }
         }
       })
     },
   },
   created(){
+
+    // window.addEventListener('scroll1', this.onScroll1);
     this.get_class();
     this.get_clsList();
     this.hh();
     this.get_classText();
     this.get_clsTextList();
-    window.addEventListener('scroll', this.onScroll);
-    window.addEventListener('scroll', this.onScroll1);
+    window.addEventListener('scroll', this.onScroll );
+
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll",this.onScroll);
   },
   components: {
     footer_nav
@@ -330,7 +391,7 @@ export default {
   height: 70px;
   line-height: 70px;
   background-color: #ffffff;
-  z-index: 9999;
+  z-index: 1999;
   img{
     position: absolute;
     left: 15px;
@@ -382,9 +443,9 @@ export default {
       border-radius: 0px 2px 2px 0px;
     }
     .cur{
-      color: #F3F4F6;
-      border: 0;
-      background: #0596EB;
+      color: #F3F4F6!important;
+      border: 0!important;
+      background: #0596EB!important;
     }
   }
 }
@@ -496,12 +557,12 @@ export default {
       color: #0E69FF!important;
     }
     .contContCont::-webkit-scrollbar {
-      display: none;
+      //display: none;
     }
     .contContCont{
       width: 100%;
       margin-top: 82px;
-      overflow: auto;
+      //overflow: auto;
 
       ul{
         width: 100%;
@@ -565,6 +626,9 @@ export default {
             }
           }
         }
+        //li:last-child{
+        //  margin-bottom: 62px;
+        //}
       }
       .nullBox{
         width: 100%;

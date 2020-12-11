@@ -4,7 +4,7 @@
         <div class="header">
             <mu-appbar style="width: 100%;" color="transparent">
                 <img :src="logo_url" alt="">
-                <mu-button icon slot="right" @click="open">
+                <mu-button style="display: none;" icon slot="right" @click="open">
                     <mu-icon color="#eeeeee" value="menu"></mu-icon>
                 </mu-button>
             </mu-appbar>
@@ -68,25 +68,7 @@
                                     </div>
                                 </template>
                             </mu-form-item>
-                            <mu-form-item label="验证码" prop="verify" :rules="verify" :style="{marginBottom: password_show? '15px' : ''}">
-                                <div class="ver_code" style="display: flex;">
-                                    <mu-text-field underline-color="#2196f3" type="password" v-model="validateForm.verify" prop="password"></mu-text-field>
-                                    <div class="verify">
-                                      <img v-if="verify_img_show" @click="get_verify" :src="verify_img" alt="">
-                                      <div v-if="!verify_img_show">
-                                        <mu-button v-if="!count_down_show" style="margin: 0;"  @click="get_verify_num" color="primary">获取验证码</mu-button>
-                                        <span v-if="count_down_show">{{ count_down }}</span>
-                                      </div>
-                                    </div>
-                                </div>
-                                <template v-slot:label>
-                                    <div style="display: flex; align-items: flex-end; ">
-                                        <i class="iconfont icon-yanzhengma" style="color: #486EEF; "></i>
-                                        <p style="margin-left: 9px; line-height: 22px; color: #486EEF;">验证码</p>
-                                    </div>
-                                </template>
-                            </mu-form-item>
-                            <mu-form-item help-text="" prop="phone" :rules="phone">
+                            <mu-form-item help-text="" prop="phone" :rules="phone" v-show="tuijianren">
                               <mu-text-field underline-color="#2196f3" v-model="validateForm.invite_code" prop="username"></mu-text-field>
                               <template v-slot:label>
                                 <div style="display: flex; align-items: flex-end; ">
@@ -95,6 +77,25 @@
                                 </div>
                               </template>
                             </mu-form-item>
+<!--                            <mu-form-item label="验证码" prop="verify" :rules="verify" :style="{marginBottom: password_show? '15px' : ''}">-->
+<!--                                <div class="ver_code" style="display: flex;">-->
+<!--                                    <mu-text-field underline-color="#2196f3" type="password" v-model="validateForm.verify" prop="password"></mu-text-field>-->
+<!--                                    <div class="verify">-->
+<!--                                      <img v-if="verify_img_show" @click="get_verify" :src="verify_img" alt="">-->
+<!--                                      <div v-if="!verify_img_show">-->
+<!--                                        <mu-button v-if="!count_down_show" style="margin: 0;"  @click="get_verify_num" color="primary">获取验证码</mu-button>-->
+<!--                                        <span v-if="count_down_show">{{ count_down }}</span>-->
+<!--                                      </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <template v-slot:label>-->
+<!--                                    <div style="display: flex; align-items: flex-end; ">-->
+<!--                                        <i class="iconfont icon-yanzhengma" style="color: #486EEF; "></i>-->
+<!--                                        <p style="margin-left: 9px; line-height: 22px; color: #486EEF;">验证码</p>-->
+<!--                                    </div>-->
+<!--                                </template>-->
+<!--                            </mu-form-item>-->
+
                             <mu-form-item style="margin-bottom: 0px;">
                                 <div class="submit_button">
                                     <div style="display: flex; justify-content: flex-end;">
@@ -127,6 +128,7 @@
     export default {
         data() {
             return{
+                tuijianren:false,
                 logo: null,
                 logo_url: null,
                 phone: [
@@ -363,13 +365,14 @@
               this.login1= false
               this.login2= true
               this.login3= false
+              this.tuijianren = true
               this.validateForm= {
                   phone: null,
                   pass: null,
                   pass_two: null,
                   verify: null,
                   isAgree: false,
-                  invite_code:null
+                  invite_code:null,
               }
               this.password_show= true
             },
@@ -399,6 +402,7 @@
               this.login2= false
               this.login3= false
               this.verify_img_show= true
+              this.tuijianren= false
               this.validateForm= {
                   phone: null,
                   pass: null,

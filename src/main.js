@@ -23,8 +23,8 @@ Vue.use(new VueSocketIO({
   connection: 'https://socket.tjqpjt.com:2120'
 }))
 
-import { DatetimePicker,Calendar,Area } from 'vant';
-Vue.use(DatetimePicker).use(Calendar).use(Area);
+import { DatetimePicker,Calendar,Area,CountDown,ShareSheet } from 'vant';
+Vue.use(DatetimePicker).use(Calendar).use(Area).use(CountDown).use(ShareSheet);
 
 theme.add('custom-theme', {
   whites: colors.grey50

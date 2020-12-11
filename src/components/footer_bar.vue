@@ -77,7 +77,8 @@ export default {
   left: 0;
   width: 100%;
   height: 62px;
-  z-index: 9999;
+  //z-index: 9999;
+  z-index: 1999;
   background: #FFFFFF;
   border: 1px solid #E7E7E7;
   box-sizing: border-box;
