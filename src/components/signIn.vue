@@ -36,7 +36,7 @@
           <!-- 日期 -->
           <ul class="days">
             <!-- 核心 v-for循环 每一次循环用<li>标签创建一天 -->
-            <li  v-for="(n,dayobject) in days" :key="dayobject">
+            <li  v-for="(n,dayobject) in days" :key="dayobject" @click="signIn">
               <!--本月-->
               <!--如果不是本月  改变类名加灰色-->
 
@@ -47,8 +47,7 @@
           <!--今天  同年同月同日-->
                 <span v-if=" n.isSign===true" class="active">{{ n.day.getDate() }}</span>
                 <span v-else>{{ n.day.getDate() }}</span>
-            </span>
-
+              </span>
             </li>
           </ul>
         </div>
@@ -75,6 +74,9 @@ export default {
       //选中日期
       arrDate: [],
 
+      stime:'',
+      etime:'',
+      lastDay:'',
     }
   },
   methods: {
@@ -144,7 +146,6 @@ export default {
     pickYear: function(year, month) {
       alert(year + "," + month);
     },
-
     // 返回 类似 2016-01-02 格式的字符串
     formatDate: function(year,month,day){
       var y = year;
@@ -154,10 +155,70 @@ export default {
       if(d<10) d = "0" + d;
       return y+"-"+m+"-"+d
     },
+
+    // 获取签到记录
+    get_signIn(){
+      var lastDay= ((lastDay=new Date).setMonth(lastDay.getMonth()+1) - (+new Date))/1000/60/60/24
+      this.lastDay = lastDay
+      console.log(this.lastDay);
+      this.$post(localStorage.getItem('http') + 'user_score/get_sign_log',{
+        token: sessionStorage.getItem('token'),
+        stime: 1,
+        etime: this.value
+      })
+      .then(res=> {
+        console.log(res.data)
+      })
+    },
+    // 点击签到
+    signIn(){
+      this.$post(localStorage.getItem('http') + 'user_score/add',{
+        token: sessionStorage.getItem('token'),
+        source: 1,
+      })
+      .then(res=> {
+        console.log(res.data)
+      })
+    },
+    // 获取本月日期
+    get_data(){
+      // var aData = new Date();
+      // console.log(aData) //Wed Aug 21 2019 10:00:58 GMT+0800 (中国标准时间)
+      //
+      // this.value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
+      // console.log(this.value) //2019-8-20
+
+
+//获取当前时间
+      let date=new Date();
+//获取当前月的第一天
+      let monthStart = date.setDate(1);
+//获取当前月
+      let currentMonth=date.getMonth();
+//获取到下一个月，++currentMonth表示本月+1，一元运算
+      let nextMonth=++currentMonth;
+//获取到下个月的第一天
+      let nextMonthFirstDay=new Date(date.getFullYear(),nextMonth,1);
+//一天时间的毫秒数
+      let oneDay=1000*60*60*24;
+
+//获取当前月第一天和最后一天
+      let firstDay = moment(monthStart).format("YYYY-MM-DD");
+//nextMonthFirstDay-oneDay表示下个月的第一天减一天时间的毫秒数就是本月的最后一天
+      let lastDay = moment(nextMonthFirstDay-oneDay).format("YYYY-MM-DD");
+
+      console.log(firstDay)
+      console.log(lastDay)
+    }
+
   },
   created(){
     this.hh();
     this.initData(null);
+    this.get_signIn();
+    // this.signIn();
+    this.get_data();
+
   },
 }
 </script>
