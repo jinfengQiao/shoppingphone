@@ -1,5 +1,5 @@
 <template>
-  <div class="bg">
+  <div class="bg" :style="height">
     <div class="headBox">
       <div class="head">
         <div class="headTitle">个人中心</div>
@@ -55,11 +55,16 @@ export default {
   name: "center",
   data() {
     return{
+      height:{
+        wdith:'',
+        height:'',
+      },
       token:'',
       show1:'',
       nicheng:'',
       face_url:'',
       zhuangtai:'未登录',
+      balance:'',
       serList:[
         {
           imgurl:require('../assets/center/ser_icon1.png'),
@@ -71,7 +76,7 @@ export default {
         },
         {
           imgurl:require('../assets/center/ser_icon3.png'),
-          text:'充值'
+          text:'余额'
         },
         {
           imgurl:require('../assets/center/ser_icon4.png'),
@@ -118,8 +123,9 @@ export default {
     }
   },
   created() {
+    this.hh();
     var token = sessionStorage.getItem('token');
-    console.log(token)
+    // console.log(token)
 
     // 判断token
     if(!token){
@@ -136,12 +142,13 @@ export default {
         token: sessionStorage.getItem('token')
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.face_url = res.data.face_url
         this.zhuangtai= res.data.nickname
         this.nicheng = res.data.level_name
         this.cybermoney = res.data.cybermoney
         this.score = res.data.score
+        this.balance = res.data.balance
         // console.log(this.score);
         sessionStorage.setItem('score',res.data.score)
         sessionStorage.setItem('cybermoney',res.data.cybermoney)
@@ -155,6 +162,9 @@ export default {
     }
   },
   methods: {
+    hh(){
+      this.height.height = window.innerHeight-310 +'px'
+    },
     jumpModifyPage:function (){
       var that = this;
       that.$router.push('/modifyPage');
@@ -184,8 +194,14 @@ export default {
             }
           })
         }
-        if(e.target.innerHTML == '充值'){
-          this.$router.push("/recharge");
+        if(e.target.innerHTML == '余额'){
+          this.$router.push({
+            path:'/balance',
+            query:{
+              balance: this.balance
+            }
+          });
+          // this.$router.push("/recharge");
         }
         if(e.target.innerHTML == '我的咨询卡'){
           this.$router.push("/consultation");
@@ -280,8 +296,9 @@ export default {
 
 <style lang="less" scoped>
 .bg{
+  width: 100%;
   background-color: #f3f4f6;
-  padding: 0 0 62px 0;
+  padding: 310px 0 62px 0;
   box-sizing: border-box;
 }
 .headBox{
@@ -334,20 +351,21 @@ export default {
     .nameBox{
       width: 100%;
       height: 28px;
-      line-height: 28px;
       margin-top: 12px;
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       .name{
         font-size: 18px;
         font-family: DengXian;
         font-weight: bold;
         color: #FFFFFF;
-        display: inline;
       }
       .modify{
-        display: inline;
         margin-left: 5px;
-        margin-top: 1px;
+        padding: 5px 0 0 0;
+        box-sizing: border-box;
         img{
           width: 15px;
           height: 17px;
@@ -435,8 +453,7 @@ export default {
   position: relative;
   z-index: 1;
   width: 100%;
-  margin-top: 310px;
-  padding: 20px 30px 30px 30px;
+  padding: 20px 30px 0 30px;
   box-sizing: border-box;
   background-color: #ffffff;
   .serTitle{
@@ -444,7 +461,7 @@ export default {
     text-align: left;
     font-size: 16px;
     font-family: Microsoft YaHei;
-    font-weight: 400;
+    font-weight: 600;
     color: #333333;
   }
   ul{

@@ -55,7 +55,7 @@
     </div>
     <div class="btnBox">
       <div class="mingxiBtn">
-        <button type="button" @click="jumpMoneyDetailed">零钱明细</button>
+        <button type="button">零钱明细</button>
       </div>
       <div class="lijichongzhi">立即充值</div>
     </div>
@@ -74,9 +74,9 @@ export default {
     back:function(){
       this.$router.go(-1);
     },
-    jumpMoneyDetailed:function (){
-      this.$router.push('./moneyDetailed');
-    }
+    // jumpMoneyDetailed:function (){
+    //   this.$router.push('./moneyDetailed');
+    // }
   },
   created(){
 
@@ -206,6 +206,7 @@ export default {
   }
 }
 .textBox{
+  float: left;
   width: 100%;
   padding:  0 15px;
   box-sizing: border-box;
@@ -239,8 +240,9 @@ export default {
   }
 }
 .btnBox{
-  margin-bottom: 24px;
-  margin-top: 24px;
+  float: left;
+  //margin-bottom: 24px;
+  //margin-top: 24px;
   width: 100%;
   padding: 0 15px;
   box-sizing: border-box;
@@ -254,6 +256,7 @@ export default {
       color: #333333;
       outline: none;
       border: 0;
+      display: none;
     }
   }
   .lijichongzhi{

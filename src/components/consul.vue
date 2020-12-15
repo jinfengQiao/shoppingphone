@@ -15,7 +15,7 @@
           <img :src="n.pic_url" alt="">
           <div class="rightRi">
             <span>{{ n.name }}</span>
-            <p>{{n.content}}</p>
+            <pre>{{n.content}}</pre>
           </div>
         </li>
       </ul>
@@ -101,6 +101,7 @@ export default {
       tabCont:'',
       name:'',
       price:'',
+      category_id:1,
     }
   },
   methods:{
@@ -116,38 +117,27 @@ export default {
     listGo(index,id){
       this.isActive = index;
       console.log(id);
-      this.tab_Cont1(id);
+      this.category_id = id;
+      this.tab_Cont();
     },
     // 获取卡片分类
     tab_List(){
       this.$post(localStorage.getItem('http') + 'card/get_category',{})
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.tabList = res.data.list;
       })
     },
     // 获取卡片列表
     tab_Cont(){
       this.$post(localStorage.getItem('http') + 'card/get_list',{
-        category_id:1
+        category_id:this.category_id
       })
       .then(res=> {
-        // console.log(res.data)
+        console.log(res.data.list.length)
         this.tabCont = res.data.list;
-        if(res.data.list == '' || res.data.list == null){
-          this.show12 = true;
-        }else{
-          this.show12 = false;
-        }
-      })
-    },
-    tab_Cont1(id){
-      this.$post(localStorage.getItem('http') + 'card/get_list',{
-        category_id:id
-      })
-      .then(res=> {
-        console.log(res.data)
-        this.tabCont = res.data.list;
+
+
         if(res.data.list == '' || res.data.list == null){
           this.show12 = true;
         }else{
@@ -297,7 +287,7 @@ export default {
         box-sizing: border-box;
         span{
           width: 100%;
-          text-align: left;
+          text-align: right;
           font-size: 16px;
           font-family: PingFang SC;
           font-weight: bold;
@@ -311,7 +301,7 @@ export default {
           -webkit-box-orient: vertical;
 
         }
-        p{
+        pre{
           margin-top: 5px;
           width: 100%;
           text-align: right;

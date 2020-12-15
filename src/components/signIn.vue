@@ -67,15 +67,13 @@ export default {
         height:'',
       },
       currentDay: 1,
-      currentMonth: 1,
-      currentYear: 1970,
+      currentMonth: 12,
+      currentYear: 2020,
       currentWeek: 1,
       days: [],
       //选中日期
       arrDate: [],
 
-      stime:'',
-      etime:'',
       lastDay:'',
     }
   },
@@ -105,28 +103,12 @@ export default {
       if (this.currentWeek == 0) {
         this.currentWeek = 7;
       }
-      var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
-      this.days.length = 0;
-      // 今天是周日，放在第一行第7个位置，前面6个
-      //初始化本周
-      for (var i = this.currentWeek - 1; i >= 0; i--) {
-        var d = new Date(str);
-        d.setDate(d.getDate() - i);
-        var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
-        dayobject.day=d;
-        this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
-      }
-      //其他周
-      for (var l = 1; l <= 42 - this.currentWeek; l++) {
-        var db = new Date(str);
-        db.setDate(d.getDate() + l);
-        var dayobject1={};
-        // dayobject.day=d;
-        dayobject1 = {day: db,isSign: this.isVerDate(db.getDate())}
-        this.days.push(dayobject1);
-      }
+
+
+
     },
     isVerDate (v) {
+      // console.log(v)
       return this.arrDate.includes(v)
     },
     pickPre: function(year, month) {
@@ -158,16 +140,38 @@ export default {
 
     // 获取签到记录
     get_signIn(){
-      var lastDay= ((lastDay=new Date).setMonth(lastDay.getMonth()+1) - (+new Date))/1000/60/60/24
-      this.lastDay = lastDay
-      console.log(this.lastDay);
+      this.date = this.currentYear + '-' + this.currentMonth
+      console.log(this.date);
+      // var lastDay= ((lastDay=new Date).setMonth(lastDay.getMonth()+1) - (+new Date))/1000/60/60/24
+      // this.lastDay = lastDay
+      // console.log(this.lastDay);
       this.$post(localStorage.getItem('http') + 'user_score/get_sign_log',{
         token: sessionStorage.getItem('token'),
-        stime: 1,
-        etime: this.value
+        date: this.date
       })
       .then(res=> {
-        console.log(res.data)
+        this.arrDate = res.data
+        console.log(this.arrDate)
+        var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
+        this.days.length = 0;
+        // 今天是周日，放在第一行第7个位置，前面6个
+        //初始化本周
+        for (var i = this.currentWeek - 1; i >= 0; i--) {
+          var d = new Date(str);
+          d.setDate(d.getDate() - i);
+          var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
+          dayobject.day=d;
+          this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
+        }
+        //其他周
+        for (var l = 1; l <= 42 - this.currentWeek; l++) {
+          var db = new Date(str);
+          db.setDate(d.getDate() + l);
+          var dayobject1={};
+          // dayobject.day=d;
+          dayobject1 = {day: db,isSign: this.isVerDate(db.getDate())}
+          this.days.push(dayobject1);
+        }
       })
     },
     // 点击签到
@@ -178,46 +182,22 @@ export default {
       })
       .then(res=> {
         console.log(res.data)
+        if(res.data.code == 1){
+          this.$toast.success('签到成功');
+          this.$router.push('/center');
+        }else{
+          this.$toast.error('签到失败');
+        }
       })
     },
-    // 获取本月日期
-    get_data(){
-      // var aData = new Date();
-      // console.log(aData) //Wed Aug 21 2019 10:00:58 GMT+0800 (中国标准时间)
-      //
-      // this.value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
-      // console.log(this.value) //2019-8-20
-
-
-//获取当前时间
-      let date=new Date();
-//获取当前月的第一天
-      let monthStart = date.setDate(1);
-//获取当前月
-      let currentMonth=date.getMonth();
-//获取到下一个月，++currentMonth表示本月+1，一元运算
-      let nextMonth=++currentMonth;
-//获取到下个月的第一天
-      let nextMonthFirstDay=new Date(date.getFullYear(),nextMonth,1);
-//一天时间的毫秒数
-      let oneDay=1000*60*60*24;
-
-//获取当前月第一天和最后一天
-      let firstDay = moment(monthStart).format("YYYY-MM-DD");
-//nextMonthFirstDay-oneDay表示下个月的第一天减一天时间的毫秒数就是本月的最后一天
-      let lastDay = moment(nextMonthFirstDay-oneDay).format("YYYY-MM-DD");
-
-      console.log(firstDay)
-      console.log(lastDay)
-    }
 
   },
   created(){
     this.hh();
     this.initData(null);
     this.get_signIn();
+
     // this.signIn();
-    this.get_data();
 
   },
 }
@@ -442,7 +422,7 @@ export default {
   font-size: 14px;
 }
 
-.days li .active {
+.active {
   padding: 6px 10px;
   border-radius: 50%;
   /*background: #00B8EC;*/

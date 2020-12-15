@@ -28,7 +28,12 @@
             <div class="time">{{ n.addtime}}</div>
           </div>
           <div class="right">
-            <span>{{ n.num }}</span>
+            <template v-if="n.type == 1">
+              <span>{{n.num}}</span>
+            </template>
+            <template v-if="n.type == 2">
+              <span class="spanAdd">{{n.num}}</span>
+            </template>
           </div>
         </li>
       </ul>
@@ -244,8 +249,11 @@ export default {
           font-size: 20px;
           font-family: PingFang SC;
           font-weight: bold;
-          color: #0596EB;
+          color: #F53033;
           line-height: 53px;
+        }
+        .spanAdd{
+          color: #0596EB;
         }
       }
     }

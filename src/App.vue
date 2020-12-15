@@ -5,6 +5,26 @@
 <script>
 
 export default {
+  methods:{
+    get_openid(){
+      function getUrlPara(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r!=null) return (r[2]); return null;
+      }
+      let code = getUrlPara("code");
+      if(!code){
+        let redirect_url = encodeURIComponent(window.location.href);
+        location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6bb6df7430479e17&redirect_uri="+redirect_url+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+      }
+      this.$post(localStorage.getItem('http') + 'wechat/get_openid',{
+        code:code
+      }).then(res => {
+        localStorage.setItem("openid",res.data);
+      })
+    },
+  },
+
   created() {
     // 手机商城
     //localStorage.setItem('http', 'http://of.kurohane.com/api/')
@@ -13,6 +33,10 @@ export default {
     localStorage.setItem('url', 'http://192.168.1.244/official/public')
     // localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
     // localStorage.setItem('url', 'https://of.tjqpjt.com')
+
+    if(!localStorage.getItem("openid")){
+      // this.get_openid();
+    }
 
   }
 }

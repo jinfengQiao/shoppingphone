@@ -36,7 +36,8 @@ import search from "../components/search";
 import courDetails from "../components/courDetails";
 import artiDetails from "../components/artiDetails";
 import payComp from "../components/payComp";
-// import sign_in from "../components/sign_in";
+import balance from "../components/balance";
+
 
 import deta from "../view/deta";
 import refund from "../view/refund";
@@ -320,13 +321,13 @@ const router = new VueRouter({
                 title: '支付组件'
             }
         },
-        // {
-        //     path:'/sign_in',
-        //     component: sign_in,
-        //     meta: {
-        //         title: '签到'
-        //     }
-        // },
+        {
+            path:'/balance',
+            component: balance,
+            meta: {
+                title: '余额'
+            }
+        },
 
     ]
 })

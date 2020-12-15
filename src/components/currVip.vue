@@ -32,7 +32,7 @@
         </div>
         <div class="cont13">
           <ul>
-            <li v-for="(n,index) in contContCont" :key="index" :class="{contContContAdd:index==isSelect11}" @click="toggleAddCls(index)">
+            <li v-for="(n,index) in contContCont" :key="index" :class="{contContContAdd:index==isSelect11}" @click="toggleAddCls(index,n.id)">
               <img :src="n.video_cover" alt="">
               <div class="box1">
                 <div class="title">{{n.title}}</div>
@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="buyBtn1">
-          <button>立即开通</button>
+          <button @click="kaitongBtn">立即开通</button>
         </div>
       </div>
       <div class="cont2" v-show="tabState==2">
@@ -143,33 +143,13 @@ export default {
       contContHead:[
         // '财税','法律','融资','股权','资本','人力'
       ],
-      contContCont:[
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // },
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // },
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // },
-        // {
-        //   imgUrl:require('../assets/buSchool/ceshiImg11.png'),
-        //   title:'第一节【财税入门课程】',
-        //   context:'简单介绍此节课的主要内容',
-        //   num:'130'
-        // }
-      ],
-      monthList:[]
+      contContCont:[],
+      monthList:[],
+      card_id: 1,
+      time_long:1,
+      course_id:'',
+      category_id:'',
+      order_id:'',
     }
   },
   methods:{
@@ -191,6 +171,8 @@ export default {
 
       that.get_courCard1(index1);
 
+      that.card_id = index1
+
     },
     changeCls(index,id){
       this.isSelect = index;
@@ -209,10 +191,14 @@ export default {
       this.index=idx;
       var index1 = idx + 1
       console.log(index1);
+      this.time_long = index1
     },
-    toggleAddCls(index){
+    toggleAddCls(index,id){
       console.log(index);
       this.isSelect11 = index;
+      console.log(id);
+      this.course_id = id
+      console.log(this.course_id);
     },
     // 获取课程卡
     get_courCard() {
@@ -280,6 +266,41 @@ export default {
         }
       })
     },
+    kaitongBtn(){
+      console.log(this.time_long)
+      console.log(this.card_id)
+      this.$post(localStorage.getItem('http') + 'school/make_card_order',{
+        token: sessionStorage.getItem('token'),
+        card_id: this.card_id,
+        time_long: this.time_long,
+        course_id : this.course_id,
+        order_type: 3
+      })
+      .then(res=> {
+        console.log(res.data)
+        console.log(res.data.order_id)
+        this.order_id = res.data.order_id
+        console.log(this.order_id)
+        if(res.code == 1){
+          this.card_pay_success();
+        }
+      })
+    },
+    // 支付
+    card_pay_success(){
+      console.log(this.order_id)
+      this.$post(localStorage.getItem('http') + 'school/card_pay_success',{
+        token: sessionStorage.getItem('token'),
+        order_id: this.order_id,
+        order_type: 3
+      })
+      .then(res=> {
+        console.log(res.data)
+      })
+    }
+
+
+
   },
   created(){
     this.hh();

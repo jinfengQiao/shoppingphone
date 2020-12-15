@@ -111,7 +111,7 @@
             </div>
             <div class="jifenBox2">
               <div class="jifenBox2Le">我的积分 <span>{{ score }}</span></div>
-              <input type="number" placeholder="输入兑换积分">
+              <input type="number" placeholder="输入兑换积分" v-model="use_score">
             </div>
           </div>
           <div class="btnBox">
@@ -157,6 +157,8 @@ export default {
       order_type:'',
       code:'',
       openid_code:'',
+      open_id:'',
+      use_score: 0,
     }
   },
   methods:{
@@ -222,8 +224,9 @@ export default {
         this.want_study = res.data.want_study
         // console.log(this.want_study)
         this.lesson = res.data.lesson
-        this.lesson_id = this.lesson[0].id
+        // this.lesson_id = this.lesson[0].id
         this.course_id = res.data.id
+        console.log(this.course_id)
         if(this.want_study == 1){
           this.lay_type1 = 1
         }
@@ -253,6 +256,7 @@ export default {
       // console.log('余额支付')
     },
     buyBtn(){
+      console.log(this.course_id)
       this.$post(localStorage.getItem('http') + 'school/make_course_order',{
         token: sessionStorage.getItem('token'),
         course_id: this.course_id,
@@ -270,47 +274,37 @@ export default {
           // 余额支付
           if(this.weixinSelect == true){
             console.log('微信支付')
-            // 获取网页授权code
-            // this.$post(localStorage.getItem('http') + 'wechat/get_code',)
-            // .then(res=> {
-            //   // console.log(res)
-            //   this.openid_code = res
-            //   console.log(this.openid_code)
-            // })
-            // 获取用户id
-            // console.log(this.openid_code)
-            // this.$post(localStorage.getItem('http') + 'wechat/get_openid',{
-            //   code:this.openid_code
-            // })
-            // .then(res=> {
-            //   console.log(res)
-            //   localStorage.setItem("openid",res.data);
-            //
-            // })
 
+            this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id: this.order_id,
+              openid: localStorage.getItem('openid'),
+              order_type: 5,
+              use_score: this.use_score
+            })
+            .then(res=> {
+              console.log(res)
+              window.WeixinJSBridge.invoke(
+                  'getBrandWCPayRequest', res ,
+                  function(res){
+                    if(res.err_msg == "get_brand_wcpay_request:ok"){
+                      location.href = "/#/lesson";
+                      // this.$router.push({
+                      //   path: '/lesson'
+                      // })
+                    }else{
+                      alert(res);
+                    }
+                  });
+            })
 
-            // this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-            //   token: sessionStorage.getItem('token'),
-            //   order_id: this.order_id,
-            //   openid:this.openid
-            // })
-            // .then(res=> {
-            //   console.log(res)
-            //   if(res.code == 0){
-            //     // console.log('余额不足')
-            //     this.$toast.error(res.msg)
-            //   }
-            //   if(res.code == 1){
-            //     this.$toast.success(res.msg);
-            //     this.$router.push('./lesson');
-            //   }
-            // })
           }else{
             console.log('余额支付')
             this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
               token: sessionStorage.getItem('token'),
               order_id: this.order_id,
-              order_type: this.order_type
+              order_type: 5,
+              use_score: this.use_score
             })
             .then(res=> {
               console.log(res)
@@ -334,6 +328,11 @@ export default {
     var score = sessionStorage.getItem('score');
     this.score = score
     console.log(this.score)
+
+    var open_id = sessionStorage.getItem('openid')
+    this.order_id = open_id
+    console.log(this.open_id)
+
     let id =this.$route.query.id;
     // console.log(id);
     this.hh();

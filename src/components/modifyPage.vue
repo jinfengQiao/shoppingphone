@@ -153,7 +153,12 @@ export default {
         header:{'Content-Type':'multipart/form-data'},
         data:formData,
       }).then((res)=>{
-        this.face_url = res.data.data.save_name
+        console.log(res)
+        if(res.data.code == 1){
+          this.face_url = res.data.data.save_name
+        }else{
+          this.$toast.error('上传失败');
+        }
       })
     },
     // 显示弹窗
