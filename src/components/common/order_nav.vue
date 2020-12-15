@@ -1,8 +1,9 @@
 <template>
-    <div class="order_nav">
-        <i @click="back" class="iconfont icon-fanhui"></i>
-        <h2>{{ msg }}</h2>
-    </div>
+  <div></div>
+<!--    <div class="order_nav">-->
+<!--        <i @click="back" class="iconfont icon-fanhui"></i>-->
+<!--        <h2>{{ msg }}</h2>-->
+<!--    </div>-->
 </template>
 
 <script>

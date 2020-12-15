@@ -1,9 +1,9 @@
 <template>
   <div class="bg" :style="height">
-    <div class="head">
-      <img src="../assets/center/back_icon1.png" alt="" @click="back">
-      <span>课程详情</span>
-    </div>
+<!--    <div class="head">-->
+<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
+<!--      <span>课程详情</span>-->
+<!--    </div>-->
     <div class="videoBox">
       <video id="myVideo"
        class="video-js"
@@ -380,7 +380,7 @@ export default {
 .videoBox{
   float: left;
   position: relative;
-  margin-top: 70px;
+  //margin-top: 70px;
   width: 100%;
   height: 201px;
   //background: url("../assets/buSchool/videoBox_bg.png") no-repeat;

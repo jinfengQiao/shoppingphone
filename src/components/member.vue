@@ -1,10 +1,10 @@
 <template>
   <div class="bg">
     <div class="head">
-      <div class="headTitle">
-        <img src="../assets/center/back_icon.png" alt="" @click="back">
-        <span>我的等级</span>
-      </div>
+<!--      <div class="headTitle">-->
+<!--        <img src="../assets/center/back_icon.png" alt="" @click="back">-->
+<!--        <span>我的等级</span>-->
+<!--      </div>-->
       <div class="headContBox">
         <div class="quanyi">
           <span @click="showQyBox">会员权益</span>
@@ -110,7 +110,7 @@ export default {
   left: 0;
   z-index: 2;
   width: 100%;
-  height: 280px;
+  height: 210px;
   background: url("../assets/center/member_bg.png") no-repeat;
   background-size: 100% 100%;
   padding: 18px 15px;

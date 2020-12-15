@@ -1,6 +1,6 @@
 <template>
     <div style="border-top: 1px solid #DDDDDD;">
-        <ul class="my_order_title">
+        <ul class="my_order_title" style="display: none;">
             <li :class="[ indexs == index? 'span_blue' : '' ]" v-for="(item,index) in my_order_title" :key="item.id" @click="my_order_list_click(index)" >
                 <span>{{ item.name }}</span>
             </li>
@@ -307,8 +307,9 @@
     .headTab{
       z-index: 2;
       position: fixed;
-      top: 70px;
+      //top: 70px;
       left: 0;
+      top: 0;
       width: 100%;
       height: 52px;
       line-height: 52px;
@@ -321,7 +322,7 @@
       justify-items: center;
       li{
         cursor: pointer;
-        font-size: 12px;
+        font-size: 14px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #999999;
@@ -342,7 +343,7 @@
       color: #5D80FC!important;
     }
     .my_list{
-        padding: 72px 15px 12px 15px;
+        padding: 52px 15px 12px 15px;
         li{
             border-radius: 4px;
             background: white;

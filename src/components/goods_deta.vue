@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="goods_deta" style="margin-top: 70px;">
+<!--        <div class="goods_deta" style="margin-top: 70px;">-->
+        <div class="goods_deta" >
             <img :src="spu.pic_url" alt="">
             <div class="goods_deta_title">
                 <h2>{{ spu.name }}</h2>

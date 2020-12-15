@@ -1,9 +1,9 @@
 <template>
   <div class="bg">
-    <div class="head">
-      <img src="../assets/center/back_icon1.png" alt="" @click="back">
-      <span>用户充值</span>
-    </div>
+<!--    <div class="head">-->
+<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
+<!--      <span>用户充值</span>-->
+<!--    </div>-->
     <div class="cont">
       <div class="moneyBox">
         <p>充值金额</p>
@@ -115,7 +115,7 @@ export default {
   }
 }
 .cont{
-  margin-top: 70px;
+  //margin-top: 70px;
   width: 100%;
   padding: 15px 15px 30px 15px;
   box-sizing: border-box;
@@ -149,7 +149,7 @@ export default {
         margin-left: 6px;
         width: 200px;
         height: 24px;
-        font-size: 12px;
+        font-size: 14px;
         font-family: PingFang SC;
         font-weight: 500;
         outline: none;
@@ -186,7 +186,7 @@ export default {
         span{
           float: left;
           margin-left: 12px;
-          font-size: 12px;
+          font-size: 14px;
           font-family: PingFang SC;
           font-weight: 500;
           color: #333333;

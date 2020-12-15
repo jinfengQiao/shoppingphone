@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div class="posiBox">
-      <div class="head">
-        <img src="../assets/center/back_icon1.png" alt="" @click="back">
-        <span>我的返利</span>
-      </div>
+<!--      <div class="head">-->
+<!--        <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
+<!--        <span>我的返利</span>-->
+<!--      </div>-->
       <div class="banner">
         <div class="bannerBox">
           <div class="moneyBox">
@@ -186,7 +186,7 @@ export default {
 }
 .cont{
   width: 100%;
-  margin-top: 232px;
+  margin-top: 162px;
   margin-bottom: 76px;
   background-color: #ffffff;
   ul{

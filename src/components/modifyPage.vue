@@ -1,10 +1,10 @@
 <template>
-  <div class="bg">
+  <div class="bg" :style="height">
     <div class="head">
-      <div class="headTitle">
-        <img src="../assets/center/back_icon.png" alt="" @click="back">
-        <span>修改资料</span>
-      </div>
+<!--      <div class="headTitle">-->
+<!--        <img src="../assets/center/back_icon.png" alt="" @click="back">-->
+<!--        <span>修改资料</span>-->
+<!--      </div>-->
       <div class="headImg">
         <div class="imgBox">
           <img :src="face_url" alt="">
@@ -78,10 +78,8 @@
         </li>
         <li>
           <img src="../assets/center/modify_icon5.png" alt="">简介
+          <input type="text" placeholder="请输入简介" v-model="info" class="infoBox">
         </li>
-        <div class="textareaBox">
-          <textarea name="" id="" placeholder="请输入简介" v-model="info"></textarea>
-        </div>
 
       </ul>
     </div>
@@ -98,6 +96,10 @@ export default {
   name: "modifyPage",
   data(){
     return{
+      height:{
+        width:'',
+        height:'',
+      },
       axios:axios,
       face_url:require('../assets/center/headImg.png'),
       zhuangtai:'',
@@ -125,6 +127,9 @@ export default {
     }
   },
   methods:{
+    hh(){
+      this.height.height = window.innerHeight +'px'
+    },
     back:function(){
       this.$router.go(-1);
     },
@@ -245,6 +250,7 @@ export default {
     },
   },
   created(){
+    this.hh();
     this.$post(localStorage.getItem('http') + 'user_info/detail',{
       token: sessionStorage.getItem('token')
     })
@@ -297,9 +303,9 @@ export default {
 
 <style lang="less" scoped>
 .bg{
+  float: left;
+  width: 100%;
   background-color: #f3f4f6;
-  padding: 0 0 62px 0;
-  box-sizing: border-box;
 }
 .head{
   position: fixed;
@@ -390,25 +396,7 @@ export default {
   background-color: #ffffff;
   ul{
     width: 100%;
-    .textareaBox{
-      width: 100%;
-      height: 200px;
-      padding:  0 16px;
-      box-sizing: border-box;
-      textarea{
-        width: 100%;
-        height: 100%;
-        border: 1px solid #cccccc;
-        box-sizing: border-box;
-        resize: none;
-        outline: none;
-        padding: 12px 24px;
-        font-size: 14px;
-        font-family: PingFang SC;
-        font-weight: 400;
-        //text-indent: 2em;
-      }
-    }
+
     li{
       width: 100%;
       height: 52px;
@@ -452,6 +440,9 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         text-align: right;
+      }
+      .infoBox{
+        width: 200px;
       }
       .xuanze{
         float: right;

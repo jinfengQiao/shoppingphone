@@ -1,9 +1,9 @@
 <template>
   <div class="bg" id="app">
-    <div class="head">
-<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
-      <span>商学院</span>
-    </div>
+<!--    <div class="head">-->
+<!--&lt;!&ndash;      <img src="../assets/center/back_icon1.png" alt="" @click="back">&ndash;&gt;-->
+<!--      <span>商学院</span>-->
+<!--    </div>-->
     <div class="contHead">
       <div class="toggle">
         <button type="button" class="kecheng" :class="{cur:index==isActive}" @click="listGo(index)" v-for="(n,index) in buttonText" :key="index">{{n}}</button>
@@ -411,7 +411,8 @@ export default {
 }
 .contHead{
   position: fixed;
-  top: 70px;
+  //top: 70px;
+  top: 0;
   left: 0;
   width: 100%;
   height: 25px;
@@ -460,7 +461,7 @@ export default {
   margin-top: 95px;
   .banner{
     position: fixed;
-    top: 95px;
+    top: 25px;
     left: 0;
     float: left;
     width: 100%;
@@ -528,7 +529,7 @@ export default {
       padding: 0 15px;
       box-sizing: border-box;
       position: fixed;
-      top: 215px;
+      top: 145px;
       left: 0;
       z-index: 11;
       width: 100%;
@@ -540,11 +541,11 @@ export default {
         flex-wrap: wrap;
         li{
           margin-top: 15px;
-          padding: 4px 20px;
+          padding: 4px 24px;
           box-sizing: border-box;
           background: rgba(220, 220, 220, 0.27);
           border-radius: 12px;
-          font-size: 12px;
+          font-size: 14px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #666666;
@@ -561,7 +562,7 @@ export default {
     }
     .contContCont{
       width: 100%;
-      margin-top: 82px;
+      margin-top: 12px;
       //overflow: auto;
 
       ul{
@@ -650,7 +651,7 @@ export default {
   //display: none;
   .cont2Head{
     position: fixed;
-    top: 95px;
+    top: 25px;
     left: 0;
     z-index: 2;
 
@@ -671,7 +672,7 @@ export default {
         padding: 0 2px;
         margin-right: 8px;
         color: rgba(153, 153, 153, 1);
-        font-size: 12px;
+        font-size: 14px;
         font-family: PingFang SC;
         font-weight: bold;
       }
@@ -690,7 +691,7 @@ export default {
   .cont2Cont{
     position: relative;
     width: 100%;
-    padding: 57px 0 62px 0;
+    padding: 0 0 62px 0;
     box-sizing: border-box;
     .cont2Cont1{
       width: 100%;

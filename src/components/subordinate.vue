@@ -1,10 +1,10 @@
 <template>
   <div class="bg">
     <div class="head">
-      <div class="headTitle">
-        <img src="../assets/center/back_icon.png" alt="" @click="back">
-        <span>我的下级</span>
-      </div>
+<!--      <div class="headTitle">-->
+<!--        <img src="../assets/center/back_icon.png" alt="" @click="back">-->
+<!--        <span>我的下级</span>-->
+<!--      </div>-->
       <div class="headCont">
         <p>他得返利</p>
         <span>我得收益</span>

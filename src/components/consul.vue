@@ -1,9 +1,9 @@
 <template>
   <div class="bg" :style="height">
-    <div class="head">
-<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
-      <span>咨询卡</span>
-    </div>
+<!--    <div class="head">-->
+<!--&lt;!&ndash;      <img src="../assets/center/back_icon1.png" alt="" @click="back">&ndash;&gt;-->
+<!--      <span>咨询卡</span>-->
+<!--    </div>-->
     <div class="tab">
       <ul>
         <li v-for="(n,index) in tabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index,n.id)">{{n.name}}</li>
@@ -222,7 +222,7 @@ export default {
 .tab{
   z-index: 2;
   position: fixed;
-  top: 70px;
+  top: 0;
   left: 0;
   //margin-top: 70px;
   width: 100%;
@@ -241,7 +241,7 @@ export default {
     li{
       margin-right: 15px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 14px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #999999;
@@ -260,7 +260,7 @@ export default {
 .cont{
   position: relative;
   z-index: 1;
-  margin-top: 122px;
+  margin-top: 52px;
   width: 100%;
   padding: 15px 15px 77px 15px;
   box-sizing: border-box;

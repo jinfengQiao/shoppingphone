@@ -2,10 +2,10 @@
   <div class="bg" :style="height">
     <div class="headBox">
       <div class="head">
-        <div class="headTitle">个人中心</div>
-        <div class="tuichuBtn">
-          <img src="../assets/center/tuichuBtn.png" alt="" @click="tuichuBtn">
-        </div>
+<!--        <div class="headTitle">个人中心</div>-->
+<!--        <div class="tuichuBtn">-->
+<!--          <img src="../assets/center/tuichuBtn.png" alt="" @click="tuichuBtn">-->
+<!--        </div>-->
         <div class="denglu">
           <div class="headImg">
             <img :src="face_url" alt="">
@@ -278,15 +278,15 @@ export default {
 
 
     },
-    tuichuBtn(){
-      if(!sessionStorage.getItem('token')){
-        this.$toast.error('请登录!')
-      }else{
-        window.sessionStorage.clear();
-        this.$toast.success('退出成功!')
-        location.reload();
-      }
-    }
+    // tuichuBtn(){
+    //   if(!sessionStorage.getItem('token')){
+    //     this.$toast.error('请登录!')
+    //   }else{
+    //     window.sessionStorage.clear();
+    //     this.$toast.success('退出成功!')
+    //     location.reload();
+    //   }
+    // }
   },
   components: {
     footer_nav

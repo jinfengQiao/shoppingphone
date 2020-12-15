@@ -1,9 +1,9 @@
 <template>
   <div class="bg">
-    <div class="head">
-      <img src="../assets/center/back_icon1.png" alt="" @click="back">
-      <span>我想学</span>
-    </div>
+<!--    <div class="head">-->
+<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
+<!--      <span>我想学</span>-->
+<!--    </div>-->
     <div class="cont">
       <ul>
         <li v-for="(n,inx) in wantStudyList" :key="inx">
@@ -89,7 +89,7 @@ export default {
   }
 }
 .cont{
-  margin-top: 70px;
+  //margin-top: 70px;
   width: 100%;
   padding: 15px 15px 0;
   box-sizing: border-box;

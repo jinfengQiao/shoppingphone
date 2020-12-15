@@ -149,7 +149,6 @@ export default {
       time_long:1,
       course_id:'',
       category_id:'',
-      order_id:'',
     }
   },
   methods:{
@@ -278,9 +277,6 @@ export default {
       })
       .then(res=> {
         console.log(res.data)
-        console.log(res.data.order_id)
-        this.order_id = res.data.order_id
-        console.log(this.order_id)
         if(res.code == 1){
           this.card_pay_success();
         }
@@ -288,14 +284,18 @@ export default {
     },
     // 支付
     card_pay_success(){
-      console.log(this.order_id)
-      this.$post(localStorage.getItem('http') + 'school/card_pay_success',{
+      this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
         token: sessionStorage.getItem('token'),
-        order_id: this.order_id,
+        card_id: this.card_id,
+        time_long: this.time_long,
+        course_id : this.course_id,
         order_type: 3
       })
       .then(res=> {
         console.log(res.data)
+        // if(res.code == 1){
+        //
+        // }
       })
     }
 

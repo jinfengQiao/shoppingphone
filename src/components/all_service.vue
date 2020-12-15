@@ -1,6 +1,6 @@
 <template>
     <div style="border-top: 1px solid #DDDDDD;">
-        <div class="all_service" style="margin-top:70px;margin-bottom: 62px;">
+        <div class="all_service" style="margin-bottom: 62px;">
             <div class="all_service_item" v-for="item in list" :key="item.id">
                 <h2>{{ item.name }}</h2>
                 <ul class="all_service_ul">
