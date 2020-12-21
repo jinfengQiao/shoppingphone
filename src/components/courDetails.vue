@@ -18,7 +18,7 @@
       <div class="titleBox">
         <div class="title">{{ title }}</div>
         <div class="money">
-          <div class="money1">￥{{ price }}</div>
+          <div class="money1">￥{{ price1 }}</div>
           <div class="money2" v-show="show">
             <div class="span1">特价</div>
             <div class="span2">仅限今天</div>
@@ -70,7 +70,7 @@
             <img :src="video_cover" alt="">
             <div class="tanBoxCont">
               <p>{{title}}</p>
-              <span>￥{{ price }}</span>
+              <span>￥{{ price1 }}</span>
             </div>
             <div class="guanbi">
               <img src="../assets/center/zhifuTancTuichu.png" alt="" @click="guanbi">
@@ -217,6 +217,7 @@ export default {
         this.title = res.data.title
         this.content = res.data.content
         this.price = res.data.price
+        this.price1 = (this.price/100).toFixed(2)
         this.old_price = res.data.old_price
         this.special = res.data.special
         this.video = res.data.video

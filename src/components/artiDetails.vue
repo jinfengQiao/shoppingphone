@@ -1,9 +1,9 @@
 <template>
   <div class="bg" :style="height">
-    <div class="head">
-      <img src="../assets/center/back_icon1.png" alt="" @click="back">
-      <span>内容标题</span>
-    </div>
+<!--    <div class="head">-->
+<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
+<!--      <span>内容标题</span>-->
+<!--    </div>-->
     <div class="cont">
       <div class="title">{{title}}</div>
       <span>{{info}}</span>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+
 export default {
   name: "artiDetails",
   data(){
@@ -110,7 +111,7 @@ export default {
 .cont{
   float: left;
   width: 100%;
-  margin-top: 70px;
+  //margin-top: 70px;
   padding: 15px;
   box-sizing: border-box;
   //background-color: #ffffff;

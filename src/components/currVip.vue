@@ -1,9 +1,9 @@
 <template>
   <div class="bg" :style="height">
-    <div class="head">
-      <img src="../assets/center/back_icon1.png" alt="" @click="back">
-      <span>课程VIP卡</span>
-    </div>
+<!--    <div class="head">-->
+<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
+<!--      <span>课程VIP卡</span>-->
+<!--    </div>-->
     <div class="tab">
       <ul>
         <li v-for="(n,index) in tabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index)">{{n}}</li>
@@ -16,12 +16,9 @@
         </div>
         <div class="cont11">
           <ul>
-            <li v-for="(item,idx) in monthList" :key="idx" :class="{li11:idx==index}" @click="son(idx)">
+            <li v-for="(item,idx) in monthList" :key="idx" :class="{li11:idx==index}" @click="son(idx,item.money)">
               <p>{{item.month}}</p>
               <span>￥{{item.money}}</span>
-<!--              <div class="duihaoBox">-->
-<!--                <img src="../assets/buSchool/duihao_icon.png" alt="">-->
-<!--              </div>-->
             </li>
           </ul>
         </div>
@@ -48,7 +45,7 @@
             <img src="../assets/buSchool/nullBoxImg1.png" alt="">
           </div>
         </div>
-        <div class="buyBtn1">
+        <div class="buyBtn1" v-show="btnShow">
           <button @click="kaitongBtn">立即开通</button>
         </div>
       </div>
@@ -58,12 +55,9 @@
         </div>
         <div class="cont21">
           <ul>
-            <li v-for="(item,idx) in monthList" :key="idx" :class="{li12:idx==index}" @click="son(idx)">
+            <li v-for="(item,idx) in monthList" :key="idx" :class="{li12:idx==index}" @click="son(idx,item.money)">
               <p>{{item.month}}</p>
               <span>￥{{item.money}}</span>
-              <!--              <div class="duihaoBox">-->
-              <!--                <img src="../assets/buSchool/duihao_icon.png" alt="">-->
-              <!--              </div>-->
             </li>
           </ul>
         </div>
@@ -73,7 +67,7 @@
           </ul>
         </div>
         <div class="buyBtn2">
-          <button>立即开通</button>
+          <button @click="kaitongBtn">立即开通</button>
         </div>
       </div>
       <div class="cont3" v-show="tabState==3">
@@ -82,12 +76,9 @@
         </div>
         <div class="cont31">
           <ul>
-            <li v-for="(item,idx) in monthList" :key="idx" :class="{li13:idx==index}" @click="son(idx)">
+            <li v-for="(item,idx) in monthList" :key="idx" :class="{li13:idx==index}" @click="son(idx,item.money)">
               <p>{{item.month}}</p>
               <span>￥{{item.money}}</span>
-              <!--              <div class="duihaoBox">-->
-              <!--                <img src="../assets/buSchool/duihao_icon.png" alt="">-->
-              <!--              </div>-->
             </li>
           </ul>
         </div>
@@ -113,7 +104,78 @@
           </ul>
         </div>
         <div class="buyBtn3">
-          <button>立即开通</button>
+          <button @click="kaitongBtn">立即开通</button>
+        </div>
+      </div>
+    </div>
+
+
+  <!--    弹窗-->
+  <div class="tanchuang" v-show="tcShow">
+      <div class="tanchuangBox">
+        <div class="tanchuangBox1">
+          <div class="tanchuangBox1Head">
+<!--            <img :src="video_cover" alt="">-->
+            <div class="titleBox">
+              {{ VipTitle }}{{VipCode}}
+            </div>
+            <div class="tanBoxCont">
+              <template v-if="VipTitle == '入门VIP'">
+                <p>{{title}}</p>
+              </template>
+              <template v-if="VipTitle == '贵宾VIP'">
+                <p>{{changeCls2Text}}</p>
+              </template>
+              <template v-else>
+<!--                <p>{{changeCls2Text}}</p>-->
+              </template>
+              <span>￥{{ money }}</span>
+            </div>
+            <div class="guanbi">
+              <img src="../assets/center/zhifuTancTuichu.png" alt="" @click="guanbi">
+            </div>
+          </div>
+          <div class="payMethod">
+            <p>选择支付方式</p>
+            <div class="zhifuBox">
+              <div class="weixinZhifu" @click="weixinZhifu">
+                <div class="weixinZhifuLeft">
+                  <img src="../assets/center/wechat.png" alt="" class="img1">
+                  <span>微信支付</span>
+                </div>
+                <div class="weixinZhifuRight">
+                  <input type="radio" name="zhifu" checked>
+                  <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="weixinSelect">
+                </div>
+              </div>
+              <div class="yueZhifu" name="zhifu" @click="yueZhifu">
+                <div class="yueZhifuLeft">
+                  <img src="../assets/center/yue.png" alt="" class="img1">
+                  <span>余额支付</span>
+                </div>
+                <div class="yueZhifuRight">
+                  <input type="radio" name="zhifu">
+                  <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="yueSelect">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="jifenBox">
+            <div class="jifenBox1">
+              <div class="duihuan">
+                <!--                <img src="../assets/center/duihuan_bg.png" alt=""> -->
+                积分兑换
+              </div>
+              <div class="jifenBox1Ri">100积分 = 1元</div>
+            </div>
+            <div class="jifenBox2">
+              <div class="jifenBox2Le">我的积分 <span>{{ score }}</span></div>
+              <input type="number" placeholder="输入兑换积分" v-model="use_score">
+            </div>
+          </div>
+          <div class="btnBox">
+            <button @click="buyBtn">立即购买</button>
+          </div>
         </div>
       </div>
     </div>
@@ -126,11 +188,11 @@ export default {
   data(){
     return{
       show12:false,
+      btnShow:true,
       height:{
         width:'',
         height:'',
       },
-      index:0,
       tabState: 1,
       isActive:'',
       isSelect:'',
@@ -140,15 +202,28 @@ export default {
       tabList:[
           '入门VIP','贵宾VIP','至尊VIP'
       ],
-      contContHead:[
-        // '财税','法律','融资','股权','资本','人力'
-      ],
+      contContHead:[],
       contContCont:[],
       monthList:[],
       card_id: 1,
       time_long:1,
       course_id:'',
-      category_id:'',
+      category_id:1,
+      category_id1:1,
+
+      tcShow:false,
+      weixinSelect:true,
+      yueSelect:false,
+      title:'',
+      price:'',
+      score:'',
+      use_score:0,
+      video_cover:'',
+      VipTitle:'入门VIP',
+      VipCode:'月卡',
+      index:0,
+      changeCls2Text:'财税',
+      money:'',
     }
   },
   methods:{
@@ -162,6 +237,16 @@ export default {
       this.$router.push('./moneyDetailed');
     },
     listGo(index){
+      console.log(index);
+      if(index == 0){
+        this.VipTitle = '入门VIP'
+      }
+      if(index == 1){
+        this.VipTitle = '贵宾VIP'
+      }
+      if(index == 2){
+        this.VipTitle = '至尊VIP'
+      }
       var that = this
       that.isActive = index;
       // console.log(index + 1);
@@ -185,20 +270,75 @@ export default {
     },
     changeCls2(index){
       this.isSelect2 = index;
+      console.log(index);
+      if(index == 0){
+        this.changeCls2Text = '财税'
+      }if(index == 1){
+        this.changeCls2Text = '法律'
+      }if(index == 2){
+        this.changeCls2Text = '融资'
+      }if(index == 3){
+        this.changeCls2Text = '股权'
+      }if(index == 4){
+        this.changeCls2Text = '资本'
+      }if(index == 5){
+        this.changeCls2Text = '人力'
+      }
     },
-    son(idx){
+    son(idx,money){
+      // this.inx = 0
+      console.log(money);
+      this.money = money
       this.index=idx;
       var index1 = idx + 1
       console.log(index1);
       this.time_long = index1
+      if(index1 == 1){
+        this.VipCode = '月卡'
+      }
+      if(index1 == 2){
+        this.VipCode = '季卡'
+      }
+      if(index1 == 3){
+        this.VipCode = '年卡'
+      }
+
     },
     toggleAddCls(index,id){
-      console.log(index);
       this.isSelect11 = index;
-      console.log(id);
       this.course_id = id
       console.log(this.course_id);
+      this.get_courDetails();
     },
+    // 获取课程详情
+    get_courDetails() {
+      console.log(this.course_id);
+      this.$post(localStorage.getItem('http') + 'school/get_course_detail',{
+        token: sessionStorage.getItem('token'),
+        id:this.course_id
+      })
+      .then(res=> {
+        console.log(res.data)
+        this.title = res.data.title
+        this.content = res.data.content
+        this.price = res.data.price
+        this.old_price = res.data.old_price
+        this.special = res.data.special
+        this.video = res.data.video
+        this.video_cover = res.data.video_cover
+        this.want_study = res.data.want_study
+        // console.log(this.want_study)
+        this.lesson = res.data.lesson
+        // this.lesson_id = this.lesson[0].id
+        // this.course_id = res.data.id
+        // console.log(this.course_id)
+        if(this.want_study == 1){
+          this.lay_type1 = 1
+        }
+      })
+    },
+
+
     // 获取课程卡
     get_courCard() {
       this.$post(localStorage.getItem('http') + 'school/get_card',{
@@ -207,6 +347,7 @@ export default {
       .then(res=> {
         console.log(res.data)
         this.monthList= res.data.price
+        this.money = res.data.price[0].money
       })
     },
     get_courCard1(index1) {
@@ -216,6 +357,7 @@ export default {
       .then(res=> {
         console.log(res.data)
         this.monthList= res.data.price
+        this.money = res.data.price[0].money
       })
     },
     // 获取课程分类
@@ -224,8 +366,9 @@ export default {
       .then(res=> {
         console.log(res.data)
         this.contContHead= res.data
+        this.title1 = res.data[0].name
         // this.category_id = res.data.id
-        // console.log(this.category_id)
+        console.log(this.title1)
       })
     },
     // 获取课程列表
@@ -239,65 +382,109 @@ export default {
       .then(res=> {
         console.log(res.data.list)
         this.contContCont= res.data.list
+        // console.log(this.course_id);
         console.log(this.contContCont);
+        this.get_courDetails();
+
         if(res.data.list == '' || res.data.list == null){
           this.show12 = true;
+          this.btnShow = false;
         }else{
           this.show12 = false;
-        }
-      })
-    },
-    get_clsList1(page,limit) {
-      this.$post(localStorage.getItem('http') + 'school/get_course',{
-        page:page,
-        limit:limit,
-        category_id:1,
-        keyword:this.keyword
-      })
-      .then(res=> {
-        console.log(res.data.list)
-        this.contContCont= res.data.list
-        console.log(this.contContCont);
-        if(res.data.list == '' || res.data.list == null){
-          this.show12 = true;
-        }else{
-          this.show12 = false;
+          this.btnShow = true;
+          this.course_id= res.data.list[0].id
         }
       })
     },
     kaitongBtn(){
-      console.log(this.time_long)
+      this.tcShow = true
+      this.get_courDetails();
+    },
+    guanbi(){
+      this.tcShow = false
+    },
+    weixinZhifu(){
+      this.weixinSelect = true
+      this.yueSelect = false
+      // console.log('微信支付')
+    },
+    yueZhifu(){
+      this.weixinSelect = false
+      this.yueSelect = true
+      // console.log('余额支付')
+    },
+    buyBtn(){
       console.log(this.card_id)
+      console.log(this.time_long)
+      console.log(this.course_id)
+      console.log(this.category_id)
       this.$post(localStorage.getItem('http') + 'school/make_card_order',{
         token: sessionStorage.getItem('token'),
         card_id: this.card_id,
         time_long: this.time_long,
-        course_id : this.course_id,
-        order_type: 3
+        course_id: this.course_id,
+        category_id: this.category_id
       })
       .then(res=> {
         console.log(res.data)
         if(res.code == 1){
-          this.card_pay_success();
+          // console.log('下单成功');
+          this.order_id = res.data.order_id
+          console.log(this.order_id);
+          this.order_type = res.data.order_type
+          console.log(this.order_type);
+          // 余额支付
+          if(this.weixinSelect == true){
+            console.log('微信支付')
+
+            this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id: this.order_id,
+              openid: localStorage.getItem('openid'),
+              order_type: 3,
+              use_score: this.use_score
+            })
+            .then(res=> {
+              console.log(res)
+              window.WeixinJSBridge.invoke(
+                  'getBrandWCPayRequest', res ,
+                  function(res){
+                    if(res.err_msg == "get_brand_wcpay_request:ok"){
+                      location.href = "/#/lesson";
+                      // this.$router.push({
+                      //   path: '/lesson'
+                      // })
+                    }else{
+                      // alert(res);
+                    }
+                  });
+            })
+          }else{
+            console.log('余额支付')
+            this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id: this.order_id,
+              order_type: 3,
+              use_score: this.use_score
+            })
+            .then(res=> {
+                  console.log(res)
+                  if(res.code == 0){
+                    // console.log('余额不足')
+                    this.$toast.error(res.msg)
+                  }
+                  if(res.code == 1){
+                    this.$toast.success(res.msg);
+                    this.$router.push('./lesson');
+                  }
+                })
+          }
+        }else{
+          this.$toast.error(res.msg)
         }
       })
-    },
-    // 支付
-    card_pay_success(){
-      this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
-        token: sessionStorage.getItem('token'),
-        card_id: this.card_id,
-        time_long: this.time_long,
-        course_id : this.course_id,
-        order_type: 3
-      })
-      .then(res=> {
-        console.log(res.data)
-        // if(res.code == 1){
-        //
-        // }
-      })
     }
+
 
 
 
@@ -305,8 +492,18 @@ export default {
   created(){
     this.hh();
     this.get_courCard();
-    this.get_clsList1();
     this.get_class();
+    this.get_clsList();
+
+
+
+    var score = sessionStorage.getItem('score');
+    this.score = score
+    console.log(this.score)
+
+    var open_id = sessionStorage.getItem('openid')
+    this.order_id = open_id
+    console.log(this.open_id)
   },
 }
 </script>
@@ -346,7 +543,7 @@ export default {
 .tab{
   z-index: 2;
   position: fixed;
-  top: 70px;
+  top: 0;
   left: 0;
   //margin-top: 70px;
   width: 100%;
@@ -377,7 +574,7 @@ export default {
 .cont{
   position: relative;
   z-index: 1;
-  margin-top: 105px;
+  margin-top: 35px;
   width: 100%;
   padding: 15px 0;
   box-sizing: border-box;
@@ -766,4 +963,263 @@ export default {
   }
 }
 
+//弹窗
+.tanchuang{
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 99999;
+  color: #ffffff;
+  .tanchuangBox{
+    position: absolute;
+    top: 50%;
+    margin-top: -180px;
+    width: 100%;
+    //height: 360px;
+    padding: 0 30px;
+    box-sizing: border-box;
+    .tanchuangBox1{
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      box-shadow: 0px 2px 10px rgba(204, 204, 204, 0.5);
+      opacity: 1;
+      border-radius: 5px;
+      padding: 15px;
+      box-sizing: border-box;
+      .tanchuangBox1Head{
+        position: relative;
+        width: 100%;
+        height: 78px;
+        //display: flex;
+        //justify-content: flex-start;
+        img{
+          width: 78px;
+          height: 78px;
+          object-fit: cover;
+        }
+        .titleBox{
+          width: 100%;
+          font-size: 20px;
+          font-weight: 600;
+          color: #1672F9;
+        }
+        .tanBoxCont{
+          width: 100%;
+          //margin-left: 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          p{
+            font-size: 16px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #333333;
+            display: -webkit-box;
+            -webkit-line-clamp:2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            padding: 0 20px 0 0;
+            box-sizing: border-box;
+          }
+          span{
+            font-size: 18px;
+            font-family: Roboto;
+            font-weight: 400;
+            line-height: 36px;
+            color: #EA610E;
+          }
+        }
+        .guanbi{
+          position: absolute;
+          right: -6px;
+          top: -6px;
+          img{
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+          }
+        }
+      }
+      .payMethod{
+        padding: 16px 0 0 0;
+        box-sizing: border-box;
+        width: 100%;
+        p{
+          width: 100%;
+          font-size: 16px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #333333;
+        }
+        .zhifuBox{
+          margin-top: 14px;
+          padding: 0 0 15px 0;
+          box-sizing: border-box;
+          border-bottom: 1px solid #dddddd;
+          .weixinZhifu{
+            position: relative;
+            display: flex;
+            height: 35px;
+            justify-content: space-between;
+            //align-items: center;
+            margin-bottom: 15px;
+            .weixinZhifuLeft{
+              img{
+                float: left;
+                width: 35px;height: 35px;
+              }
+              span{
+                float: left;
+                margin-left: 7px;
+                line-height: 35px;
+                font-size: 14px;
+                font-family: PingFang SC;
+                font-weight: 500;
+                color: #333333;
+              }
+            }
+            .weixinZhifuRight{
+              img{
+                float: right;
+                width: 18px;height: 18px;
+                margin-top: 8px;
+              }
+              input{
+                opacity: 0;
+                position: absolute;
+                right:0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
+          .yueZhifu{
+            position: relative;
+            display: flex;
+            height: 35px;
+            justify-content: space-between;
+            align-items: center;
+            .yueZhifuLeft{
+              img{
+                float: left;
+                width: 35px;height: 35px;
+              }
+              span{
+                float: left;
+                margin-left: 7px;
+                line-height: 35px;
+                font-size: 14px;
+                font-family: PingFang SC;
+                font-weight: 500;
+                color: #333333;
+              }
+            }
+            .yueZhifuRight{
+              img{
+                float: right;
+                width: 18px;height: 18px;
+                margin-top: 8px;
+              }
+              input{
+                opacity: 0;
+                position: absolute;
+                right:0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.jifenBox{
+  width: 100%;
+  //height: 100px;
+  padding: 12px 0 24px 0;
+  box-sizing: border-box;
+  .jifenBox1{
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .duihuan{
+      font-size: 13px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #333333;
+      img{
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+      }
+    }
+    .jifenBox1Ri{
+      font-size: 12px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #1672F9;
+    }
+  }
+  .jifenBox2{
+    width: 100%;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .jifenBox2Le{
+      font-size: 12px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #666666;
+      span{
+        font-size: 14px;
+        font-family: PingFang SC;
+        font-weight: 500;
+      }
+    }
+    input{
+      font-size: 12px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #666666;
+      width: 100px;
+      height: 24px;
+      line-height: 24px;
+      border: 1px solid #999999;
+      border-radius: 2px;
+      outline: none;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+  }
+}
+.btnBox{
+  width: 100%;
+  padding: 0 30px;
+  box-sizing: border-box;
+  button{
+    //margin-top: 20px;
+    width: 100%;
+    height: 38px;
+    line-height: 38px;
+    border: 0;
+    outline: none;
+    background: #1672F9;
+    border-radius: 20px;
+    font-size: 18px;
+    font-family: PingFang SC;
+    color: #FFFFFF;
+  }
+}
 </style>

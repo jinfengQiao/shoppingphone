@@ -73,11 +73,14 @@
             <p>{{ refund_obj.back_reason }}</p>
         </div>
 
+      <noSharing></noSharing>
 
     </div>
 </template>
 
 <script>
+    import noSharing from "@/components/noSharing";
+
     export default {
         data() {
             return{
@@ -122,6 +125,9 @@
           back() {
             this.$router.go(-1)
           },
+        },
+        components: {
+          noSharing
         }
     }
 </script>

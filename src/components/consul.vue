@@ -69,12 +69,12 @@
             <div class="jifenBox1Ri">100积分 = 1元</div>
           </div>
           <div class="jifenBox2">
-            <div class="jifenBox2Le">我的积分 <span>20000</span></div>
-            <input type="number" placeholder="输入兑换积分">
+            <div class="jifenBox2Le">我的积分 <span>{{score}}</span></div>
+            <input type="number" placeholder="输入兑换积分" v-model="use_score">
           </div>
         </div>
         <div class="btnBox">
-          <button>立即购买</button>
+          <button @click="buyBtn">立即购买</button>
         </div>
       </div>
     </div>
@@ -102,6 +102,8 @@ export default {
       name:'',
       price:'',
       category_id:1,
+      card_id:'',
+      use_score:0,
     }
   },
   methods:{
@@ -134,7 +136,7 @@ export default {
         category_id:this.category_id
       })
       .then(res=> {
-        console.log(res.data.list.length)
+        console.log(res.data.list)
         this.tabCont = res.data.list;
 
 
@@ -160,8 +162,9 @@ export default {
       }else{
         this.open = true;
         console.log(n);
-        this.price = n.price;
+        this.price = (n.price/100).toFixed(2);
         this.name = n.name;
+        this.card_id = n.id;
       }
     },
     hide1(){
@@ -174,12 +177,80 @@ export default {
     yueZhifu(){
       this.weixinSelect = false
       this.yueSelect = true
+    },
+    buyBtn(){
+      console.log(this.card_id)
+      this.$post(localStorage.getItem('http') + 'card/to_pay',{
+        token: sessionStorage.getItem('token'),
+        card_id: this.card_id,
+      })
+      .then(res=> {
+        console.log(res.data)
+        if(res.code == 1){
+          // console.log('下单成功');
+          this.order_id = res.data.order_id
+          console.log(this.order_id);
+          this.order_type = res.data.order_type
+          console.log(this.order_type);
+          // 余额支付
+          if(this.weixinSelect == true){
+            console.log('微信支付')
+            this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id: this.order_id,
+              openid: localStorage.getItem('openid'),
+              order_type: 2,
+              use_score: this.use_score
+            })
+            .then(res=> {
+              console.log(res)
+              window.WeixinJSBridge.invoke(
+                  'getBrandWCPayRequest', res ,
+                  function(res){
+                    if(res.err_msg == "get_brand_wcpay_request:ok"){
+                      location.href = "/#/consultation";
+                      // this.$router.push({
+                      //   path: '/lesson'
+                      // })
+                    }else{
+                      // alert(res);
+                    }
+                  });
+              })
+          }else{
+            console.log('余额支付')
+            this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id: this.order_id,
+              order_type: 2,
+              use_score: this.use_score
+            })
+                .then(res=> {
+                  console.log(res)
+                  if(res.code == 0){
+                    // console.log('余额不足')
+                    this.$toast.error(res.msg)
+                  }
+                  if(res.code == 1){
+                    this.$toast.success(res.msg);
+                    this.$router.push('./consultation');
+                  }
+                })
+          }
+        }else{
+          this.$toast.error(res.msg)
+        }
+      })
     }
   },
   created(){
+    var score = sessionStorage.getItem('score');
+    this.score = score
+    console.log(this.score)
     this.tab_List();
     this.tab_Cont();
     this.hh();
+
   },
   components: {
     footer_nav
@@ -272,14 +343,16 @@ export default {
       margin-bottom: 15px;
       width: 100%;
       height: 150px;
-      padding: 36px 30px;
+      padding: 10px 30px;
       box-sizing: border-box;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       img{
         float: left;
-        width: 75px;
+        //width: 75px;
         height: 76px;
+        max-width: 90px;
         object-fit: cover;
       }
       .rightRi{

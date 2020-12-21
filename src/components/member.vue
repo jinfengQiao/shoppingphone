@@ -31,10 +31,14 @@
         </ul>
       </div>
     </div>
+    <noSharing></noSharing>
+
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "member",
   data(){
@@ -96,6 +100,9 @@ export default {
     this.hh();
     this.get_myGrade();
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 

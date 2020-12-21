@@ -6,77 +6,73 @@
 <!--    </div>-->
     <div class="cont">
       <ul>
-        <li>
+        <li v-for="(n,inx) in getList" :key="inx">
           <div class="left">
-            <span>充值成功</span>
-            <div class="time">11月17日 02:22</div>
+            <template v-if="n.type == 1">
+              <span>充值成功</span>
+            </template>
+            <template v-else>
+              <span>消费成功</span>
+            </template>
+            <div class="time">{{ n.addtime }}</div>
           </div>
           <div class="right">
-            <span>+2000</span>
-            <p>余额3820</p>
-          </div>
-        </li>
-        <li>
-          <div class="left">
-            <span>充值成功</span>
-            <div class="time">11月17日 02:22</div>
-          </div>
-          <div class="right">
-            <span>+2000</span>
-            <p>余额3820</p>
-          </div>
-        </li>
-        <li>
-          <div class="left">
-            <span>充值成功</span>
-            <div class="time">11月17日 02:22</div>
-          </div>
-          <div class="right">
-            <span>+2000</span>
-            <p>余额3820</p>
-          </div>
-        </li>
-        <li>
-          <div class="left">
-            <span>充值成功</span>
-            <div class="time">11月17日 02:22</div>
-          </div>
-          <div class="right">
-            <span>+2000</span>
-            <p>余额3820</p>
-          </div>
-        </li>
-        <li>
-          <div class="left">
-            <span>充值成功</span>
-            <div class="time">11月17日 02:22</div>
-          </div>
-          <div class="right">
-            <span>+2000</span>
-            <p>余额3820</p>
+            <span>{{n.num}}</span>
+            <template v-if="!n.balance">
+              <p>余额 0</p>
+            </template>
+            <template v-else>
+              <p>余额 {{ n.balance }}</p>
+            </template>
           </div>
         </li>
       </ul>
     </div>
+    <noSharing></noSharing>
+
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "moneyDetailed",
   data(){
     return{
-
+      getList:[],
     }
   },
   methods:{
     back:function(){
       this.$router.go(-1);
     },
+    get_list(){
+      this.$post(localStorage.getItem('http') + 'invest/get_list',{
+        token: sessionStorage.getItem('token'),
+      })
+      .then(res=> {
+        console.log(res)
+        this.getList = res.data
+
+        // if(type == 1){
+        //   console.log('充值成功');
+        // }else{
+        //   console.log('消费成功');
+        // }
+        // this.balance = res.data.balance
+        // if(!this.balance){
+        //   this.balance = 0;
+        // }
+      })
+    }
   },
   created(){
-
+    this.get_list();
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 
@@ -123,9 +119,11 @@ export default {
       border-bottom: 1px solid #D2D2D2;
       box-sizing: border-box;
       padding: 15px 0;
+      display: flex;
+      justify-content: space-between;
       .left{
-        float: left;
-        width: 100px;
+        //float: left;
+        //width: 100px;
         span{
           display: block;
           width: 100%;
@@ -144,8 +142,8 @@ export default {
         }
       }
       .right{
-        float: right;
-        width: 100px;
+        //float: right;
+        //width: 100px;
         span{
           display: block;
           width: 100%;

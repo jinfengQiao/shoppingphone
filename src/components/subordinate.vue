@@ -84,6 +84,7 @@
 </template>
 
 <script>
+
 export default {
   name: "subordinate",
   data(){
@@ -91,10 +92,10 @@ export default {
       showShare: false,
       options: [
         { name: '微信', icon: 'wechat' },
-        { name: '微博', icon: 'weibo' },
-        { name: '复制链接', icon: 'link' },
-        { name: '分享海报', icon: 'poster' },
-        { name: '二维码', icon: 'qrcode' },
+        // { name: '微博', icon: 'weibo' },
+        // { name: '复制链接', icon: 'link' },
+        // { name: '分享海报', icon: 'poster' },
+        // { name: '二维码', icon: 'qrcode' },
       ],
       tabState: 1,
       isActive:'',
@@ -115,10 +116,54 @@ export default {
       erjiList:[
 
       ],
-      level:''
+      level:'',
+      integrityurl:'',
     }
   },
   methods: {
+    share(title,desc,link,imgUrl){
+      this.$post(localStorage.getItem('http') + 'wechat/get_jssdk_config',{
+        url: this.integrityurl
+      }).then(res=> {
+        var wx = this.$wx;
+        wx.config(res.data);
+        wx.ready(function(){
+          wx.checkJsApi({
+            jsApiList: res.data.jsApiList, // 需要检测的JS接口列表，所有JS接口列表见附录2,
+            success: function(res) {
+              console.log(res);
+              // 以键值对的形式返回，可用的api值true，不可用为false
+              // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+            }
+          });
+
+          wx.updateAppMessageShareData({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+              // 设置成功
+              // console.log("message ok");
+            }
+          });
+
+          wx.updateTimelineShareData({
+            title: title, // 分享标题
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+              // 设置成功
+              // console.log("timeline ok");
+            }
+          })
+
+
+        });
+
+
+      });
+    },
     back:function(){
       this.$router.go(-1);
     },
@@ -150,7 +195,7 @@ export default {
         path: '/viewSupe',
         query: {
           level : 2,
-          id : id
+          id : id,
         }
       })
     },
@@ -161,7 +206,7 @@ export default {
         level:1
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.yijiList = res.data
       })
     },
@@ -180,12 +225,21 @@ export default {
     inviteFriends(){
       this.showShare = true
     },
-    onSelect(option) {
-      this.$toast.success(option.name);
-      this.showShare = false;
-    },
+    // onSelect(option) {
+    //   console.log(option)
+    //   this.$toast.success(option.name);
+    //   this.showShare = false;
+    //   if(option.name == '微信'){
+    //     console.log(123);
+    //
+    //
+    //   }
+    // },
   },
   created(){
+    this.integrityurl = window.location.href;
+
+    this.share();
     this.hh();
     this.hh1();
     this.get_list();
@@ -246,6 +300,7 @@ export default {
       color: #FFC000;
     }
     .btnBox{
+      display: none;
       position: relative;
       margin-top: 25px;
       width: 145px;

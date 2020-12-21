@@ -39,17 +39,39 @@
       </ul>
     </div>
     <div class="btnBox">
-      <button type="button" class="btn1">提现</button>
-      <button type="button" class="btn2">转为余额</button>
+      <button type="button" class="btn1" @click="tixianBtn">提现</button>
+      <button type="button" class="btn2" @click="tranBbalance">转为余额</button>
     </div>
+<!--    <van-popup v-model="tranShow">内容</van-popup>-->
+    <van-popup
+        v-model="tranShow"
+        round
+        position="bottom"
+        :style="{ height: '30%' }"
+    >
+      <div class="moneyBox11">
+        <div class="inputBox">
+          <span>￥</span>
+          <input type="number" placeholder="请输入金额" v-model="num_money" @input="inputChange" oninput="">
+        </div>
+      </div>
+      <div class="moneyBox12">
+        <button type="button" @click="querenBtn">确认</button>
+      </div>
+    </van-popup>
+    <noSharing></noSharing>
+
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "rebate",
   data(){
     return{
+      tranShow:false,
       contList:[],
       source_name:'',
       addtime:'',
@@ -58,6 +80,7 @@ export default {
 
       page: 1,
       show:false,
+      num_money:'',
     }
   },
   methods:{
@@ -95,13 +118,69 @@ export default {
           this.contList = arr;
         }else{
           //没有了
-          this.$toast.error('没有更多了!');
+          // this.$toast.error('没有更多了!');
           window.removeEventListener("scroll",this.onScroll);
         }
-
-
       })
-    }
+    },
+    tixianBtn(){
+      this.$toast.error('功能暂未开放');
+    },
+    tranBbalance(){
+      this.tranShow = true
+    },
+    querenBtn(){
+      if(!this.num_money){
+        this.$toast.error('请输入金额');
+      }else{
+        this.$post(localStorage.getItem('http') + 'user_cybermoney/to_balance',{
+          token: sessionStorage.getItem('token'),
+          num: this.num_money
+        })
+        .then(res=> {
+          console.log(res.data)
+
+          if( res.code == 1){
+            this.$toast.success(res.msg);
+            this.get_cybermoney();
+            this.contList = [];
+            this.getData();
+            this.tranShow = false;
+            this.num_money = '';
+          }else{
+            this.$toast.error(res.msg);
+          }
+        })
+      }
+    },
+    get_cybermoney(){
+      this.$post(localStorage.getItem('http') + 'user_cybermoney/get_cybermeony',{
+        token: sessionStorage.getItem('token'),
+      })
+      .then(res=> {
+        console.log(res.data)
+        this.cybermoney = res.data
+      })
+    },
+    inputChange(e){
+      var val = e.target.value;
+      var value = e.target.value;
+
+      if (value < 0){
+        this.num_money = 0;
+      }
+      if (isNaN(value)){
+        this.num_money = 0;
+      }
+      if(value.indexOf(".") != -1 && value.substring(value.indexOf("."),value.length).length>3){
+        this.num_money = Math.round((value*100))/100;
+      }
+      if (isNaN(val)){
+        this.num_money = 0;
+      }
+
+      // return this.num_money;
+    },
   },
   beforeDestroy() {
     window.removeEventListener("scroll",this.onScroll);
@@ -109,12 +188,16 @@ export default {
   created(){
     this.token = sessionStorage.getItem('token');
     console.log(this.token)
-    this.cybermoney = sessionStorage.getItem('cybermoney');
-    console.log(this.cybermoney)
+    // this.cybermoney = sessionStorage.getItem('cybermoney');
+    // console.log(this.cybermoney)
+    this.get_cybermoney();
     this.getData();
     //先在这里监听scroll事件
     window.addEventListener('scroll', this.onScroll)
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 
@@ -288,4 +371,63 @@ export default {
     border: 0;
   }
 }
+.moneyBox11{
+  width: 100%;
+  padding: 36px 48px 0;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  .inputBox{
+    width: 160px;
+    height: 54px;
+    position: relative;
+    span{
+      position: absolute;
+      left: 4px;
+      top: 0;
+      font-size: 36px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #1672F9;
+    }
+    input{
+      width: 160px;
+      height: 48px;
+      outline: none;
+      border: 0;
+      border-bottom: 1px solid #EAEAEA;
+      padding: 5px 15px 0 50px;
+      box-sizing: border-box;
+      color: #666666;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 500;
+    }
+  }
+}
+.moneyBox12{
+  width: 100%;
+  padding: 24px 48px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  button{
+    width: 100%;
+    height: 42px;
+    box-sizing: border-box;
+    background-color: #1672F9;
+    font-size: 18px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    line-height: 34px;
+    color: #FFFFFF;
+    border-radius: 40px;
+    border: 0;
+    outline: none;
+  }
+}
+
+
 </style>

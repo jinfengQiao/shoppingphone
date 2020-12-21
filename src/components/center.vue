@@ -45,11 +45,13 @@
       </ul>
     </div>
     <footer_nav></footer_nav>
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
 import footer_nav from "@/components/footer_bar";
+import noSharing from "@/components/noSharing";
 // token: sessionStorage.getItem('token'),
 export default {
   name: "center",
@@ -152,10 +154,10 @@ export default {
         // console.log(this.score);
         sessionStorage.setItem('score',res.data.score)
         sessionStorage.setItem('cybermoney',res.data.cybermoney)
-        if(this.face_url == null){
+        if(!this.face_url){
           this.face_url=require('../assets/center/headImg.png')
         }
-        if(this.zhuangtai == null){
+        if(!this.zhuangtai){
           this.zhuangtai='未命名'
         }
       })
@@ -289,7 +291,8 @@ export default {
     // }
   },
   components: {
-    footer_nav
+    footer_nav,
+    noSharing
   }
 }
 </script>
@@ -297,8 +300,8 @@ export default {
 <style lang="less" scoped>
 .bg{
   width: 100%;
-  background-color: #f3f4f6;
-  padding: 310px 0 62px 0;
+  background-color: #ffffff;
+  padding: 0 0 62px 0;
   box-sizing: border-box;
 }
 .headBox{
@@ -453,7 +456,8 @@ export default {
   position: relative;
   z-index: 1;
   width: 100%;
-  padding: 20px 30px 0 30px;
+  margin-top: 310px;
+  padding: 30px;
   box-sizing: border-box;
   background-color: #ffffff;
   .serTitle{

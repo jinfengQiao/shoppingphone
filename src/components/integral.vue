@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="cont" id="cont">
+    <div class="cont" id="cont" :style="height">
       <ul>
         <li v-for="(n,inx) in jifenList" :key="inx">
           <div class="left">
@@ -38,20 +38,27 @@
         </li>
       </ul>
     </div>
-    <div class="btnBox">
+    <div class="btnBox" v-show="jifenDuihuan">
       <button type="button">兑换积分</button>
     </div>
-<!--    <payComp v-show="show"></payComp>-->
+
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
-// import payComp from "@/components/payComp";
+
+import noSharing from "@/components/noSharing";
 
 export default {
   name: "integral",
   data(){
     return{
+      height:{
+        width:'',
+        height:'',
+      },
+      jifenDuihuan:false,
       // show:true,
       jifenList:[],
       score:'',
@@ -60,11 +67,25 @@ export default {
     }
   },
   methods:{
+    hh(){
+      this.height.height = window.innerHeight +'px'
+    },
     back:function(){
       this.$router.go(-1);
     },
     jumpSignIn:function (){
-      this.$router.push('/signIn');
+      // console.log(this.currentYear + "-" +  this.currentMonth+ "-" + day);
+      this.$post(localStorage.getItem('http') + 'user_score/add',{
+        token: sessionStorage.getItem('token'),
+        source: 1,
+      })
+      .then(res=> {
+        if(res.code == 1){
+          this.$toast.success(res.msg);
+        }
+        this.$router.push('/signIn');
+      })
+
     },
     onScroll () {
       // 内容元素的总高度
@@ -73,8 +94,8 @@ export default {
       let outerHeight = document.documentElement.clientHeight
       // 滚动条的位置高度
       let scrollTop = document.documentElement.scrollTop
-      console.log(scrollTop + outerHeight );
-      console.log(innerHeight + 358);
+      // console.log(scrollTop + outerHeight );
+      // console.log(innerHeight + 358);
       if(scrollTop + outerHeight == innerHeight + 358){
         this.page++;
         this.get_list();
@@ -88,7 +109,7 @@ export default {
         limit:this.limit
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         // this.jifenList= res.data.list
 
         if (res.data.list.length != 0){
@@ -104,18 +125,35 @@ export default {
         }
       })
     },
+    // 获取积分
+    get_money(){
+      this.$post(localStorage.getItem('http') + 'user_info/get_money',{
+        token: sessionStorage.getItem('token'),
+      })
+      .then(res=> {
+        // console.log(res)
+        this.score = res.data.score
+        if(!this.score){
+          this.score = 0;
+        }
+      })
+    }
   },
   beforeDestroy() {
     window.removeEventListener("scroll",this.onScroll);
   },
   created(){
+    this.hh();
     this.get_list();
-    let score =this.$route.query.score;
-    this.score = score
+    // let score =this.$route.query.score;
+    // this.score = score
+    this.get_money();
     window.addEventListener('scroll', this.onScroll);
+
+
   },
   components: {
-    // payComp
+    noSharing
   }
 }
 </script>
@@ -203,8 +241,10 @@ export default {
 }
 .cont{
   width: 100%;
-  margin-top: 212px;
-  margin-bottom: 76px;
+  padding: 212px 0 0 0;
+  box-sizing: border-box;
+  //margin-top: 212px;
+  //margin-bottom: 76px;
   background-color: #ffffff;
   ul{
     width: 100%;

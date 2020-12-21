@@ -9,10 +9,13 @@
       <button type="button" class="chongzhi" @click="jumpChongzhi">充值</button>
       <button type="button" class="mingxi" @click="jumpMoneyDetailed">零钱明细</button>
     </div>
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
+
+import noSharing from "@/components/noSharing";
 
 export default {
   name: "balance",
@@ -30,15 +33,31 @@ export default {
     },
     jumpMoneyDetailed:function (){
       this.$router.push('./moneyDetailed');
+    },
+    get_money(){
+      this.$post(localStorage.getItem('http') + 'user_info/get_money',{
+        token: sessionStorage.getItem('token'),
+      })
+      .then(res=> {
+        console.log(res)
+        this.balance = res.data.balance
+        if(!this.balance){
+          this.balance = 0;
+        }
+      })
     }
 
   },
 
   created(){
-    let balance =this.$route.query.balance;
-    this.balance = balance
+    this.get_money();
+    // let balance =this.$route.query.balance;
+    // this.balance = balance
     // console.log(this.balance)
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 

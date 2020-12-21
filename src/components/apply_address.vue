@@ -50,11 +50,13 @@
             </van-form>
         </div>
 
-
+      <noSharing></noSharing>
     </div>
 </template>
 
 <script>
+    import noSharing from "@/components/noSharing";
+
     export default {
         data() {
             return{
@@ -109,6 +111,9 @@
                 this.reg_refund(obj)
 
             }
+        },
+        components: {
+          noSharing
         }
     }
 </script>

@@ -26,7 +26,8 @@
             }
         },
       created() {
-          this.get_list()
+          this.get_list();
+
       },
       methods: {
           get_list() {
@@ -46,7 +47,7 @@
           }
       },
       components: {
-        footer_nav
+        footer_nav,
       }
     }
 </script>

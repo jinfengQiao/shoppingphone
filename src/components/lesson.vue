@@ -41,10 +41,13 @@
         <img src="../assets/buSchool/nullBoxImg1.png" alt="">
       </div>
     </div>
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "lesson",
   data(){
@@ -135,6 +138,9 @@ export default {
     this.get_user_lesson();
 
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 

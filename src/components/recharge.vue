@@ -9,7 +9,7 @@
         <p>充值金额</p>
         <div class="inputBox">
           <span>￥</span>
-          <input type="text" placeholder="请输入充值金额">
+          <input type="number" placeholder="请输入充值金额" v-model="moneyNum">
         </div>
       </div>
       <div class="fangshiBox">
@@ -57,30 +57,69 @@
       <div class="mingxiBtn">
         <button type="button">零钱明细</button>
       </div>
-      <div class="lijichongzhi">立即充值</div>
+      <div class="lijichongzhi" @click="chongzhiBtn">立即充值</div>
     </div>
+    <noSharing></noSharing>
+
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "recharge",
   data(){
     return{
-
+      moneyNum:'',
     }
   },
   methods:{
     back:function(){
       this.$router.go(-1);
     },
-    // jumpMoneyDetailed:function (){
-    //   this.$router.push('./moneyDetailed');
-    // }
+    chongzhiBtn(){
+      this.$post(localStorage.getItem('http') + 'invest/to_pay',{
+        token: sessionStorage.getItem('token'),
+        total: this.moneyNum
+      }).then(res=> {
+        console.log(res);
+        this.order_id = res.data.order_id
+        this.order_type = res.data.order_type
+        console.log(this.order_id);
+        console.log(this.order_type);
+        if(res.code == 1){
+          this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+            token: sessionStorage.getItem('token'),
+            order_id: this.order_id,
+            openid: localStorage.getItem('openid'),
+            order_type: this.order_type,
+            use_score: 0
+          })
+          .then(res=> {
+            console.log(res)
+            window.WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', res ,
+            function(res){
+              if(res.err_msg == "get_brand_wcpay_request:ok"){
+                location.href = "/#/balance";
+                // this.$router.push({
+                //   path: '/lesson'
+                // })
+              }else{
+                alert(res);
+              }
+            });
+          })
+        }
+      });
+    }
   },
   created(){
-
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 
@@ -246,6 +285,7 @@ export default {
   width: 100%;
   padding: 0 15px;
   box-sizing: border-box;
+  margin-bottom: 24px;
   .mingxiBtn{
     width: 100%;
     text-align: center;

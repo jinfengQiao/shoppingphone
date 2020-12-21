@@ -16,6 +16,8 @@ import 'vant/lib/index.css'
 import Toast from 'muse-ui-toast';
 import VueSocketIO from 'vue-socket.io'
 
+import wx from 'weixin-js-sdk';
+
 
 // socket * 3.0.7 必须是这个版本
 Vue.use(new VueSocketIO({
@@ -23,8 +25,8 @@ Vue.use(new VueSocketIO({
   connection: 'https://socket.tjqpjt.com:2120'
 }))
 
-import { DatetimePicker,Calendar,Area,CountDown,ShareSheet } from 'vant';
-Vue.use(DatetimePicker).use(Calendar).use(Area).use(CountDown).use(ShareSheet);
+import { DatetimePicker,Calendar,Area,CountDown,ShareSheet,Popup } from 'vant';
+Vue.use(DatetimePicker).use(Calendar).use(Area).use(CountDown).use(ShareSheet).use(Popup);
 
 theme.add('custom-theme', {
   whites: colors.grey50
@@ -60,6 +62,7 @@ Vue.use(Toast);
 
 Vue.prototype.$get = get
 Vue.prototype.$post = post
+Vue.prototype.$wx = wx
 Vue.config.productionTip = false
 
 new Vue({

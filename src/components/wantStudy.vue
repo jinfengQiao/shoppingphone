@@ -16,22 +16,29 @@
           </div>
         </li>
       </ul>
+      <div class="nullBox" v-show="show12">
+        <img src="../assets/buSchool/nullBoxImg1.png" alt="">
+      </div>
     </div>
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "wantStudy",
   data(){
     return{
+      show12:false,
       wantStudyList:[
         // {
         //   imgUrl:require('../assets/center/wantStudyceshiImg1.png'),
         //   text:'视频名称-简单介绍',
         //   time:'09:42'
         // },
-      ]
+      ],
     }
   },
   methods:{
@@ -49,18 +56,28 @@ export default {
         console.log(res.data)
         // this.monthList= res.data.price
         this.wantStudyList = res.data.list
+        if(res.data.list.length == 0){
+          this.show12 = true;
+          this.wantStudyList = [];
+        }else{
+          this.show12 = false;
+          this.wantStudyList = res.data.list;
+        }
       })
     },
   },
   created(){
     this.get_want_study();
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .bg{
-  background-color: #f3f4f6;
+  //background-color: #f3f4f6;
 }
 .head{
   position: fixed;
@@ -93,7 +110,7 @@ export default {
   width: 100%;
   padding: 15px 15px 0;
   box-sizing: border-box;
-  background-color: #ffffff;
+  //background-color: #ffffff;
   ul{
     width: 100%;
     li{
@@ -129,6 +146,17 @@ export default {
           color: #999999;
         }
       }
+    }
+  }
+  .nullBox{
+    margin-top: 60px;
+    margin-bottom: 60px;
+    width: 100%;
+    text-align: center;
+    img{
+      width: 50%;
+      height: 50%;
+      object-fit: cover;
     }
   }
 }

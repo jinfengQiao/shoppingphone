@@ -195,10 +195,14 @@
 
         </div>
 
+      <noSharing></noSharing>
+
     </div>
 </template>
 
 <script>
+    import noSharing from "@/components/noSharing";
+
     export default {
         data() {
             return{
@@ -697,6 +701,9 @@
               this.$toast.error('支付失败');
             }
           }
+        },
+        components: {
+          noSharing
         }
     }
 </script>

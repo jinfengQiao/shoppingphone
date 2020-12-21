@@ -24,10 +24,13 @@
         <img src="../assets/buSchool/nullBoxImg1.png" alt="">
       </div>
     </div>
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "consultation",
   data(){
@@ -68,6 +71,7 @@ export default {
         token: sessionStorage.getItem('token')
       })
       .then(res=> {
+        console.log(res.data);
         if(res.data.length == 0){
           this.show12 = true;
           this.tabCont = [];
@@ -82,12 +86,15 @@ export default {
     this.tab_List();
 
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .bg{
-  background-color: #f3f4f6;
+  //background-color: #f3f4f6;
 }
 .head{
   position: fixed;
@@ -160,7 +167,7 @@ export default {
   width: 100%;
   padding: 15px;
   box-sizing: border-box;
-  background-color: #f3f4f6;
+  //background-color: #f3f4f6;
   ul{
     width: 100%;
     li{
@@ -168,14 +175,16 @@ export default {
       margin-bottom: 15px;
       width: 100%;
       height: 150px;
-      padding: 36px 30px;
+      padding: 10px 30px;
       box-sizing: border-box;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       img{
         float: left;
-        width: 75px;
+        //width: 75px;
         height: 76px;
+        max-width: 90px;
         object-fit: cover;
       }
       .rightRi{

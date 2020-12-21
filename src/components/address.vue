@@ -25,11 +25,13 @@
                 </div>
             </div>
         </div>
-
+      <noSharing></noSharing>
     </div>
 </template>
 
 <script>
+    import noSharing from "@/components/noSharing";
+
     export default {
         data() {
             return{
@@ -75,6 +77,9 @@
                     }
                 })
             }
+        },
+        components: {
+          noSharing
         }
     }
 </script>

@@ -61,10 +61,13 @@
 
 
         </van-form>
+      <noSharing></noSharing>
     </div>
 </template>
 
 <script>
+    import noSharing from "@/components/noSharing";
+
     export default {
         data() {
             return{
@@ -136,6 +139,9 @@
               this.form.value = values.map((item) => item.name).join('/');
               this.showArea = false;
             },
+        },
+        components: {
+          noSharing
         }
     }
 </script>

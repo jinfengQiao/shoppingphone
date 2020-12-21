@@ -121,10 +121,14 @@
             </div>
         </div>
 
+      <noSharing></noSharing>
+
     </div>
 </template>
 
 <script>
+    import noSharing from "@/components/noSharing";
+
     export default {
         data() {
             return{
@@ -461,6 +465,9 @@
                 this.$refs.off_nav.style.display= 'none'
 
             }
+        },
+        components: {
+          noSharing
         }
     }
 </script>

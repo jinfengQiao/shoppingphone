@@ -62,11 +62,14 @@
             </li>
         </ul>
 
+      <noSharing></noSharing>
 
     </div>
 </template>
 
 <script>
+    import noSharing from "@/components/noSharing";
+
     export default {
         data() {
             return{
@@ -276,8 +279,13 @@
           if(this.status == null || this.status == ''){
             this.isActive = 2
           }
-          this.get_list()
+          this.get_list();
+
+
         },
+        components: {
+          noSharing
+        }
     }
 </script>
 

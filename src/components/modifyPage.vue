@@ -86,11 +86,14 @@
     <div class="btnBox">
       <button type="button" @click="preservation">保存</button>
     </div>
+    <noSharing></noSharing>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import noSharing from "@/components/noSharing";
 export default {
 
   name: "modifyPage",
@@ -258,12 +261,17 @@ export default {
 
       console.log(res.data)
       this.face_url = res.data.face_url
+      console.log(this.face_url)
       this.zhuangtai = res.data.nickname
       if(res.data.birth){
         let arr = res.data.birth.split("/");
         this.birth = new Date(arr[0],arr[1],arr[2]);
         this.timeValue = res.data.birth;
       }
+      if(!this.face_url){
+        this.face_url = require('../assets/center/headImg.png');
+      }
+
 
       this.province_name = res.data.province_name
       this.city_name = res.data.city_name
@@ -297,7 +305,12 @@ export default {
       this.province_list = res.data.province_list
       this.city_list = res.data.city_list
     })
+
+
   },
+  components: {
+    noSharing
+  }
 }
 </script>
 
