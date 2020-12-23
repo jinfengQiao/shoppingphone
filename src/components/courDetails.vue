@@ -38,11 +38,12 @@
       </div>
       <div class="listBox">
         <div class="currList" v-for="(n,inx) in lesson" :key="inx">
-          <span>{{n.title}}</span>
+          <span>{{inx+1}} {{n.title}}</span>
           <ul>
-            <li v-for="(spu,k) in n.child" :key="k">
+            <li v-for="(spu,k) in n.child" :key="k" @click="playVideo(spu.video_url)">
               <img src="../assets/buSchool/listBox_icon.png" alt="">
               <p>{{n.title}}</p>
+              <div class="duration">{{spu.duration}}</div>
             </li>
           </ul>
         </div>
@@ -120,6 +121,12 @@
         </div>
       </div>
     </div>
+    <div class="playVideoBox" v-show="playVideoBox">
+      <div class="video11">
+        <video id="video" :src="video_url" autoplay="autoplay" controls="controls"></video>
+        <img src="../assets/center/zhifuTancTuichu.png" alt="" @click="guanbiViode">
+      </div>
+    </div>
 <!--    <payComp></payComp>-->
   </div>
 </template>
@@ -130,6 +137,7 @@ export default {
   name: "courDetails",
   data(){
     return{
+      playVideoBox:false,
       show:true,
       // show1:false,
       height:{
@@ -146,6 +154,7 @@ export default {
       special:'',
       video:'',
       video_cover:'',
+      video_url:'',
       want_study:'',
       lesson:'',
       lesson_id:'',
@@ -159,6 +168,9 @@ export default {
       openid_code:'',
       open_id:'',
       use_score: 0,
+      have:'',
+      price1:'',
+      lessonId:'',
     }
   },
   methods:{
@@ -214,11 +226,18 @@ export default {
       })
       .then(res=> {
         console.log(res.data)
+        this.have = res.data.have
+        this.lessonId = res.data.id
+        // if(res.data.have == true){
+        //   console.log('已买')
+        // }else{
+        //   console.log('未买')
+        // }
         this.title = res.data.title
         this.content = res.data.content
         this.price = res.data.price
         this.price1 = (this.price/100).toFixed(2)
-        this.old_price = res.data.old_price
+        this.old_price = (res.data.old_price/100).toFixed(2)
         this.special = res.data.special
         this.video = res.data.video
         this.video_cover = res.data.video_cover
@@ -227,7 +246,7 @@ export default {
         this.lesson = res.data.lesson
         // this.lesson_id = this.lesson[0].id
         this.course_id = res.data.id
-        console.log(this.course_id)
+        // console.log(this.course_id)
         if(this.want_study == 1){
           this.lay_type1 = 1
         }
@@ -258,84 +277,137 @@ export default {
     },
     buyBtn(){
       console.log(this.course_id)
-      this.$post(localStorage.getItem('http') + 'school/make_course_order',{
+      this.$dialog.confirm({
+        title:'是否确认购买',
+        // message:'取消，确认',
+      })
+      .then(()=>{
+        console.log('支付中..')
+        this.$post(localStorage.getItem('http') + 'school/make_course_order',{
+          token: sessionStorage.getItem('token'),
+          course_id: this.course_id,
+          // lesson_id: this.lesson_id
+          lesson_id:0
+        })
+        .then(res=> {
+          console.log(res.data)
+          if(res.code == 1){
+            // console.log('下单成功');
+            this.order_id = res.data.order_id
+            console.log(this.order_id);
+            this.order_type = res.data.order_type
+            console.log(this.order_type);
+            // 余额支付
+            if(this.weixinSelect == true){
+              console.log('微信支付')
+
+              this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+                token: sessionStorage.getItem('token'),
+                order_id: this.order_id,
+                openid: localStorage.getItem('openid'),
+                order_type: 5,
+                use_score: this.use_score
+              })
+              .then(res=> {
+                function onBridgeReady(res){
+                  window.WeixinJSBridge.invoke(
+                      'getBrandWCPayRequest', res ,
+                      function(res){
+                        console.log(res);
+                        if(res.err_msg == "get_brand_wcpay_request:ok"){
+                          location.href = "/#/lesson";
+                          // this.$router.push({
+                          //   path: '/lesson'
+                          // })
+                        }
+                      });
+                }
+
+                if (typeof WeixinJSBridge == "undefined"){
+                  if( document.addEventListener ){
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady(res), false);
+                  }else if (document.attachEvent){
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady(res));
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(res));
+                  }
+                }else{
+                  onBridgeReady(res);
+                }
+
+                console.log(res)
+
+              })
+
+            }else{
+              console.log('余额支付')
+              this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
+                token: sessionStorage.getItem('token'),
+                order_id: this.order_id,
+                order_type: 5,
+                use_score: this.use_score
+              })
+              .then(res=> {
+                console.log(res)
+                if(res.code == 0){
+                  // console.log('余额不足')
+                  this.$toast.error(res.msg)
+                }
+                if(res.code == 1){
+                  this.$toast.success(res.msg);
+                  this.$router.push('./lesson');
+                }
+              })
+            }
+          }else{
+            this.$toast.error(res.msg)
+          }
+        })
+      })
+      .catch(()=>{
+        console.log('未支付')
+      });
+
+    },
+    guanbiViode(){
+      this.playVideoBox = false;
+      var video = document.getElementById("video");
+      video.pause();
+    },
+    // 播放视频
+    playVideo(video_url){
+      // console.log(video_url);
+      this.video_url = video_url
+      // console.log(this.video_url);
+      this.$post(localStorage.getItem('http') + 'school/check_course',{
         token: sessionStorage.getItem('token'),
-        course_id: this.course_id,
-        // lesson_id: this.lesson_id
-        lesson_id:0
+        id:this.lessonId
       })
       .then(res=> {
-        console.log(res.data)
-        if(res.code == 1){
-          // console.log('下单成功');
-          this.order_id = res.data.order_id
-          console.log(this.order_id);
-          this.order_type = res.data.order_type
-          console.log(this.order_type);
-          // 余额支付
-          if(this.weixinSelect == true){
-            console.log('微信支付')
-
-            this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-              token: sessionStorage.getItem('token'),
-              order_id: this.order_id,
-              openid: localStorage.getItem('openid'),
-              order_type: 5,
-              use_score: this.use_score
-            })
-            .then(res=> {
-              console.log(res)
-              window.WeixinJSBridge.invoke(
-                  'getBrandWCPayRequest', res ,
-                  function(res){
-                    if(res.err_msg == "get_brand_wcpay_request:ok"){
-                      location.href = "/#/lesson";
-                      // this.$router.push({
-                      //   path: '/lesson'
-                      // })
-                    }else{
-                      alert(res);
-                    }
-                  });
-            })
-
-          }else{
-            console.log('余额支付')
-            this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
-              token: sessionStorage.getItem('token'),
-              order_id: this.order_id,
-              order_type: 5,
-              use_score: this.use_score
-            })
-            .then(res=> {
-              console.log(res)
-              if(res.code == 0){
-                // console.log('余额不足')
-                this.$toast.error(res.msg)
-              }
-              if(res.code == 1){
-                this.$toast.success(res.msg);
-                this.$router.push('./lesson');
-              }
-            })
+        if(res.data.have == true){
+          this.playVideoBox = true;
+          var video = document.getElementById("video");
+          if(video.pause){
+            video.play();
           }
         }else{
-          this.$toast.error(res.msg)
+            this.$toast.error('尚未购买')
         }
       })
-    }
+
+
+    },
   },
   created(){
     var score = sessionStorage.getItem('score');
     this.score = score
-    console.log(this.score)
+    // console.log(this.score)
 
     var open_id = sessionStorage.getItem('openid')
     this.order_id = open_id
-    console.log(this.open_id)
+    // console.log(this.open_id)
 
     let id =this.$route.query.id;
-    // console.log(id);
+    console.log(id);
     this.hh();
     this.get_courDetails(id);
     // this.get_want_study();
@@ -577,6 +649,9 @@ export default {
           p{
             margin-left: 10px;
           }
+          .duration{
+            margin-left: 10px;
+          }
         }
       }
     }
@@ -643,7 +718,7 @@ export default {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.25);
-  z-index: 99999;
+  z-index: 1999;
   color: #ffffff;
   .tanchuangBox{
     position: absolute;
@@ -881,5 +956,38 @@ export default {
     font-family: PingFang SC;
     color: #FFFFFF;
   }
+}
+.playVideoBox{
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1999;
+  color: #ffffff;
+  .video11{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -100px;
+    margin-left: -50%;
+    width: 100%;
+    height: 201px;
+    background-color: #ccc;
+    video{
+      width: 100%;
+      height: 201px;
+    }
+    img{
+      position: absolute;
+      right: 5px;
+      top: -30px;
+      width: 24px;
+      height: 24px;
+      object-fit: cover;
+    }
+  }
+
 }
 </style>

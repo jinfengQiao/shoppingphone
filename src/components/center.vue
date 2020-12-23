@@ -1,5 +1,5 @@
 <template>
-  <div class="bg" :style="height">
+  <div class="bg">
     <div class="headBox">
       <div class="head">
 <!--        <div class="headTitle">个人中心</div>-->
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div class="service">
+    <div class="service" :style="height">
       <div class="serTitle">我的服务</div>
       <ul>
         <li v-for="(n,inx) in serList" :key="inx" @click="jumpJ">
@@ -162,6 +162,9 @@ export default {
         }
       })
     }
+
+
+
   },
   methods: {
     hh(){
@@ -301,8 +304,6 @@ export default {
 .bg{
   width: 100%;
   background-color: #ffffff;
-  padding: 0 0 62px 0;
-  box-sizing: border-box;
 }
 .headBox{
   width: 100%;
@@ -444,7 +445,7 @@ export default {
             text-align: center;
             font-size: 14px;
             font-family: Microsoft YaHei;
-            font-weight: 400;
+            font-weight: 600;
             color: #666666;
           }
         }
@@ -457,7 +458,8 @@ export default {
   z-index: 1;
   width: 100%;
   margin-top: 310px;
-  padding: 30px;
+  padding: 30px 30px 62px 30px;
+  margin-bottom: 60px;
   box-sizing: border-box;
   background-color: #ffffff;
   .serTitle{
@@ -467,12 +469,15 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 600;
     color: #333333;
+    overflow: auto;
   }
   ul{
     width: 100%;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    //padding: 0 0 30px 0;
+    //box-sizing: border-box;
     li{
       position: relative;
       margin-top: 24px;
@@ -495,7 +500,7 @@ export default {
         display: block;
         font-size: 14px;
         font-family: Microsoft YaHei;
-        font-weight: 400;
+        font-weight: 600;
         color: #666666;
         text-align: center;
         line-height: 120px;

@@ -29,13 +29,13 @@ export default {
     // 手机商城
     //localStorage.setItem('http', 'http://of.kurohane.com/api/')
     //localStorage.setItem('url', 'http://of.kurohane.com')
-    localStorage.setItem('http', 'http://192.168.1.244/official/public/api/')
-    localStorage.setItem('url', 'http://192.168.1.244/official/public')
-    // localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
-    // localStorage.setItem('url', 'https://of.tjqpjt.com')
+    // localStorage.setItem('http', 'http://192.168.1.244/official/public/api/')
+    // localStorage.setItem('url', 'http://192.168.1.244/official/public')
+    localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
+    localStorage.setItem('url', 'https://of.tjqpjt.com')
 
     if(!localStorage.getItem("openid")){
-      // this.get_openid();
+      this.get_openid();
     }
 
   }

@@ -27,6 +27,8 @@
         },
       created() {
           this.get_list();
+        var wx = this.$wx
+        wx.showOptionMenu();
 
       },
       methods: {

@@ -24,7 +24,7 @@
             <template v-else>
               <span>{{ n.source_name }}</span>
             </template>
-            <p>成功返利</p>
+            <p>{{n.out_type}}</p>
           </div>
           <div class="right">
             <template v-if="n.type == 1">
@@ -59,6 +59,23 @@
         <button type="button" @click="querenBtn">确认</button>
       </div>
     </van-popup>
+
+    <van-popup
+        v-model="tranShow1"
+        round
+        position="bottom"
+        :style="{ height: '30%' }"
+    >
+      <div class="moneyBox11">
+        <div class="inputBox">
+          <span>￥</span>
+          <input type="number" placeholder="请输入金额" v-model="num_money1" @input="inputChange1" oninput="">
+        </div>
+      </div>
+      <div class="moneyBox12">
+        <button type="button" @click="querenBtn1">确认</button>
+      </div>
+    </van-popup>
     <noSharing></noSharing>
 
   </div>
@@ -72,8 +89,10 @@ export default {
   data(){
     return{
       tranShow:false,
+      tranShow1:false,
       contList:[],
       source_name:'',
+      out_type:'',
       addtime:'',
       num:'',
       cybermoney:'',
@@ -81,6 +100,7 @@ export default {
       page: 1,
       show:false,
       num_money:'',
+      num_money1:'',
     }
   },
   methods:{
@@ -109,6 +129,7 @@ export default {
         limit:15
       })
       .then(res=> {
+        console.log(res.data)
         if(res.data.list.length != 0){
           var arr = [];
           arr = this.contList;
@@ -124,7 +145,10 @@ export default {
       })
     },
     tixianBtn(){
-      this.$toast.error('功能暂未开放');
+      this.tranShow1 = true
+      // this.$toast.error('功能暂未开放');
+
+
     },
     tranBbalance(){
       this.tranShow = true
@@ -147,6 +171,32 @@ export default {
             this.getData();
             this.tranShow = false;
             this.num_money = '';
+          }else{
+            this.$toast.error(res.msg);
+          }
+        })
+      }
+    },
+    querenBtn1(){
+      if(!this.num_money1){
+        this.$toast.error('请输入金额');
+      }else if(this.num_money1<1 || this.num_money1>200){
+        this.$toast.error('提现金额为1-200元');
+      }else{
+        this.$post(localStorage.getItem('http') + 'user_cybermoney/to_wechat',{
+          token: sessionStorage.getItem('token'),
+          num: this.num_money1,
+          openid: localStorage.getItem('openid'),
+        })
+        .then(res=> {
+          console.log(res.data)
+          if(res.code == 1){
+            this.tranShow1 = false
+            this.$toast.success(res.msg);
+            this.num_money = '';
+            this.contList = [];
+            this.getData();
+            this.get_cybermoney();
           }else{
             this.$toast.error(res.msg);
           }
@@ -181,6 +231,25 @@ export default {
 
       // return this.num_money;
     },
+    inputChange1(e){
+      var val = e.target.value;
+      var value = e.target.value;
+
+      if (value < 0){
+        this.num_money1 = 0;
+      }
+      if (isNaN(value)){
+        this.num_money1 = 0;
+      }
+      if(value.indexOf(".") != -1 && value.substring(value.indexOf("."),value.length).length>3){
+        this.num_money1 = Math.round((value*100))/100;
+      }
+      if (isNaN(val)){
+        this.num_money1 = 0;
+      }
+
+      // return this.num_money;
+    },
   },
   beforeDestroy() {
     window.removeEventListener("scroll",this.onScroll);
@@ -194,6 +263,9 @@ export default {
     this.getData();
     //先在这里监听scroll事件
     window.addEventListener('scroll', this.onScroll)
+
+    var open_id = sessionStorage.getItem('openid')
+    this.order_id = open_id
   },
   components: {
     noSharing
@@ -287,7 +359,6 @@ export default {
       padding: 15px 20px;
       .left{
         float: left;
-        width: 100px;
         span{
           width: 100%;
           font-size: 16px;
@@ -306,7 +377,6 @@ export default {
       }
       .right{
         float: right;
-        width: 145px;
         text-align: right;
         span{
           width: 100%;

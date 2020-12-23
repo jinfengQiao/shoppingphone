@@ -1,12 +1,12 @@
 <template>
   <div :style="{marginBottom: order_info_show? '84px': '84px' }">
-    <div class="deta_header">
-      <div class="deta_header_title">
-        <i @click="bank" class="iconfont icon-fanhui"></i>
-        <h2>订单详情</h2>
-      </div>
+<!--    <div class="deta_header">-->
+<!--      <div class="deta_header_title">-->
+<!--        <i @click="bank" class="iconfont icon-fanhui"></i>-->
+<!--        <h2>订单详情</h2>-->
+<!--      </div>-->
 
-    </div>
+<!--    </div>-->
 
     <!--收货地址-->
 <!--    <div class="deta_address">-->

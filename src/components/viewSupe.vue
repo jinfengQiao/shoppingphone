@@ -2,8 +2,8 @@
   <div class="bg">
     <div class="head">
       <div class="headTitle">
-        <img src="../assets/center/back_icon.png" alt="" @click="back">
-        <span>Ta的资料</span>
+<!--        <img src="../assets/center/back_icon.png" alt="" @click="back">-->
+<!--        <span>Ta的资料</span>-->
       </div>
       <div class="headContBox">
         <div class="headCont">
@@ -19,7 +19,7 @@
               <button type="button" class="btn1">级别：{{ lever11 }}</button>
             </p>
             <p>
-              <button type="button" class="btn2" v-show="shangji" @click="jumpShangji">上级：{{ parentName }}</button>
+              <button type="button" class="btn2" v-show="shangji" @click="jumpShangji()">上级：{{ parentName }}</button>
             </p>
           </div>
           <div class="headCont3">注册时间：{{ addtime }}</div>
@@ -48,7 +48,6 @@ export default {
       parentId:'',
       parentName:'',
       lever11:'',
-
     }
   },
   methods: {
@@ -67,25 +66,26 @@ export default {
       .then(res=> {
         console.log(res.data)
         this.face_url = res.data.face_url
-        if(this.face_url == null || this.face_url == ''){
+        if(!this.face_url){
           this.face_url = require('../assets/center/headImg.png')
         }
         this.info = res.data.info
-        if(this.info == null || this.info == ''){
+        if(!this.info){
           this.info = "未定义"
         }
         this.addtime = res.data.addtime
         this.nickname = res.data.nickname
-        if(this.nickname == null || this.nickname == ''){
+        if(!this.nickname){
           this.nickname = "未命名"
         }
         this.parentId = res.data.parent.id
         // console.log(this.parentId)
         this.parentName = res.data.parent.nickname
-        if(this.parentId == null || this.parentId == ''){
+        if(!this.parentId){
           this.parentName = "不存在"
+          // this.shangji = false
         }else{
-          if(this.parentName == null || this.parentName == ''){
+          if(!this.parentName){
             this.parentName = "未命名"
           }
         }
@@ -122,7 +122,7 @@ export default {
         this.parentId = res.data.parent.id
         console.log(this.parentId)
         this.parentName = res.data.parent.nickname
-        if(this.parentId == null || this.parentId == ''){
+        if(!this.parentId){
           this.parentName = "不存在"
         }else{
           if(this.parentName == null || this.parentName == ''){

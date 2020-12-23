@@ -10,7 +10,6 @@
         <span>我得收益</span>
         <div class="btnBox">
           <img src="../assets/center/subordinate_btnIcon.png" alt="">
-          <button type="button" @click="inviteFriends">邀请好友</button>
         </div>
       </div>
     </div>
@@ -73,23 +72,24 @@
       </div>
     </div>
 
-    <van-cell title="显示分享面板" @click="showShare = true" />
-    <van-share-sheet
-        v-model="showShare"
-        title="-- 分享到 --"
-        :options="options"
-        @select="onSelect"
-    />
+<!--    <van-cell title="显示分享面板" @click="showShare = true" />-->
+<!--    <van-share-sheet-->
+<!--        v-model="showShare"-->
+<!--        title="&#45;&#45; 分享到 &#45;&#45;"-->
+<!--        :options="options"-->
+<!--        @select="onSelect"-->
+<!--    />-->
+<!--    <wechatInv></wechatInv>-->
   </div>
 </template>
 
 <script>
-
+// import wechatInv from "@/components/wechatInv";
 export default {
   name: "subordinate",
   data(){
     return{
-      showShare: false,
+      // showShare: false,
       options: [
         { name: '微信', icon: 'wechat' },
         // { name: '微博', icon: 'weibo' },
@@ -220,21 +220,6 @@ export default {
         this.erjiList = res.data
       })
     },
-
-    // 邀请好友
-    inviteFriends(){
-      this.showShare = true
-    },
-    // onSelect(option) {
-    //   console.log(option)
-    //   this.$toast.success(option.name);
-    //   this.showShare = false;
-    //   if(option.name == '微信'){
-    //     console.log(123);
-    //
-    //
-    //   }
-    // },
   },
   created(){
     this.integrityurl = window.location.href;
@@ -244,7 +229,13 @@ export default {
     this.hh1();
     this.get_list();
     this.get_list1();
+
+    var wx = this.$wx
+    wx.showOptionMenu();
   },
+  components: {
+    // wechatInv
+  }
 }
 </script>
 
@@ -305,20 +296,6 @@ export default {
       margin-top: 25px;
       width: 145px;
       height: 52px;
-      button{
-        width: 100%;
-        height: 52px;
-        outline: none;
-        border: 0;
-        font-size: 18px;
-        font-family: PingFang SC;
-        font-weight: 500;
-        color: #4E60E5;
-        background: #FFFFFF;
-        border-radius: 24px;
-        padding: 0 0 0 25px;
-        box-sizing: border-box;
-      }
       img{
         position: absolute;
         left: 18px;

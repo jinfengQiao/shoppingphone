@@ -2,7 +2,7 @@
     <div>
         <mu-carousel transition="fade" :hide-indicators="true" :hide-controls="true">
             <mu-carousel-item v-for="item in list" :key="item.id" >
-                <img :src="item.pic_url" alt="">
+                <img :src="item.phone_pic_url" alt="">
             </mu-carousel-item>
         </mu-carousel>
     </div>
@@ -26,7 +26,7 @@
                         console.log(res.data)
 
                         res.data.forEach((item,k)=> {
-                            res.data[k].phone_pic_url= item.pic_url
+                            res.data[k].phone_pic_url= item.phone_pic_url
                         })
 
                         this.list= res.data

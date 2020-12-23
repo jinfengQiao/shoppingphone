@@ -288,7 +288,7 @@ export default {
     },
     // 获取课程列表
     get_clsList() {
-      console.log(this.page)
+      // console.log(this.page)
       this.$post(localStorage.getItem('http') + 'school/get_course',{
         page:this.page,
         limit:15,
@@ -296,7 +296,7 @@ export default {
         keyword:this.keyword
       })
       .then(res=> {
-        console.log(res.data.list)
+        // console.log(res.data.list)
         if (res.data.list.length == 0 && this.page == 1){
           this.show12 = true;
         }else{
@@ -366,6 +366,8 @@ export default {
     this.get_classText();
     this.get_clsTextList();
     window.addEventListener('scroll', this.onScroll );
+    var wx = this.$wx
+    wx.showOptionMenu();
 
   },
   beforeDestroy() {

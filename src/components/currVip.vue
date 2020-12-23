@@ -287,6 +287,8 @@ export default {
     },
     son(idx,money){
       // this.inx = 0
+      // this.idx = 0
+      // console.log(idx)
       console.log(money);
       this.money = money
       this.index=idx;
@@ -418,71 +420,81 @@ export default {
       console.log(this.time_long)
       console.log(this.course_id)
       console.log(this.category_id)
-      this.$post(localStorage.getItem('http') + 'school/make_card_order',{
-        token: sessionStorage.getItem('token'),
-        card_id: this.card_id,
-        time_long: this.time_long,
-        course_id: this.course_id,
-        category_id: this.category_id
-      })
-      .then(res=> {
-        console.log(res.data)
-        if(res.code == 1){
-          // console.log('下单成功');
-          this.order_id = res.data.order_id
-          console.log(this.order_id);
-          this.order_type = res.data.order_type
-          console.log(this.order_type);
-          // 余额支付
-          if(this.weixinSelect == true){
-            console.log('微信支付')
 
-            this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-              token: sessionStorage.getItem('token'),
-              order_id: this.order_id,
-              openid: localStorage.getItem('openid'),
-              order_type: 3,
-              use_score: this.use_score
-            })
-            .then(res=> {
-              console.log(res)
-              window.WeixinJSBridge.invoke(
-                  'getBrandWCPayRequest', res ,
-                  function(res){
-                    if(res.err_msg == "get_brand_wcpay_request:ok"){
-                      location.href = "/#/lesson";
-                      // this.$router.push({
-                      //   path: '/lesson'
-                      // })
-                    }else{
-                      // alert(res);
-                    }
-                  });
-            })
-          }else{
-            console.log('余额支付')
-            this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
-              token: sessionStorage.getItem('token'),
-              order_id: this.order_id,
-              order_type: 3,
-              use_score: this.use_score
-            })
-            .then(res=> {
-                  console.log(res)
-                  if(res.code == 0){
-                    // console.log('余额不足')
-                    this.$toast.error(res.msg)
-                  }
-                  if(res.code == 1){
-                    this.$toast.success(res.msg);
-                    this.$router.push('./lesson');
-                  }
-                })
-          }
-        }else{
-          this.$toast.error(res.msg)
-        }
+      this.$dialog.confirm({
+        title:'是否确认购买',
       })
+      .then(()=>{
+        console.log('支付中..')
+        this.$post(localStorage.getItem('http') + 'school/make_card_order',{
+          token: sessionStorage.getItem('token'),
+          card_id: this.card_id,
+          time_long: this.time_long,
+          course_id: this.course_id,
+          category_id: this.category_id
+        })
+            .then(res=> {
+              console.log(res.data)
+              if(res.code == 1){
+                // console.log('下单成功');
+                this.order_id = res.data.order_id
+                console.log(this.order_id);
+                this.order_type = res.data.order_type
+                console.log(this.order_type);
+                // 余额支付
+                if(this.weixinSelect == true){
+                  console.log('微信支付')
+
+                  this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+                    token: sessionStorage.getItem('token'),
+                    order_id: this.order_id,
+                    openid: localStorage.getItem('openid'),
+                    order_type: 3,
+                    use_score: this.use_score
+                  })
+                      .then(res=> {
+                        console.log(res)
+                        window.WeixinJSBridge.invoke(
+                            'getBrandWCPayRequest', res ,
+                            function(res){
+                              if(res.err_msg == "get_brand_wcpay_request:ok"){
+                                location.href = "/#/lesson";
+                                // this.$router.push({
+                                //   path: '/lesson'
+                                // })
+                              }else{
+                                // alert(res);
+                              }
+                            });
+                      })
+                }else{
+                  console.log('余额支付')
+                  this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
+                    token: sessionStorage.getItem('token'),
+                    order_id: this.order_id,
+                    order_type: 3,
+                    use_score: this.use_score
+                  })
+                      .then(res=> {
+                        console.log(res)
+                        if(res.code == 0){
+                          // console.log('余额不足')
+                          this.$toast.error(res.msg)
+                        }
+                        if(res.code == 1){
+                          this.$toast.success(res.msg);
+                          this.$router.push('./lesson');
+                        }
+                      })
+                }
+              }else{
+                this.$toast.error(res.msg)
+              }
+            })
+      })
+      .catch(()=>{
+        console.log('未支付')
+      });
     }
 
 
@@ -971,7 +983,7 @@ export default {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.25);
-  z-index: 99999;
+  z-index: 1999;
   color: #ffffff;
   .tanchuangBox{
     position: absolute;

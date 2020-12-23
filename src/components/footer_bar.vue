@@ -7,8 +7,9 @@
       <li
           v-for="(i,index) in list"
           :key="index"
-          @click="addClassName(i.path)"
+          @click="addClassName(i.path,index)"
           :to="i.path"
+          :class="{barCls:index==isSelect11}"
       >
         <img :src="i.path===$route.path?list[index].active : list[index].img">
         <span>{{i.name}}</span>
@@ -57,13 +58,15 @@ export default {
           },
 
         ],
+        isSelect11:0,
       }
     },
     created() {
 
     },
     methods: {
-      addClassName: function(path) {
+      addClassName: function(path,index) {
+        this.isSelect11 = index;
         this.$router.replace(path);
       },
     }
@@ -82,6 +85,7 @@ export default {
   background: #FFFFFF;
   border: 1px solid #E7E7E7;
   box-sizing: border-box;
+  color: #AAAAAA;
   ul{
     float: left;
     width: 100%;
@@ -95,22 +99,22 @@ export default {
       cursor: pointer;
       img{
         margin-top: 10px;
-        width: 26px;
-        height: 26px;
+        width: 22px;
+        height: 22px;
       }
       span{
         float: left;
         width: 100%;
-        margin-top: -4px;
+        margin-top: -1px;
         font-size: 13px;
         font-family: PingFang SC;
-        color: #AAAAAA;
         text-align: center;
+        font-weight: bold;
       }
     }
   }
 }
-.Active{
+.barCls{
   color: #1672F9!important;
 }
 </style>

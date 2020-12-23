@@ -94,6 +94,9 @@
           this.get_nav()
           this.get_nav_recom()
           this.get_List()
+
+          var wx = this.$wx
+          wx.showOptionMenu();
         },
         methods: {
             // 列表跳转详情
@@ -106,13 +109,13 @@
               })
             },
             // 获取列表
-            get_list(y) {
-              this.$post(localStorage.getItem('http') + 'goods/get_list',y)
-                .then(res=> {
-                  // console.log(res)
-                  this.list= res.data.list
-                })
-            },
+            // get_list(y) {
+            //   this.$post(localStorage.getItem('http') + 'goods/get_list',y)
+            //     .then(res=> {
+            //       // console.log(res)
+            //       this.list= res.data.list
+            //     })
+            // },
             // 获取导航
             get_nav() {
               this.$post(localStorage.getItem('http') + 'goods_category/get_parent_nav',{
@@ -132,7 +135,7 @@
 
                   this.list_form.category_pid= res.data[0].id
 
-                  this.get_list(this.list_form)
+                  // this.get_list(this.list_form)
 
                   this.goods_buttons_list= res.data
                 })
@@ -263,9 +266,9 @@
         }
         li{
           position: relative;
-          padding: 15px 0 0 0;
+          padding: 10px 0;
           width: 33.33%;
-          height: 125px;
+          min-height: 115px;
           border: 1px solid #C9C9C9;
           box-sizing: border-box;
           opacity: 1;
@@ -276,19 +279,20 @@
           p{
             width: 100%;
             text-align: center;
-            font-size: 12px;
+            font-size: 14px;
             font-family: PingFang SC;
-            font-weight: 500;
+            font-weight: 600;
             color: #333333;
-            height: 36px;
+            //height: 36px;
           }
           span{
+            margin-top: 5px;
             display: block;
             width: 100%;
             text-align: center;
             font-size: 14px;
             font-family: PingFang SC;
-            font-weight: 500;
+            font-weight: 600;
             color: #1B71FF;
           }
           .title{
@@ -297,7 +301,7 @@
             width: 100%;
             font-size: 16px;
             font-family: PingFang SC;
-            font-weight: 500;
+            font-weight: 600;
             color: #333333;
           }
           .text{

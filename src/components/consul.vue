@@ -180,68 +180,123 @@ export default {
     },
     buyBtn(){
       console.log(this.card_id)
-      this.$post(localStorage.getItem('http') + 'card/to_pay',{
-        token: sessionStorage.getItem('token'),
-        card_id: this.card_id,
+
+      this.$dialog.confirm({
+        title:'是否确认购买',
       })
-      .then(res=> {
-        console.log(res.data)
-        if(res.code == 1){
-          // console.log('下单成功');
-          this.order_id = res.data.order_id
-          console.log(this.order_id);
-          this.order_type = res.data.order_type
-          console.log(this.order_type);
-          // 余额支付
-          if(this.weixinSelect == true){
-            console.log('微信支付')
-            this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-              token: sessionStorage.getItem('token'),
-              order_id: this.order_id,
-              openid: localStorage.getItem('openid'),
-              order_type: 2,
-              use_score: this.use_score
-            })
+      .then(()=>{
+        console.log('支付中..')
+        this.$post(localStorage.getItem('http') + 'card/to_pay',{
+          token: sessionStorage.getItem('token'),
+          card_id: this.card_id,
+        })
             .then(res=> {
-              console.log(res)
-              window.WeixinJSBridge.invoke(
-                  'getBrandWCPayRequest', res ,
-                  function(res){
-                    if(res.err_msg == "get_brand_wcpay_request:ok"){
-                      location.href = "/#/consultation";
-                      // this.$router.push({
-                      //   path: '/lesson'
-                      // })
-                    }else{
-                      // alert(res);
-                    }
-                  });
-              })
-          }else{
-            console.log('余额支付')
-            this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
-              token: sessionStorage.getItem('token'),
-              order_id: this.order_id,
-              order_type: 2,
-              use_score: this.use_score
+              console.log(res.data)
+              if(res.code == 1){
+                // console.log('下单成功');
+                this.order_id = res.data.order_id
+                console.log(this.order_id);
+                this.order_type = res.data.order_type
+                console.log(this.order_type);
+                // 余额支付
+                if(this.weixinSelect == true){
+                  console.log('微信支付')
+                  this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+                    token: sessionStorage.getItem('token'),
+                    order_id: this.order_id,
+                    openid: localStorage.getItem('openid'),
+                    order_type: 2,
+                    use_score: this.use_score
+                  })
+                      .then(res=> {
+                        console.log(res)
+                        window.WeixinJSBridge.invoke(
+                            'getBrandWCPayRequest', res ,
+                            function(res){
+                              if(res.err_msg == "get_brand_wcpay_request:ok"){
+                                location.href = "/#/consultation";
+                                // this.$router.push({
+                                //   path: '/lesson'
+                                // })
+                              }else{
+                                // alert(res);
+                              }
+                            });
+                      })
+                }else{
+                  console.log('余额支付')
+                  this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
+                    token: sessionStorage.getItem('token'),
+                    order_id: this.order_id,
+                    order_type: 2,
+                    use_score: this.use_score
+                  })
+                      .then(res=> {
+                        console.log(res)
+                        if(res.code == 0){
+                          // console.log('余额不足')
+                          this.$toast.error(res.msg)
+                        }
+                        if(res.code == 1){
+                          this.$toast.success(res.msg);
+                          this.$router.push('./consultation');
+                        }
+                      })
+                }
+              }else{
+                this.$toast.error(res.msg)
+              }
             })
-                .then(res=> {
-                  console.log(res)
-                  if(res.code == 0){
-                    // console.log('余额不足')
-                    this.$toast.error(res.msg)
-                  }
-                  if(res.code == 1){
-                    this.$toast.success(res.msg);
-                    this.$router.push('./consultation');
-                  }
-                })
-          }
-        }else{
-          this.$toast.error(res.msg)
-        }
       })
-    }
+      .catch(()=>{
+        console.log('未支付')
+      });
+
+
+    },
+    share(title,desc,link,imgUrl){
+      this.$post(localStorage.getItem('http') + 'wechat/get_jssdk_config',{
+        url: this.integrityurl
+      }).then(res=> {
+        var wx = this.$wx;
+        wx.config(res.data);
+        wx.ready(function(){
+          wx.checkJsApi({
+            jsApiList: res.data.jsApiList, // 需要检测的JS接口列表，所有JS接口列表见附录2,
+            success: function(res) {
+              console.log(res);
+              // 以键值对的形式返回，可用的api值true，不可用为false
+              // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+            }
+          });
+
+          wx.updateAppMessageShareData({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+              // 设置成功
+              // console.log("message ok");
+            }
+          });
+
+          wx.updateTimelineShareData({
+            title: title, // 分享标题
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+              // 设置成功
+              // console.log("timeline ok");
+            }
+          })
+
+
+        });
+
+
+      });
+    },
   },
   created(){
     var score = sessionStorage.getItem('score');
@@ -250,6 +305,9 @@ export default {
     this.tab_List();
     this.tab_Cont();
     this.hh();
+    this.share
+    var wx = this.$wx
+    wx.showOptionMenu();
 
   },
   components: {
@@ -420,7 +478,7 @@ export default {
   left: 0;
   top: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 2000;
   background: rgba(0, 0, 0, 0.25)
 }
 .showQyBox{
@@ -428,7 +486,7 @@ export default {
   top: 50%;
   left: 0;
   margin-top: -210px;
-  z-index: 99999;
+  z-index: 2000;
   width: 100%;
   padding: 0 30px;
   box-sizing: border-box;

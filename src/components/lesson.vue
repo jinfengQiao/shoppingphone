@@ -17,7 +17,7 @@
         </div>
       </div>
       <ul>
-        <li class="nthChildLi" v-for="(n,inx) in lessonList" :key="inx">
+        <li class="nthChildLi" v-for="(n,inx) in lessonList" :key="inx" @click="jumpDetails(n.course_id)">
           <p>
             <span>{{ spanName }}</span>
             {{n.title}}
@@ -131,6 +131,14 @@ export default {
         }
       })
     },
+    jumpDetails(course_id){
+      this.$router.push({
+        path:'courDetails',
+        query:{
+          id:course_id
+        }
+      })
+    }
   },
   created(){
     this.hh();

@@ -40,7 +40,7 @@ export default {
       })
       .then(res=> {
         console.log(res)
-        this.balance = res.data.balance
+        this.balance = (res.data.balance)/100
         if(!this.balance){
           this.balance = 0;
         }

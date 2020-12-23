@@ -1,10 +1,10 @@
 <template>
     <div :style="{marginBottom: order_info_show? '84px': '84px' }">
         <div class="deta_header">
-            <div class="deta_header_title">
-                <i @click="bank" class="iconfont icon-fanhui"></i>
-                <h2>订单支付</h2>
-            </div>
+<!--            <div class="deta_header_title">-->
+<!--                <i @click="bank" class="iconfont icon-fanhui"></i>-->
+<!--                <h2>订单支付</h2>-->
+<!--            </div>-->
             <div class="deta_header_state">
                 <div class="deta_header_state_left">
                     <h2>{{ deta_title }}</h2>
@@ -81,11 +81,6 @@
                             </svg>
                         </div>
                         <div v-if="radio == '2'" class="pay_content">
-                          <svg class="icon zhifubao" aria-hidden="true">
-                            <use xlink:href="#icon-zhifubao"></use>
-                          </svg>
-                        </div>
-                        <div v-if="radio == '3'" class="pay_content">
                             <svg class="icon yue" aria-hidden="true">
                                 <use xlink:href="#icon-yanzhengma"></use>
                             </svg>
@@ -110,26 +105,17 @@
                     </div>
                     <van-radio name="1" icon-size="24px"></van-radio>
                   </div>
-                  <template v-if="this.is_weixin == false">
-                  <div class="pay_modes">
-                    <div class="pay_mode">
-                      <svg class="icon zhifubao" aria-hidden="true">
-                        <use xlink:href="#icon-zhifubao"></use>
-                      </svg>
-                      <p>支付宝支付</p>
+
+                    <div class="pay_modes">
+                      <div class="pay_mode">
+                        <svg class="icon yue" aria-hidden="true">
+                          <use xlink:href="#icon-yanzhengma"></use>
+                        </svg>
+                        <p>余额支付</p>
+                      </div>
+                      <van-radio name="2" icon-size="24px"></van-radio>
                     </div>
-                    <van-radio name="2" icon-size="24px"></van-radio>
-                  </div>
-                  </template>
-                  <div class="pay_modes">
-                    <div class="pay_mode">
-                      <svg class="icon yue" aria-hidden="true">
-                        <use xlink:href="#icon-yanzhengma"></use>
-                      </svg>
-                      <p>余额支付</p>
-                    </div>
-                    <van-radio name="3" icon-size="24px"></van-radio>
-                  </div>
+
                 </van-radio-group>
             </div>
         </div>
@@ -144,9 +130,9 @@
         </div>
         <div class="myjifen">
           <div class="myjifenLeft">
-            我的总积分 <span>200000</span>
+            我的总积分 <span>{{ score }}</span>
           </div>
-          <input type="number" placeholder="输入兑换积分">
+          <input type="number" placeholder="输入兑换积分" v-model="use_score">
         </div>
         <div v-if="order_info_show" :style="{marginTop: order_info_show? '12px' : ''}">
           <!--订单信息-->
@@ -254,10 +240,12 @@
                 is_weixin: false,
 
                 time11:24 * 60 * 60 * 1000,
+                score:0,
+                use_score:0,
             }
         },
         created() {
-            this.isWeiXin()
+            // this.isWeiXin()
             this.get_id()
 
             let obj_spu= {}
@@ -287,6 +275,12 @@
               // 获取订单详情
               this.get_detail()
             }
+            this.get_money();
+
+
+            var open_id = sessionStorage.getItem('openid')
+            this.open_id = open_id
+            console.log(this.open_id)
         },
         methods: {
             // 获取订单详情
@@ -297,7 +291,7 @@
                 id: this.$route.query.id
               })
                 .then(res=> {
-                  // console.log(res)
+                  console.log(res)
                   this.order_goods_id= res.data.goods[0].id
                   this.spu_id= res.data.goods[0].spu_id
                   this.order_id= res.data.id
@@ -354,73 +348,6 @@
                   }
                 })
             },
-            wap_pay(y) {
-              if (this.is_weixin == true){
-                y.is_weixin = 1;
-                y.openid = localStorage.getItem("openid");
-                this.$post(localStorage.getItem('http') + 'pay/wap_pay',y).then(res=>{
-                    window.WeixinJSBridge.invoke(
-                        'getBrandWCPayRequest', {
-                          "appId":res.appId,
-                          "timeStamp":res.timeStamp,
-                          "nonceStr":res.nonceStr,
-                          "package":res.package,
-                          "signType":res.signType,
-                          "paySign":res.paySign
-                        },function(res){
-                          if(res.err_msg == "get_brand_wcpay_request:ok" ){
-                            //不处理
-                            this.$router.push({
-                              path: '/payPage',
-                              query:{
-                                stu: 1
-                              }
-                            })
-
-                            //清除本地商品缓存
-                            sessionStorage.removeItem('obj');
-                          }
-                          //取消
-                          if(res.err_msg == "get_brand_wcpay_request:cancel" ){
-                            //弹框告诉用户取消
-                          }
-                          //失败
-                          if(res.err_msg == "get_brand_wcpay_request:fail" ){
-                            //跳转到失败页面
-                            this.$router.push({
-                              path: '/payPage',
-                              query:{
-                                stu: 2
-                              }
-                            })
-                          }
-                        });
-                });
-              }else{
-                if (y.type == 1){
-                  this.$post(localStorage.getItem('http') + 'pay/wap_pay',y)
-                      .then(res=> {
-                        console.log(y.type)
-                        // console.log(res)
-                        // const div = document.createElement('div')
-                        /* 此处form就是后台返回接收到的数据 */
-                        // div.style.display= 'none'
-                        // div.innerHTML = res
-                        // document.body.appendChild(div)
-                        // document.forms[0].submit()
-
-                        this.$refs['pays'].innerHTML= res
-                        document.forms[0].submit()
-                        console.log(document.forms[0])
-                        console.log(res)
-                      })
-                }
-
-                if(y.type == 2){
-                  window.location.href="https://of.tjqpjt.com/api/pay/wap_pay?token="+y.token+"&order_id="+y.order_id+"&type=2";
-                }
-              }
-            },
             // 下单接口
             make_order() {
               let obj= {}
@@ -433,37 +360,6 @@
                 obj['type']= '1'
               }
               this.wap_pay(obj)
-            },
-            // 立即支付
-            pay_click() {
-                 // 下单
-              let obj= {}
-              obj['token']= sessionStorage.getItem('token')
-              obj['user_address_id']= this.address_id
-
-              this.arr_spu.forEach((item)=> {
-                obj['amount']= [item.num]
-                obj['sku_id']= [item.sku_id]
-              })
-
-              // console.log(obj)
-              if(this.address_clicks) {
-                this.make_order()
-              }else{
-                let obj= {}
-                obj['order_id']= this.order_id
-                obj['token']= sessionStorage.getItem('token')
-               // console.log(this.radio)
-                if(this.radio == 1) {
-                  obj['type']= '2'
-                }else{
-                  obj['type']= '1'
-                }
-                // console.log(obj)
-
-                this.wap_pay(obj)
-              }
-
             },
             // 申请退款
             refund_click() {
@@ -603,9 +499,6 @@
             },
             // 支付方式展开
             open() {
-              if (this.is_weixin == true){
-                return false;
-              }
               if(this.pay.falg) {
                 this.pay.pays= 'pays pays_into'
                 this.pay.icon= 'iconfont icon-fanhui trun'
@@ -623,7 +516,7 @@
               this.$post(localStorage.getItem('http') + 'pay/get_id',{
                 token: sessionStorage.getItem('token')
               }).then((res)=> {
-                  console.log(res.data);
+                  // console.log(res.data);
                   this.socket= res.data
                   this.$socket.emit('login',res.data)
               })
@@ -631,40 +524,205 @@
             // 支付方式切换
             redio_change(val) {
                 this.radio= val
+                console.log(val)
             },
             // 返回
             bank() {
               this.$router.go(-1)
             },
-            isWeiXin() {
-              function getUrlPara(name) {
-                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
-                var r = window.location.search.substr(1).match(reg);
-                if (r!=null) return (r[2]); return null;
-              }
+            // isWeiXin() {
+            //   function getUrlPara(name) {
+            //     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
+            //     var r = window.location.search.substr(1).match(reg);
+            //     if (r!=null) return (r[2]); return null;
+            //   }
+            //
+            //   var ua = window.navigator.userAgent.toLowerCase();
+            //   if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+            //     this.is_weixin = true; // 是微信端
+            //
+            //     // https://open.weixin.qq.com/connect/oauth2/authorize?appid=$this->appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect
+            //     let code = getUrlPara("code");
+            //     if(!code){
+            //       let redirect_url = encodeURIComponent(window.location.href);
+            //       location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6bb6df7430479e17&redirect_uri="+redirect_url+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+            //     }
+            //
+            //     this.$post(localStorage.getItem('http') + 'wechat/get_openid',{
+            //       code:code
+            //     })
+            //         .then(res => {
+            //           localStorage.setItem("openid",res.data);
+            //         })
+            //
+            //   } else {
+            //     this.is_weixin = false;
+            //   }
+            // },
 
-              var ua = window.navigator.userAgent.toLowerCase();
-              if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-                this.is_weixin = true; // 是微信端
-
-                // https://open.weixin.qq.com/connect/oauth2/authorize?appid=$this->appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect
-                let code = getUrlPara("code");
-                if(!code){
-                  let redirect_url = encodeURIComponent(window.location.href);
-                  location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6bb6df7430479e17&redirect_uri="+redirect_url+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
-                }
-
-                this.$post(localStorage.getItem('http') + 'wechat/get_openid',{
-                  code:code
-                })
-                    .then(res => {
-                      localStorage.setItem("openid",res.data);
-                    })
-
-              } else {
-                this.is_weixin = false;
-              }
+          // 获取积分
+          get_money(){
+            this.$post(localStorage.getItem('http') + 'user_info/get_money',{
+              token: sessionStorage.getItem('token'),
+            })
+            .then(res=> {
+              // console.log(res.data)
+              this.score = res.data.score
+            })
+          },
+          pay_click(){
+            console.log(this.radio)
+            if(this.radio == 1){
+              this.weChatZhifu();
             }
+            if(this.radio == 2){
+              this.yueZhifu();
+            }
+          },
+          // 微信支付
+          weChatZhifu(){
+            console.log(this.openid)
+            console.log('微信支付')
+            this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id: this.order_id,
+              openid: localStorage.getItem('openid'),
+              order_type: 1,
+              use_score: this.use_score
+            })
+            .then(res=> {
+              console.log(res)
+              window.WeixinJSBridge.invoke(
+              'getBrandWCPayRequest', res ,
+              function(res){
+                if(res.err_msg == "get_brand_wcpay_request:ok"){
+                  location.href = "/#/order/my_order";
+                  // this.$router.push({
+                  //   path: '/lesson'
+                  // })
+                }else{
+                  // alert(res);
+                }
+              });
+            })
+          },
+          // 余额支付
+          yueZhifu(){
+            this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
+              token: sessionStorage.getItem('token'),
+              order_id:this.order_id,
+              order_type: 1,
+              use_score: this.use_score
+            })
+            .then(res=> {
+              console.log(res.data)
+              if(res.code == 0){
+                this.$toast.error(res.msg)
+              }
+              if(res.code == 1){
+                this.$toast.success(res.msg);
+                this.$router.push('order/my_order');
+              }
+            })
+          }
+          // 立即支付
+          // pay_click() {
+          //   // 下单
+          //   let obj= {}
+          //   obj['token']= sessionStorage.getItem('token')
+          //   obj['user_address_id']= this.address_id
+          //
+          //   this.arr_spu.forEach((item)=> {
+          //     obj['amount']= [item.num]
+          //     obj['sku_id']= [item.sku_id]
+          //   })
+          //
+          //   // console.log(obj)
+          //   if(this.address_clicks) {
+          //     this.make_order()
+          //   }else{
+          //     let obj= {}
+          //     obj['order_id']= this.order_id
+          //     obj['token']= sessionStorage.getItem('token')
+          //     // console.log(this.radio)
+          //     if(this.radio == 1) {
+          //       obj['type']= '3'
+          //     }else{
+          //       obj['type']= '1'
+          //     }
+          //     // console.log(obj)
+          //
+          //     this.wap_pay(obj)
+          //   }
+          //
+          // },
+          // wap_pay(y) {
+          //   if (this.is_weixin == true){
+          //     y.is_weixin = 1;
+          //     y.openid = localStorage.getItem("openid");
+          //     this.$post(localStorage.getItem('http') + 'pay/wap_pay',y).then(res=>{
+          //       window.WeixinJSBridge.invoke(
+          //           'getBrandWCPayRequest', {
+          //             "appId":res.appId,
+          //             "timeStamp":res.timeStamp,
+          //             "nonceStr":res.nonceStr,
+          //             "package":res.package,
+          //             "signType":res.signType,
+          //             "paySign":res.paySign
+          //           },function(res){
+          //             if(res.err_msg == "get_brand_wcpay_request:ok" ){
+          //               //不处理
+          //               this.$router.push({
+          //                 path: '/payPage',
+          //                 query:{
+          //                   stu: 1
+          //                 }
+          //               })
+          //
+          //               //清除本地商品缓存
+          //               sessionStorage.removeItem('obj');
+          //             }
+          //             //取消
+          //             if(res.err_msg == "get_brand_wcpay_request:cancel" ){
+          //               //弹框告诉用户取消
+          //             }
+          //             //失败
+          //             if(res.err_msg == "get_brand_wcpay_request:fail" ){
+          //               //跳转到失败页面
+          //               this.$router.push({
+          //                 path: '/payPage',
+          //                 query:{
+          //                   stu: 2
+          //                 }
+          //               })
+          //             }
+          //           });
+          //     });
+          //   }else{
+          //     if (y.type == 1){
+          //       this.$post(localStorage.getItem('http') + 'pay/wap_pay',y)
+          //           .then(res=> {
+          //             console.log(y.type)
+          //             // console.log(res)
+          //             // const div = document.createElement('div')
+          //             /* 此处form就是后台返回接收到的数据 */
+          //             // div.style.display= 'none'
+          //             // div.innerHTML = res
+          //             // document.body.appendChild(div)
+          //             // document.forms[0].submit()
+          //
+          //             this.$refs['pays'].innerHTML= res
+          //             document.forms[0].submit()
+          //             console.log(document.forms[0])
+          //             console.log(res)
+          //           })
+          //     }
+          //
+          //     if(y.type == 2){
+          //       window.location.href="https://of.tjqpjt.com/api/pay/wap_pay?token="+y.token+"&order_id="+y.order_id+"&type=2";
+          //     }
+          //   }
+          // },
         },
         sockets: {
           connect(){
@@ -885,9 +943,6 @@
                     .yue{
                       font-size: 16px;
                     }
-                    .zhifubao{
-                        font-size: 16px;
-                    }
                 }
                 .pay_price{
                     display: flex;
@@ -919,9 +974,6 @@
                         }
                         .yue{
                           font-size: 16px;
-                        }
-                        .zhifubao{
-                            font-size: 16px;
                         }
                         p{
                             font-size: 13px;
@@ -1010,8 +1062,8 @@
     }
 
     .pays_into{
-        //height: 108px!important;
-        height: 124px!important;
+        height: 108px!important;
+        //height: 124px!important;
     }
 
     // 订单信息
