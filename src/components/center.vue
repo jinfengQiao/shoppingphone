@@ -163,8 +163,6 @@ export default {
       })
     }
 
-
-
   },
   methods: {
     hh(){
@@ -459,9 +457,9 @@ export default {
   width: 100%;
   margin-top: 310px;
   padding: 30px 30px 62px 30px;
-  margin-bottom: 60px;
   box-sizing: border-box;
   background-color: #ffffff;
+  overflow: auto;
   .serTitle{
     width: 100%;
     text-align: left;

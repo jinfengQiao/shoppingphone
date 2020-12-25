@@ -56,15 +56,15 @@ export default {
     },
     // 获取用户详情
     get_list(level,user_id){
-      console.log(level)
-      console.log(user_id)
+      // console.log(level)
+      // console.log(user_id)
       this.$post(localStorage.getItem('http') + 'user_relation/get_detail',{
         token: sessionStorage.getItem('token'),
         level: level,
         user_id: user_id
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.face_url = res.data.face_url
         if(!this.face_url){
           this.face_url = require('../assets/center/headImg.png')
@@ -105,7 +105,7 @@ export default {
         user_id: this.parentId
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.face_url = res.data.face_url
         if(this.face_url == null || this.face_url == ''){
           this.face_url = require('../assets/center/headImg.png')
@@ -120,7 +120,7 @@ export default {
           this.nickname = "未命名"
         }
         this.parentId = res.data.parent.id
-        console.log(this.parentId)
+        // console.log(this.parentId)
         this.parentName = res.data.parent.nickname
         if(!this.parentId){
           this.parentName = "不存在"
@@ -136,12 +136,12 @@ export default {
   },
   created(){
     let level =this.$route.query.level;
-    console.log(level);
+    // console.log(level);
     if(level == 1){
       this.shangji = false
     }
     let user_id =this.$route.query.id;
-    console.log(user_id);
+    // console.log(user_id);
     this.get_list(level,user_id);
   },
 }

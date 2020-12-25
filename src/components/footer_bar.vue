@@ -9,7 +9,7 @@
           :key="index"
           @click="addClassName(i.path,index)"
           :to="i.path"
-          :class="{barCls:index==isSelect11}"
+          :class="i.path===$route.path?list[index].currentClass : list[index].class"
       >
         <img :src="i.path===$route.path?list[index].active : list[index].img">
         <span>{{i.name}}</span>
@@ -30,33 +30,42 @@ export default {
             img: require("../assets/footer/index_icon1.png"),  //原始显示的图标
             active: require("../assets/footer/index_icon.png"), //点击之后要显示的图标
             name: "首页",
-            path: "/index_home"
+            path: "/index_home",
+            class:"",
+            currentClass:"barCls"
           },
           {
             img: require("../assets/footer/busin_icon1.png"),  //原始显示的图标
             active: require("../assets/footer/busin_icon.png"), //点击之后要显示的图标
             name: "商学院",
-            path: "/buSchool"
+            path: "/buSchool",
+            class:"",
+            currentClass:"barCls"
           },
           {
             img: require("../assets/footer/card_icon1.png"),  //原始显示的图标
             active: require("../assets/footer/card_icon.png"), //点击之后要显示的图标
             name: "咨询卡",
-            path: "/consul"
+            path: "/consul",
+            class:"",
+            currentClass:"barCls"
           },
           {
             img: require("../assets/footer/class_icon1.png"),  //原始显示的图标
             active: require("../assets/footer/class_icon.png"), //点击之后要显示的图标
             name: "分类",
-            path: "/order/all_service"
+            path: "/order/all_service",
+            class:"",
+            currentClass:"barCls"
           },
           {
             img: require("../assets/footer/my_icon1.png"),  //原始显示的图标
             active: require("../assets/footer/my_icon.png"), //点击之后要显示的图标
             name: "我的",
-            path: "/center"
+            path: "/center",
+            class:"",
+            currentClass:"barCls"
           },
-
         ],
         isSelect11:0,
       }

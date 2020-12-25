@@ -125,7 +125,7 @@ export default {
         month:this.currentMonth,
         year:this.currentYear
       }).then(res=> {
-        console.log(res);
+        // console.log(res);
         this.days = res.data;
       });
     },
@@ -139,7 +139,7 @@ export default {
       })
       .then(res=> {
         this.arrDate = res.data
-        console.log(this.arrDate)
+        // console.log(this.arrDate)
       })
     },
     // 点击签到

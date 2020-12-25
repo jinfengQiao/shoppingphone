@@ -90,7 +90,7 @@ export default {
     get_class() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.tabList= res.data
         this.spanName = res.data[0].name
       })
@@ -104,7 +104,7 @@ export default {
         category_id:1
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.lessonList = res.data
 
         if(this.lessonList == '' || this.lessonList == null){

@@ -136,7 +136,7 @@ export default {
         category_id:this.category_id
       })
       .then(res=> {
-        console.log(res.data.list)
+        // console.log(res.data.list)
         this.tabCont = res.data.list;
 
 
@@ -301,7 +301,7 @@ export default {
   created(){
     var score = sessionStorage.getItem('score');
     this.score = score
-    console.log(this.score)
+    // console.log(this.score)
     this.tab_List();
     this.tab_Cont();
     this.hh();

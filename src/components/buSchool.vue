@@ -55,7 +55,7 @@
           </ul>
           <img src="../assets/buSchool/search_icon.png" alt="" @click="jumpSearch">
         </div>
-        <div class="cont2Cont" id="contContCont1">
+        <div class="cont2Cont" id="contContCont1" :style="height1">
           <div class="cont2Cont1" v-for="(n,inx) in contContCont1" :key="inx" @click="jumpArtiDetails(n.id)">
             <span>{{ n.title }}</span>
             <p>{{ n.info }}</p>
@@ -100,6 +100,10 @@ export default {
         width:'',
         height:'',
       },
+      height1:{
+        width:'',
+        height:'',
+      },
       show12:false,
       show13:false,
       tabState: 1,
@@ -135,7 +139,10 @@ export default {
   },
   methods:{
     hh(){
-      this.height.height = window.innerHeightc +'px'
+      this.height.height = window.innerHeight-313 +'px'
+    },
+    hh1(){
+      this.height1.height = window.innerHeight +'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -261,7 +268,7 @@ export default {
     get_class() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.contContHead= res.data
         // this.category_id = res.data.id
         // console.log(this.category_id)
@@ -320,7 +327,7 @@ export default {
     get_classText() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.cont2HeadLi= res.data
         // this.category_id = res.data.id
         // console.log(this.category_id)
@@ -336,7 +343,7 @@ export default {
         keyword:this.keyword
       })
       .then(res=> {
-        console.log(res.data.list)
+        // console.log(res.data.list)
         if (res.data.list.length == 0 && this.page == 1){
           this.show13 = true;
         }else{
@@ -363,6 +370,7 @@ export default {
     this.get_class();
     this.get_clsList();
     this.hh();
+    this.hh1();
     this.get_classText();
     this.get_clsTextList();
     window.addEventListener('scroll', this.onScroll );
@@ -417,29 +425,28 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 25px;
   z-index: 3;
   background-color: #f3f4f6;
+  //padding: 0 15px;
+  //box-sizing: border-box;
   .toggle{
-    position: absolute;
-    left: 50%;
-    top: 0;
-    margin-left: -65px;
-    width: 130px;
+    float: left;
+    width: 100%;
     button{
       float: left;
-      width: 65px;
-      height: 25px;
-      line-height: 23px;
+      width: 50%;
+      height: 36px;
+      line-height: 32px;
       border-radius: 2px 0px 0px 2px;
       outline: none;
-      font-size: 16px;
+      font-size: 18px;
       font-family: PingFang SC;
       font-weight: 500;
       box-sizing: border-box;
       border: 1px solid #0596EB;
       box-sizing: border-box;
       color: #0596EB;
+      background-color: #ffffff;
     }
     button:last-child{
       float: right;
@@ -458,12 +465,12 @@ export default {
   //display: none;
 }
 .cont{
+  float: left;
   position: relative;
   width: 100%;
-  margin-top: 95px;
   .banner{
     position: fixed;
-    top: 25px;
+    top: 36px;
     left: 0;
     float: left;
     width: 100%;
@@ -522,16 +529,16 @@ export default {
   .contCont{
     position: relative;
     float: left;
-    margin-top: 120px;
     width: 100%;
     background-color: #ffffff;
-    padding: 0 15px 62px;
+    padding: 251px 15px 62px;
     box-sizing: border-box;
+    overflow: auto;
     .contContHead{
       padding: 0 15px;
       box-sizing: border-box;
       position: fixed;
-      top: 145px;
+      top: 156px;
       left: 0;
       z-index: 11;
       width: 100%;
@@ -553,7 +560,7 @@ export default {
           color: #666666;
         }
       }
-      ul:after {content: "";width: 138px}
+      ul:after {content: "";width: 163px;}
     }
     .contContHeadAdd{
       background: rgba(13, 104, 255, 0.27)!important;
@@ -564,7 +571,6 @@ export default {
     }
     .contContCont{
       width: 100%;
-      margin-top: 12px;
       //overflow: auto;
 
       ul{
@@ -653,7 +659,7 @@ export default {
   //display: none;
   .cont2Head{
     position: fixed;
-    top: 25px;
+    top: 36px;
     left: 0;
     z-index: 2;
 
@@ -691,10 +697,13 @@ export default {
     }
   }
   .cont2Cont{
+    float: left;
     position: relative;
     width: 100%;
-    padding: 0 0 62px 0;
+    padding: 96px 0 62px 0;
     box-sizing: border-box;
+    background-color: #ffffff;
+    overflow: auto;
     .cont2Cont1{
       width: 100%;
       padding: 15px;

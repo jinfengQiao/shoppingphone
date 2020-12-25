@@ -5,7 +5,7 @@
     left: 0;
     top: 0;">
         <mu-appbar style="width: 100%;" color="whites">
-            <img :src="logo" alt="">
+            <img :src="logo" alt="" @click="jumpGuanwang">
 <!--            <mu-button icon slot="right" @click="open">-->
 <!--                <mu-icon color="#000000" value="menu"></mu-icon>-->
 <!--            </mu-button>-->
@@ -66,94 +66,97 @@
             // this.get_nav()
         },
         methods: {
-            // 跳转我的订单
-            tokens(e) {
-              if(e.id == 2) {
-                if(sessionStorage.getItem('token')) {
-                  this.$router.push({
-                    path: '/order/my_order'
-                  })
-                }else{
-                  this.$router.push({
-                    path: '/login'
-                  })
-                }
-              }else if(e.id == 1) {
+          // 跳转我的订单
+          tokens(e) {
+            if(e.id == 2) {
+              if(sessionStorage.getItem('token')) {
                 this.$router.push({
-                  path: '/index_home'
+                  path: '/order/my_order'
+                })
+              }else{
+                this.$router.push({
+                  path: '/login'
                 })
               }
-            },
-            // 联系客服
-            service() {
-              this.service_show= true
-              var mo=function(e){e.preventDefault();};
-              document.body.style.overflow='hidden';
-              document.addEventListener("touchmove",mo,false);//禁止页面滑动
-            },
-            service_open() {
-              this.service_show= false
+            }else if(e.id == 1) {
+              this.$router.push({
+                path: '/index_home'
+              })
+            }
+        },
+          // 联系客服
+          service() {
+            this.service_show= true
+            var mo=function(e){e.preventDefault();};
+            document.body.style.overflow='hidden';
+            document.addEventListener("touchmove",mo,false);//禁止页面滑动
+          },
+          service_open() {
+            this.service_show= false
+            var mo=function(e){e.preventDefault();};
+            document.body.style.overflow='';//出现滚动条
+            document.removeEventListener("touchmove",mo,false);
+          },
+          // 获取导航
+          // get_nav() {
+          //   this.$post(localStorage.getItem('http') + 'nav/get_top_nav')
+          //     .then(res=> {
+          //       // console.log(res.data)
+          //
+          //       res.data.forEach(item=> {
+          //         item.link= localStorage.getItem('http') + item.link
+          //       })
+          //
+          //       this.nav_list= res.data
+          //     })
+          // },
+          // 获取logo
+          get_logo() {
+              this.$post(localStorage.getItem('http') + 'setting/get_detail')
+                  .then((res)=> {
+                      // console.log(res)
+
+                      this.logo_url= res.data.logo_url
+
+                      this.logo= res.data.black_logo_url
+
+                  })
+          },
+          // 登录
+          login() {
+              this.$router.push({
+                  path: '/login'
+              })
+          },
+          // 展开
+          // open() {
+          //     this.$refs.nav_background.style.width= '100%'
+          //     this.$refs.nav.style.width= '260px'
+          //     this.$refs.nav.style.paddingLeft= '26px'
+          //     this.$refs.nav.style.paddingRight= '26px'
+          //     this.$refs.imgs.style.display= 'block'
+          //     setTimeout(()=> {
+          //         this.$refs.off_nav.style.display= 'block'
+          //     },200)
+          //     var mo=function(e){e.preventDefault();};
+          //     document.body.style.overflow='hidden';
+          //     document.addEventListener("touchmove",mo,false);//禁止页面滑动
+          // },
+          // 关闭
+          backgronds() {
+              this.$refs.nav_background.style.width= '0'
+              this.$refs.nav.style.width= '0'
+              this.$refs.nav.style.paddingLeft= '0'
+              this.$refs.nav.style.paddingRight= '0'
+              this.$refs.imgs.style.display= 'none'
+              this.$refs.off_nav.style.display= 'none'
               var mo=function(e){e.preventDefault();};
               document.body.style.overflow='';//出现滚动条
               document.removeEventListener("touchmove",mo,false);
-            },
-            // 获取导航
-            // get_nav() {
-            //   this.$post(localStorage.getItem('http') + 'nav/get_top_nav')
-            //     .then(res=> {
-            //       // console.log(res.data)
-            //
-            //       res.data.forEach(item=> {
-            //         item.link= localStorage.getItem('http') + item.link
-            //       })
-            //
-            //       this.nav_list= res.data
-            //     })
-            // },
-            // 获取logo
-            get_logo() {
-                this.$post(localStorage.getItem('http') + 'setting/get_detail')
-                    .then((res)=> {
-                        // console.log(res)
-
-                        this.logo_url= res.data.logo_url
-
-                        this.logo= res.data.black_logo_url
-
-                    })
-            },
-            // 登录
-            login() {
-                this.$router.push({
-                    path: '/login'
-                })
-            },
-            // 展开
-            // open() {
-            //     this.$refs.nav_background.style.width= '100%'
-            //     this.$refs.nav.style.width= '260px'
-            //     this.$refs.nav.style.paddingLeft= '26px'
-            //     this.$refs.nav.style.paddingRight= '26px'
-            //     this.$refs.imgs.style.display= 'block'
-            //     setTimeout(()=> {
-            //         this.$refs.off_nav.style.display= 'block'
-            //     },200)
-            //     var mo=function(e){e.preventDefault();};
-            //     document.body.style.overflow='hidden';
-            //     document.addEventListener("touchmove",mo,false);//禁止页面滑动
-            // },
-            // 关闭
-            backgronds() {
-                this.$refs.nav_background.style.width= '0'
-                this.$refs.nav.style.width= '0'
-                this.$refs.nav.style.paddingLeft= '0'
-                this.$refs.nav.style.paddingRight= '0'
-                this.$refs.imgs.style.display= 'none'
-                this.$refs.off_nav.style.display= 'none'
-                var mo=function(e){e.preventDefault();};
-                document.body.style.overflow='';//出现滚动条
-                document.removeEventListener("touchmove",mo,false);
-            }
+          },
+          jumpGuanwang(){
+            window.location.href='https://wap.tjqpjt.com/'
+          }
         }
     }
 </script>

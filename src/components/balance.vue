@@ -39,7 +39,7 @@ export default {
         token: sessionStorage.getItem('token'),
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.balance = (res.data.balance)/100
         if(!this.balance){
           this.balance = 0;

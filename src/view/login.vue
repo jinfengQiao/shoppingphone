@@ -68,7 +68,7 @@
                                     </div>
                                 </template>
                             </mu-form-item>
-                            <mu-form-item help-text="" prop="phone" :rules="phone" v-show="tuijianren">
+                            <mu-form-item help-text="" prop="phone" v-show="tuijianren">
                               <mu-text-field underline-color="#2196f3" v-model="validateForm.invite_code" prop="username"></mu-text-field>
                               <template v-slot:label>
                                 <div style="display: flex; align-items: flex-end; ">
@@ -77,26 +77,26 @@
                                 </div>
                               </template>
                             </mu-form-item>
-<!--                            <mu-form-item label="验证码" prop="verify" :rules="verify" :style="{marginBottom: password_show? '15px' : ''}">-->
-<!--                                <div class="ver_code" style="display: flex;">-->
-<!--                                    <mu-text-field underline-color="#2196f3" type="password" v-model="validateForm.verify" prop="password"></mu-text-field>-->
-<!--                                    <div class="verify">-->
+                            <mu-form-item v-show="yanzhengmaBox" label="验证码" prop="verify" :rules="verify" :style="{marginBottom: password_show? '15px' : ''}">
+                                <div class="ver_code" style="display: flex;">
+                                    <mu-text-field underline-color="#2196f3" type="password" v-model="validateForm.verify" prop="password"></mu-text-field>
+                                    <div class="verify">
 <!--                                      <img v-if="verify_img_show" @click="get_verify" :src="verify_img" alt="">-->
 <!--                                      <div v-if="!verify_img_show">-->
-<!--                                        <mu-button v-if="!count_down_show" style="margin: 0;"  @click="get_verify_num" color="primary">获取验证码</mu-button>-->
-<!--                                        <span v-if="count_down_show">{{ count_down }}</span>-->
+                                        <mu-button v-if="!count_down_show" style="margin: 0;"  @click="get_verify_num" color="primary">获取验证码</mu-button>
+                                        <span v-if="count_down_show">{{ count_down }}</span>
 <!--                                      </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <template v-slot:label>-->
-<!--                                    <div style="display: flex; align-items: flex-end; ">-->
-<!--                                        <i class="iconfont icon-yanzhengma" style="color: #486EEF; "></i>-->
-<!--                                        <p style="margin-left: 9px; line-height: 22px; color: #486EEF;">验证码</p>-->
-<!--                                    </div>-->
-<!--                                </template>-->
-<!--                            </mu-form-item>-->
+                                    </div>
+                                </div>
+                                <template v-slot:label>
+                                    <div style="display: flex; align-items: flex-end; ">
+                                        <i class="iconfont icon-yanzhengma" style="color: #486EEF; "></i>
+                                        <p style="margin-left: 9px; line-height: 22px; color: #486EEF;">验证码</p>
+                                    </div>
+                                </template>
+                            </mu-form-item>
 
-                            <mu-form-item style="margin-bottom: 0px;">
+                            <mu-form-item style="margin-bottom: 0px; margin-top: 10px;">
                                 <div class="submit_button">
                                     <div style="display: flex; justify-content: flex-end;">
                                       <p style="width: 50px;" v-if="!password_show" @click="look_for_password_info">忘记密码</p>
@@ -136,7 +136,7 @@
                 logo: null,
                 logo_url: null,
                 phone: [
-                    { validate: (val) => !!val, message: '必须填写用户名'},
+                    { validate: (val) => !!val, message: '必须填写手机号'},
                     { validate: (val) => val.length >= 3, message: '用户名长度大于3'},
                     { validate: (val) => /^1[34578]\d{9}$/ims.test(val), message: '手机号不正确'}
                 ],
@@ -149,9 +149,7 @@
                     { validate: (val) => val.length >= 6 && val.length <= 18, message: '密码长度大于6小于10'},
                 ],
                 error_text1: null,
-                verify: [
-                  { validate: (val) => !!val, message: '必须填写验证码'}
-                ],
+                verify: null,
                 validateForm: {
                     phone: null,
                     pass: null,
@@ -179,11 +177,12 @@
                 login2: false,
                 login3: false,
                 // 图形验证码
-                verify_img_show: true,
+                // verify_img_show: true,
                 // 短信验证码
                 count_down_show: false,
                 setInterval: null,
-                count_down: 300
+                count_down: 300,
+              yanzhengmaBox:false,
             }
         },
         created() {
@@ -193,7 +192,7 @@
             // 获取导航
             // this.get_nav()
             // 获取图形验证码
-            this.get_verify()
+            // this.get_verify()
         },
         methods: {
             // 跳转我的订单
@@ -233,7 +232,7 @@
                     this.$toast.success(res.msg);
                   }else{
                     this.$toast.error(res.msg);
-                    this.get_verify()
+                    // this.get_verify()
                   }
                 })
             },
@@ -359,12 +358,12 @@
 
             },
             // 获取图形验证码
-            get_verify() {
-              this.verify_img= localStorage.getItem('http') + 'user/get_verify?'+ Math.random();
-            },
+            // get_verify() {
+            //   this.verify_img= localStorage.getItem('http') + 'user/get_verify?'+ Math.random();
+            // },
             // 注册
             register() {
-              this.get_verify()
+              // this.get_verify()
               this.$refs['form'].clear();
               this.login1= false
               this.login2= true
@@ -379,6 +378,8 @@
                   invite_code:null,
               }
               this.password_show= true
+              this.yanzhengmaBox= false
+              this.verify = null;
             },
             // 忘记密码
             look_for_password_info() {
@@ -396,16 +397,20 @@
                   invite_code:null
               }
               this.password_show= true
+              this.yanzhengmaBox= true
+              this.verify=[
+                { validate: (val) => !!val, message: '必须填写验证码'}
+              ]
             },
             // 回到登录
             back_login() {
-              this.get_verify()
+              // this.get_verify()
               this.password_show= false
               this.$refs['form'].clear();
               this.login1= true
               this.login2= false
               this.login3= false
-              this.verify_img_show= true
+              // this.verify_img_show= true
               this.tuijianren= false
               this.validateForm= {
                   phone: null,
@@ -415,6 +420,8 @@
                   isAgree: false,
                   invite_code:null
               }
+              this.yanzhengmaBox= false
+              this.verify = null;
             },
             get_logo() {
                 this.$post(localStorage.getItem('http') + 'setting/get_detail')

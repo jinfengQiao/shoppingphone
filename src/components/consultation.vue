@@ -57,7 +57,7 @@ export default {
     tab_List(){
       this.$post(localStorage.getItem('http') + 'card/get_category',{})
       .then(res=> {
-        console.log(res.data.list[0].id)
+        // console.log(res.data.list[0].id)
         this.category_id = res.data.list[0].id;
         this.tabList = res.data.list;
 
@@ -65,13 +65,13 @@ export default {
       })
     },
     tab_Cont(){
-      console.log(this.category_id);
+      // console.log(this.category_id);
       this.$post(localStorage.getItem('http') + 'user_card/get_list',{
         category_id:this.category_id,
         token: sessionStorage.getItem('token')
       })
       .then(res=> {
-        console.log(res.data);
+        // console.log(res.data);
         if(res.data.length == 0){
           this.show12 = true;
           this.tabCont = [];

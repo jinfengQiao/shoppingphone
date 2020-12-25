@@ -198,6 +198,7 @@
         display: flex;
         justify-content: space-between;
         li{
+          font-weight: 600;
             img{
                 width: 45px;
                 height: 45px;

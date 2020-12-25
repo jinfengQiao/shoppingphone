@@ -35,7 +35,7 @@
           get_list() {
             this.$post(localStorage.getItem('http') + 'goods_category/get_nav')
               .then(res=> {
-                  console.log(res.data)
+                  // console.log(res.data)
                   this.list= res.data
               })
           },
@@ -56,6 +56,7 @@
 
 <style lang="less" scoped>
     .all_service{
+        font-weight: 600;
         background: #F9F9F9;
         .all_service_item{
             margin-bottom: 12px;

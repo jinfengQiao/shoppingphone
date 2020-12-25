@@ -1,9 +1,9 @@
 <template>
   <div class="bg" :style="height">
-    <div class="head">
-      <img src="../assets/center/back_icon1.png" alt="" @click="back">
-      <span>搜索</span>
-    </div>
+<!--    <div class="head">-->
+<!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
+<!--      <span>搜索</span>-->
+<!--    </div>-->
     <div class="searchBox">
       <div class="btnBox">
         <input type="text" v-model="keyword">
@@ -54,7 +54,7 @@ export default {
   },
   methods:{
     hh(){
-      this.height.height = window.innerHeight-125 +'px'
+      this.height.height = window.innerHeight-55 +'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -102,7 +102,7 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  background-color: #f3f4f6;
+  background-color: #ffffff;
 }
 .head{
   position: fixed;
@@ -132,7 +132,7 @@ export default {
 }
 .searchBox{
   position: fixed;
-  top: 70px;
+  top: 0;
   left: 0;
   width: 100%;
   padding: 15px;
@@ -173,7 +173,7 @@ export default {
 }
 .cont{
   width: 100%;
-  margin-top: 122px;
+  margin-top: 52px;
   padding: 0 15px 30px 15px;
   box-sizing: border-box;
   .contCont{

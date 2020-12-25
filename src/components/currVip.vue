@@ -686,6 +686,7 @@ export default {
           color: #666666;
         }
       }
+      ul:after {content: "";width: 138px;}
     }
     .cont13{
       width: 100%;
@@ -836,6 +837,7 @@ export default {
           color: #666666;
         }
       }
+      ul:after {content: "";width: 138px;}
     }
   }
   .cont3{

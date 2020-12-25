@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="moneyBox12">
-        <button type="button" @click="querenBtn">确认</button>
+        <button type="button" @click="querenBtn" :disabled="isAble">确认</button>
       </div>
     </van-popup>
 
@@ -73,7 +73,7 @@
         </div>
       </div>
       <div class="moneyBox12">
-        <button type="button" @click="querenBtn1">确认</button>
+        <button type="button" @click="querenBtn1" :disabled="isAble1">确认</button>
       </div>
     </van-popup>
     <noSharing></noSharing>
@@ -101,6 +101,8 @@ export default {
       show:false,
       num_money:'',
       num_money1:'',
+      isAble:false,
+      isAble1:false,
     }
   },
   methods:{
@@ -122,14 +124,14 @@ export default {
       }
     },
     getData(){
-      console.log(this.page);
+      // console.log(this.page);
       this.$post(localStorage.getItem('http') + 'user_cybermoney/get_log',{
         token: this.token,
         page:this.page,
         limit:15
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         if(res.data.list.length != 0){
           var arr = [];
           arr = this.contList;
@@ -145,18 +147,22 @@ export default {
       })
     },
     tixianBtn(){
-      this.tranShow1 = true
+      this.tranShow1 = true;
+      this.isAble1 = false;
       // this.$toast.error('功能暂未开放');
 
 
     },
     tranBbalance(){
-      this.tranShow = true
+      this.tranShow = true;
+      this.isAble = false;
     },
     querenBtn(){
       if(!this.num_money){
+        this.isAble = false;
         this.$toast.error('请输入金额');
       }else{
+        this.isAble = true;
         this.$post(localStorage.getItem('http') + 'user_cybermoney/to_balance',{
           token: sessionStorage.getItem('token'),
           num: this.num_money
@@ -179,10 +185,12 @@ export default {
     },
     querenBtn1(){
       if(!this.num_money1){
+        this.isAble1 = false;
         this.$toast.error('请输入金额');
       }else if(this.num_money1<1 || this.num_money1>200){
         this.$toast.error('提现金额为1-200元');
       }else{
+        this.isAble1 = true;
         this.$post(localStorage.getItem('http') + 'user_cybermoney/to_wechat',{
           token: sessionStorage.getItem('token'),
           num: this.num_money1,
@@ -208,7 +216,7 @@ export default {
         token: sessionStorage.getItem('token'),
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.cybermoney = res.data
       })
     },
@@ -256,7 +264,7 @@ export default {
   },
   created(){
     this.token = sessionStorage.getItem('token');
-    console.log(this.token)
+    // console.log(this.token)
     // this.cybermoney = sessionStorage.getItem('cybermoney');
     // console.log(this.cybermoney)
     this.get_cybermoney();

@@ -52,7 +52,7 @@ export default {
         token: sessionStorage.getItem('token'),
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.getList = res.data
 
         // if(type == 1){

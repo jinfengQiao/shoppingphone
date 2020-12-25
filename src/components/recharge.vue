@@ -83,11 +83,11 @@ export default {
         token: sessionStorage.getItem('token'),
         total: this.moneyNum
       }).then(res=> {
-        console.log(res);
+        // console.log(res);
         this.order_id = res.data.order_id
         this.order_type = res.data.order_type
-        console.log(this.order_id);
-        console.log(this.order_type);
+        // console.log(this.order_id);
+        // console.log(this.order_type);
         if(res.code == 1){
           this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
             token: sessionStorage.getItem('token'),
@@ -97,7 +97,7 @@ export default {
             use_score: 0
           })
           .then(res=> {
-            console.log(res)
+            // console.log(res)
             window.WeixinJSBridge.invoke(
             'getBrandWCPayRequest', res ,
             function(res){

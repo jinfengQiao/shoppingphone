@@ -6,7 +6,7 @@
 <!--    </div>-->
     <div class="cont">
       <ul>
-        <li v-for="(n,inx) in wantStudyList" :key="inx">
+        <li v-for="(n,inx) in wantStudyList" :key="inx" @click="jumpDetails(n.id)">
           <img :src="n.video_cover" alt="">
           <div class="textBox">
             <p>{{ n.title }}</p>
@@ -53,7 +53,7 @@ export default {
         limit:limit
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         // this.monthList= res.data.price
         this.wantStudyList = res.data.list
         if(res.data.list.length == 0){
@@ -65,6 +65,14 @@ export default {
         }
       })
     },
+    jumpDetails(id){
+      this.$router.push({
+        path:'courDetails',
+        query:{
+          id:id
+        }
+      })
+    }
   },
   created(){
     this.get_want_study();

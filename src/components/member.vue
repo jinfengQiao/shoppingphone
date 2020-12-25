@@ -74,7 +74,7 @@ export default {
         token: sessionStorage.getItem('token'),
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.level = res.data.level
         this.get_memlevelDetails(this.level)
       })
@@ -85,7 +85,7 @@ export default {
         id:this.level
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.name = res.data.name
         this.rate_level_one = res.data.rate_level_one
         this.rate_level_two = res.data.rate_level_two
