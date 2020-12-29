@@ -157,11 +157,7 @@ export default {
               // console.log("timeline ok");
             }
           })
-
-
         });
-
-
       });
     },
     back:function(){

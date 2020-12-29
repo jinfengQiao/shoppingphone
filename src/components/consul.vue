@@ -104,6 +104,7 @@ export default {
       category_id:1,
       card_id:'',
       use_score:0,
+      integrityurl:'',
     }
   },
   methods:{
@@ -299,13 +300,14 @@ export default {
     },
   },
   created(){
+    this.integrityurl = window.location.href;
+    this.share();
     var score = sessionStorage.getItem('score');
     this.score = score
     // console.log(this.score)
     this.tab_List();
     this.tab_Cont();
     this.hh();
-    this.share
     var wx = this.$wx
     wx.showOptionMenu();
 

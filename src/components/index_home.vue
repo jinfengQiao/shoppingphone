@@ -86,7 +86,10 @@
                 list_form: {
                   category_pid: null
                 },
-                show: true
+                show: true,
+                imgurl:'https://m.tjqpjt.com/logo.png',
+                desc:'权鹏集团',
+                link:'',
             }
         },
         created() {
@@ -94,11 +97,50 @@
           this.get_nav()
           this.get_nav_recom()
           this.get_List()
-
+          // this.share(title,desc,link,imgUrl)
+          this.share()
           var wx = this.$wx
           wx.showOptionMenu();
         },
         methods: {
+            share(title,desc,link,imgUrl){
+            this.$post(localStorage.getItem('http') + 'wechat/get_jssdk_config',{
+              url: this.integrityurl
+            }).then(res=> {
+              var wx = this.$wx;
+              wx.config(res.data);
+              wx.ready(function(){
+                wx.checkJsApi({
+                  jsApiList: res.data.jsApiList, // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                  success: function(res) {
+                    console.log(res);
+                    // 以键值对的形式返回，可用的api值true，不可用为false
+                    // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                  }
+                });
+                wx.updateAppMessageShareData({
+                  title: title, // 分享标题
+                  desc: desc, // 分享描述
+                  link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                  imgUrl: imgUrl, // 分享图标
+                  success: function () {
+                    // 设置成功
+                    // console.log("message ok");
+                  }
+                });
+
+                wx.updateTimelineShareData({
+                  title: title, // 分享标题
+                  link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                  imgUrl: require('../assets/center/tab_icon1.png'), // 分享图标
+                  success: function () {
+                    // 设置成功
+                    // console.log("timeline ok");
+                  }
+                })
+              });
+            });
+          },
             // 列表跳转详情
             jumpDoods_deta(sku) {
               this.$router.push({
@@ -180,7 +222,8 @@
                   // console.log(res.data)
                   this.shujuList = res.data.list;
                 })
-            }
+            },
+
         },
         components: {
             swiper,

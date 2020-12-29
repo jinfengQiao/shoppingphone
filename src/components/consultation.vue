@@ -11,7 +11,7 @@
     </div>
     <div class="cont">
       <ul>
-        <li v-for="(n,inx) in tabCont" :key="inx">
+        <li v-for="(n,inx) in tabCont" :key="inx" @click="jumpLink(n.card_info.link)">
           <img :src="n['card_info'].pic_url" alt="">
           <div class="rightRi">
             <span>{{ n.card_info.name }}</span>
@@ -57,6 +57,7 @@ export default {
     tab_List(){
       this.$post(localStorage.getItem('http') + 'card/get_category',{})
       .then(res=> {
+        // console.log(res.data)
         // console.log(res.data.list[0].id)
         this.category_id = res.data.list[0].id;
         this.tabList = res.data.list;
@@ -71,7 +72,7 @@ export default {
         token: sessionStorage.getItem('token')
       })
       .then(res=> {
-        // console.log(res.data);
+        console.log(res.data);
         if(res.data.length == 0){
           this.show12 = true;
           this.tabCont = [];
@@ -81,10 +82,13 @@ export default {
         }
       })
     },
+    jumpLink(link){
+      console.log(link)
+      window.location.href=link
+    }
   },
   created(){
     this.tab_List();
-
   },
   components: {
     noSharing
