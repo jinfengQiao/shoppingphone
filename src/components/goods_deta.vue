@@ -103,12 +103,18 @@
                 value_list: [],
                 attribute_list: [],
                 power_set: [],
-                sku_list: []
+                sku_list: [],
+                title: '',
+                integrityurl:'',
+                // logo:'https://m.tjqpjt.com/logo.png',
+                desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+                pic_url: ''
             }
         },
         created() {
             this.get_data(this.$route.query.id);
             this.get_goods();
+
         },
         watch: {
           $route: {
@@ -259,6 +265,8 @@
               })
                 .then(res=> {
                   console.log(res.data)
+
+                  this.$wxShare(res.data.spu.name,this.desc,location.href,res.data.spu.pic_url)
                   res.data.attribute.forEach((i,k)=> {
 
 
@@ -345,6 +353,8 @@
                 .then(res=> {
                   console.log(res.data.list)
                   this.goods_list= res.data.list
+
+
                 })
             },
     }

@@ -9,7 +9,7 @@
         <p>他得返利</p>
         <span>我得收益</span>
         <div class="btnBox">
-          <img src="../assets/center/subordinate_btnIcon.png" alt="">
+          邀请码：{{yaoqingCode}}
         </div>
       </div>
     </div>
@@ -80,11 +80,14 @@
 <!--        @select="onSelect"-->
 <!--    />-->
 <!--    <wechatInv></wechatInv>-->
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
 // import wechatInv from "@/components/wechatInv";
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "subordinate",
   data(){
@@ -118,48 +121,10 @@ export default {
       ],
       level:'',
       integrityurl:'',
+      yaoqingCode: 0,
     }
   },
   methods: {
-    share(title,desc,link,imgUrl){
-      this.$post(localStorage.getItem('http') + 'wechat/get_jssdk_config',{
-        url: this.integrityurl
-      }).then(res=> {
-        var wx = this.$wx;
-        wx.config(res.data);
-        wx.ready(function(){
-          wx.checkJsApi({
-            jsApiList: res.data.jsApiList, // 需要检测的JS接口列表，所有JS接口列表见附录2,
-            success: function(res) {
-              console.log(res);
-              // 以键值对的形式返回，可用的api值true，不可用为false
-              // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
-            }
-          });
-
-          wx.updateAppMessageShareData({
-            title: title, // 分享标题
-            desc: desc, // 分享描述
-            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: imgUrl, // 分享图标
-            success: function () {
-              // 设置成功
-              // console.log("message ok");
-            }
-          });
-
-          wx.updateTimelineShareData({
-            title: title, // 分享标题
-            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: imgUrl, // 分享图标
-            success: function () {
-              // 设置成功
-              // console.log("timeline ok");
-            }
-          })
-        });
-      });
-    },
     back:function(){
       this.$router.go(-1);
     },
@@ -216,21 +181,30 @@ export default {
         this.erjiList = res.data
       })
     },
+    // 获取邀请码
+    get_Code(){
+      this.$post(localStorage.getItem('http') + 'user_info/get_invite_code',{
+        token: sessionStorage.getItem('token'),
+      })
+      .then(res=> {
+        console.log(res.data)
+        this.yaoqingCode = res.data.invite_code
+      })
+    },
   },
   created(){
     this.integrityurl = window.location.href;
-
-    this.share();
+    this.get_Code();
     this.hh();
     this.hh1();
     this.get_list();
     this.get_list1();
 
-    var wx = this.$wx
-    wx.showOptionMenu();
+    // var wx = this.$wx
+    // wx.showOptionMenu();
   },
   components: {
-    // wechatInv
+    noSharing
   }
 }
 </script>
@@ -252,7 +226,7 @@ export default {
   height: 310px;
   background: url("../assets/center/subordinate_bg.png") no-repeat;
   background-size: 100% 100%;
-  padding: 18px 15px;
+  padding: 18px 0;
   box-sizing: border-box;
   .headTitle{
     position: relative;
@@ -279,27 +253,41 @@ export default {
       font-family: WenYue XinQingNianTi;
       font-weight: normal;
       color: #FFFFFF;
+      padding: 0 0 0 17px;
+      box-sizing: border-box;
     }
     span{
       font-size: 32px;
       font-family: WenYue XinQingNianTi;
       font-weight: normal;
       color: #FFC000;
+      padding: 0 0 0 17px;
+      box-sizing: border-box;
     }
     .btnBox{
-      display: none;
+      //display: none;
       position: relative;
-      margin-top: 25px;
-      width: 145px;
-      height: 52px;
-      img{
-        position: absolute;
-        left: 18px;
-        top: 50%;
-        margin-top: -12px;
-        width: 25px;
-        height: 25px;
-      }
+      width: 180px;
+      height: 77px;
+      line-height: 77px;
+      text-align: center;
+      background: #FFFFFF;
+      background: url("../assets/center/btnBox_bg.png");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      text-align: center;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #4E60E5;
+      //img{
+      //  position: absolute;
+      //  left: 18px;
+      //  top: 50%;
+      //  margin-top: -12px;
+      //  width: 25px;
+      //  height: 25px;
+      //}
     }
 
   }

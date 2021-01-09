@@ -42,7 +42,12 @@
                   category_pid: null,
                   quality: null
                 },
-                goods_list: []
+                goods_list: [],
+                title: '商品列表',
+                integrityurl:'',
+                // logo:'https://m.tjqpjt.com/logo.png',
+                desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+                imgUrl: 'https://m.tjqpjt.com/logo.png'
             }
         },
         created() {
@@ -57,6 +62,7 @@
             this.list_form.category_id= this.$route.query.id
             this.get_list(this.list_form)
           }
+          this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
         },
         methods: {

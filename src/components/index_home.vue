@@ -13,12 +13,6 @@
         </ul>
         <swiper_two></swiper_two>
 
-<!--        <ul class="goods_buttons">-->
-<!--            <li :class="[indexs == index ? 'li_color' : '' ]" v-for="(item,index) in goods_buttons_list" :key="item.id">-->
-<!--                <span flat @click="goods_buttons_click(index,item)">{{ item.name }}</span>-->
-<!--            </li>-->
-<!--        </ul>-->
-
 <!--    优势服务-->
         <div class="fuwuBox" v-for="(n,inx) in shujuList" :key="inx">
           <div class="fuwuHeadBox">
@@ -87,60 +81,25 @@
                   category_pid: null
                 },
                 show: true,
-                imgurl:'https://m.tjqpjt.com/logo.png',
-                desc:'权鹏集团',
-                link:'',
+                title: '首页',
+                integrityurl:'',
+                // logo:'https://m.tjqpjt.com/logo.png',
+                desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+                imgUrl: 'https://m.tjqpjt.com/logo.png'
             }
         },
         created() {
           // 获取导航
-          this.get_nav()
-          this.get_nav_recom()
-          this.get_List()
-          // this.share(title,desc,link,imgUrl)
-          this.share()
+          this.get_nav();
+          this.get_nav_recom();
+          this.get_List();
+
           var wx = this.$wx
           wx.showOptionMenu();
+          this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
         },
         methods: {
-            share(title,desc,link,imgUrl){
-            this.$post(localStorage.getItem('http') + 'wechat/get_jssdk_config',{
-              url: this.integrityurl
-            }).then(res=> {
-              var wx = this.$wx;
-              wx.config(res.data);
-              wx.ready(function(){
-                wx.checkJsApi({
-                  jsApiList: res.data.jsApiList, // 需要检测的JS接口列表，所有JS接口列表见附录2,
-                  success: function(res) {
-                    console.log(res);
-                    // 以键值对的形式返回，可用的api值true，不可用为false
-                    // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
-                  }
-                });
-                wx.updateAppMessageShareData({
-                  title: title, // 分享标题
-                  desc: desc, // 分享描述
-                  link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                  imgUrl: imgUrl, // 分享图标
-                  success: function () {
-                    // 设置成功
-                    // console.log("message ok");
-                  }
-                });
 
-                wx.updateTimelineShareData({
-                  title: title, // 分享标题
-                  link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                  imgUrl: require('../assets/center/tab_icon1.png'), // 分享图标
-                  success: function () {
-                    // 设置成功
-                    // console.log("timeline ok");
-                  }
-                })
-              });
-            });
-          },
             // 列表跳转详情
             jumpDoods_deta(sku) {
               this.$router.push({
@@ -150,14 +109,6 @@
                 }
               })
             },
-            // 获取列表
-            // get_list(y) {
-            //   this.$post(localStorage.getItem('http') + 'goods/get_list',y)
-            //     .then(res=> {
-            //       // console.log(res)
-            //       this.list= res.data.list
-            //     })
-            // },
             // 获取导航
             get_nav() {
               this.$post(localStorage.getItem('http') + 'goods_category/get_parent_nav',{

@@ -101,11 +101,13 @@
     <div id="pays" ref="pays">
 
     </div>
-
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   data() {
     return{
@@ -296,6 +298,9 @@ export default {
       this.$router.go(-1)
     },
 
+  },
+  components:{
+    noSharing
   }
 }
 </script>

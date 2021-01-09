@@ -147,7 +147,6 @@ export default {
       lay_type:0,
       lay_type1:0,
       id:'',
-      title:'',
       content:'',
       price:'',
       old_price:'',
@@ -171,6 +170,11 @@ export default {
       have:'',
       price1:'',
       lessonId:'',
+      title: '',
+      integrityurl:'',
+      // logo:'https://m.tjqpjt.com/logo.png',
+      desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+      imgUrl: ''
     }
   },
   methods:{
@@ -250,6 +254,8 @@ export default {
         if(this.want_study == 1){
           this.lay_type1 = 1
         }
+
+        this.$wxShare(res.data.title,this.desc,location.href,res.data.video_cover)
       })
     },
     // 点击开通跳转vip卡页

@@ -91,6 +91,7 @@
 
 <script>
 import footer_nav from "@/components/footer_bar";
+// import share from "../utils/share.js";
 
 export default {
   name: "buSchool",
@@ -124,7 +125,6 @@ export default {
       keyword:'',
       category_id:'',
       category_id1:1,
-      title:'',
       info:'',
       publishtime:'',
       hit:'',
@@ -135,6 +135,11 @@ export default {
       scroll_element:"#contContCont",
       plus_height:359,
       sell:'',
+      title: '商学院',
+      integrityurl:'',
+      logo:'https://m.tjqpjt.com/logo.png',
+      desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+      imgUrl: 'https://m.tjqpjt.com/logo.png'
     }
   },
   methods:{
@@ -376,6 +381,8 @@ export default {
     window.addEventListener('scroll', this.onScroll );
     var wx = this.$wx
     wx.showOptionMenu();
+
+    this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
   },
   beforeDestroy() {

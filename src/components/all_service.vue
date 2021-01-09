@@ -18,17 +18,24 @@
 <script>
 
     import footer_nav from "@/components/footer_bar";
+    import share from "../utils/share.js";
 
     export default {
         data() {
             return{
-                list: []
+                list: [],
+                title: '全部服务',
+                integrityurl:'',
+                // logo:'https://m.tjqpjt.com/logo.png',
+                desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+                imgUrl: 'https://m.tjqpjt.com/logo.png'
             }
         },
       created() {
           this.get_list();
         var wx = this.$wx
         wx.showOptionMenu();
+        this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
       },
       methods: {

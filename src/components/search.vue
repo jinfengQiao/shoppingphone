@@ -34,10 +34,13 @@
         <img src="../assets/buSchool/nullBoxImg1.png" alt="">
       </div>
     </div>
+    <noSharing></noSharing>
   </div>
 </template>
 
 <script>
+import noSharing from "@/components/noSharing";
+
 export default {
   name: "search",
   data(){
@@ -97,6 +100,9 @@ export default {
   created(){
     this.hh();
   },
+  components:{
+    noSharing
+  }
 }
 </script>
 

@@ -214,7 +214,6 @@ export default {
       tcShow:false,
       weixinSelect:true,
       yueSelect:false,
-      title:'',
       price:'',
       score:'',
       use_score:0,
@@ -224,6 +223,11 @@ export default {
       index:0,
       changeCls2Text:'财税',
       money:'',
+      title: '',
+      integrityurl:'',
+      // logo:'https://m.tjqpjt.com/logo.png',
+      desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+      imgUrl: 'https://m.tjqpjt.com/logo.png'
     }
   },
   methods:{
@@ -247,6 +251,7 @@ export default {
       if(index == 2){
         this.VipTitle = '至尊VIP'
       }
+      this.$wxShare(this.VipTitle,this.desc,location.href,this.imgUrl)
       var that = this
       that.isActive = index;
       // console.log(index + 1);

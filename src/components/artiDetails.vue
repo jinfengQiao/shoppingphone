@@ -34,12 +34,16 @@ export default {
         width:'',
         height:'',
       },
-      title:'',
       info:'',
       content:'',
       publishtime:'',
       hit:'',
       imgList:[],
+      title: '',
+      integrityurl:'',
+      // logo:'https://m.tjqpjt.com/logo.png',
+      desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+      imgUrl: 'https://m.tjqpjt.com/logo.png'
     }
   },
   methods:{
@@ -63,6 +67,13 @@ export default {
         this.publishtime = res.data.publishtime
         this.hit = res.data.hit
         this.imgList = res.data.media_url.img
+
+        if(!this.imgList){
+          this.$wxShare(res.data.title,this.desc,location.href,res.data.media_url.img)
+        }else{
+          this.$wxShare(res.data.title,this.desc,location.href,'https://m.tjqpjt.com/logo.png')
+        }
+
       })
     },
   },

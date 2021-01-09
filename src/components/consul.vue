@@ -83,6 +83,7 @@
 
 <script>
 import footer_nav from "@/components/footer_bar";
+import share from "../utils/share.js";
 
 export default {
   name: "consul",
@@ -104,7 +105,11 @@ export default {
       category_id:1,
       card_id:'',
       use_score:0,
+      title: '咨询卡',
       integrityurl:'',
+      // logo:'https://m.tjqpjt.com/logo.png',
+      desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+      imgUrl: 'https://m.tjqpjt.com/logo.png'
     }
   },
   methods:{
@@ -310,6 +315,7 @@ export default {
     this.hh();
     var wx = this.$wx
     wx.showOptionMenu();
+    this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
   },
   components: {

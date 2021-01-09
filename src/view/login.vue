@@ -135,6 +135,7 @@
                 tuijianren:false,
                 logo: null,
                 logo_url: null,
+                invite_code: '',
                 phone: [
                     { validate: (val) => !!val, message: '必须填写手机号'},
                     { validate: (val) => val.length >= 3, message: '用户名长度大于3'},
@@ -193,8 +194,11 @@
             // this.get_nav()
             // 获取图形验证码
             // this.get_verify()
+
+
         },
         methods: {
+
             // 跳转我的订单
             tokens(e) {
               if(e.id == 2) {
@@ -222,6 +226,8 @@
             },
             // 登录接口
             user_login(y) {
+              y.openid = localStorage.getItem('openid')
+              console.log(y.openid)
               this.$post(localStorage.getItem('http') + 'user/login',y)
                 .then(res=> {
                   if(res.code == 1) {
@@ -251,7 +257,7 @@
                 phone: this.validateForm.phone
               })
                 .then(res=> {
-                  console.log(res)
+                  // console.log(res)
                   if(res.code == 1) {
                     this.user_reg(this.validateForm)
                   }else{
@@ -261,22 +267,41 @@
             },
             // 注册接口
             user_reg(y) {
-              this.$post(localStorage.getItem('http') + 'user/reg',y)
-                .then(res=> {
-                  if(res.code == 1) {
-                    this.back_login()
-                    this.$toast.success(res.msg);
-                  }else{
-                    this.$toast.error(res.msg);
-                  }
+
+              var invite_openid = localStorage.getItem('invite_openid');
+              if(invite_openid){
+                this.$post(localStorage.getItem('http') + 'user/get_invite_code_by_openid', {
+                  invite_openid:invite_openid
                 })
+                    .then(res=> {
+                      if (res.code == 1){
+                        y.invite_code = res.data.invite_code;
+                      }else{
+                        console.log(res);
+                      }
+                      y.openid = localStorage.getItem('openid')
+                      this.$post(localStorage.getItem('http') + 'user/reg',y)
+                          .then(res=> {
+                            if(res.code == 1) {
+                              this.back_login()
+                              this.$toast.success(res.msg);
+                            }else{
+                              this.$toast.error(res.msg);
+                            }
+                          })
+
+                    })
+              }
+
+
+
             },
             // 注册
             submit_ce() {
               this.$refs.form.validate().then((result) => {
                 // console.log('form valid: ', result)
                 if(result) {
-                  console.log(this.error_text1)
+                  // console.log(this.error_text1)
                   if(this.validateForm.pass != this.validateForm.pass_two) {
                     this.error_text1= '两次密码不一致'
                   }else{
@@ -289,7 +314,7 @@
             edit_pass(y) {
               this.$post(localStorage.getItem('http') + 'user/edit_pass',y)
                 .then(res=> {
-                  console.log(res)
+                  // console.log(res)
                   if(res.code == 1) {
                     this.back_login()
                     this.$toast.success(res.msg)
@@ -368,14 +393,14 @@
               this.login1= false
               this.login2= true
               this.login3= false
-              this.tuijianren = true
+              this.tuijianren = false
               this.validateForm= {
                   phone: null,
                   pass: null,
                   pass_two: null,
                   verify: null,
                   isAgree: false,
-                  invite_code:null,
+                  invite_code:null
               }
               this.password_show= true
               this.yanzhengmaBox= false

@@ -6,6 +6,23 @@
 
 export default {
   methods:{
+    auto_login(openid){
+      //自动登录接口
+      this.$post(localStorage.getItem('http') + 'user/login_by_openid',{
+        openid: openid
+      })
+          .then(res=> {
+            // console.log(res.data)
+            // console.log(res.data.token)
+            // console.log(res.data.phone)
+            if(res.code == 1){
+              sessionStorage.setItem('token',res.data.token)
+              sessionStorage.setItem('phone',res.data.phone)
+            }else{
+
+            }
+          })
+    },
     get_openid(){
       function getUrlPara(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
@@ -21,6 +38,7 @@ export default {
         code:code
       }).then(res => {
         localStorage.setItem("openid",res.data);
+        this.auto_login(res.data);
       })
     },
   },
@@ -28,16 +46,28 @@ export default {
   created() {
     // 手机商城
     //localStorage.setItem('http', 'http://of.kurohane.com/api/')
-    //localStorage.setItem('url', 'http://of.kurohane.com')
-    localStorage.setItem('http', 'http://192.168.1.244/official/public/api/')
-    localStorage.setItem('url', 'http://192.168.1.244/official/public')
-    // localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
-    // localStorage.setItem('url', 'https://of.tjqpjt.com')
+    //localStorage.setItem('uttp', 'http://192.168.1.244/official/public/api/')
+    // localStorage.setItem('url', 'http://of.kurohane.com')
+    // localStorage.setItem('hrl', 'http://192.168.1.244/official/public')
+    localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
+    localStorage.setItem('url', 'https://of.tjqpjt.com')
 
-    if(!localStorage.getItem("openid")){
-      // this.get_openid();
+
+    var ua = window.navigator.userAgent.toLowerCase();
+    if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+      var openid = localStorage.getItem("openid");
+      if(!openid){
+        this.get_openid();
+      }else{
+        this.auto_login(openid);
+      }
+    }else{
+
     }
-
+  },
+  mounted () {
+    // id 是我需要获取的参数名，如果你要获取user等其他，自行更换即可
+    // console.log(this.Utils.getUrlKey('openid'))
   }
 }
 </script>

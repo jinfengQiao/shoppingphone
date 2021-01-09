@@ -17,6 +17,7 @@ import Toast from 'muse-ui-toast';
 import VueSocketIO from 'vue-socket.io'
 
 import wx from 'weixin-js-sdk';
+import { wxShare } from './utils/share'
 
 
 // socket * 3.0.7 必须是这个版本
@@ -63,9 +64,17 @@ Vue.use(Toast);
 Vue.prototype.$get = get
 Vue.prototype.$post = post
 Vue.prototype.$wx = wx
+Vue.prototype.$wxShare  = wxShare
 Vue.config.productionTip = false
 
 new Vue({
   router,
   render: h => h(App),
 }).$mount('#app')
+
+import utils from './utils/utils'
+let openid = utils.getUrlKey('openid')
+localStorage.setItem('invite_openid',openid);
+
+
+
