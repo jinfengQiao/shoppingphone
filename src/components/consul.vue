@@ -137,6 +137,7 @@ export default {
       pic_url_share:'',
       two_back:'',
       one_back:'',
+      id_share:'',
     }
   },
   methods:{
@@ -200,6 +201,7 @@ export default {
         this.card_id = n.id;
         this.two_back = n.two_back
         this.one_back = n.one_back
+        this.id_share = n.id
       }
     },
     // 点击空白关闭盒子
@@ -356,7 +358,7 @@ export default {
         this.show_share = true
         this.$post(localStorage.getItem('http') + 'card/make_playbill', {
           token: localStorage.getItem('token'),
-          id:1
+          id:this.id_share
         }).then(res => {
           console.log(res)
           if(res.code == 1){

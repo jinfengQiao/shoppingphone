@@ -128,7 +128,7 @@
               </template>
               <template v-else>
 <!--                <p>{{changeCls2Text}}</p>-->
-                <p></p>
+                <p>全套课程</p>
               </template>
               <span>￥{{ money }}</span>
             </div>
@@ -138,8 +138,18 @@
           </div>
           <div class="share_b">
             <div class="returnCom_b">
-              预计返佣：{{two_back}} ~ {{one_back}}元
+              <template v-if="VipCode == '月卡'">
+                预计返佣：{{this.monthList[0].two_back}} ~ {{this.monthList[0].one_back}}元
+              </template>
+              <template v-else-if="VipCode == '季卡'">
+                预计返佣：{{this.monthList[1].two_back}} ~ {{this.monthList[1].one_back}}元
+              </template>
+              <template v-else>
+                预计返佣：{{this.monthList[2].two_back}} ~ {{this.monthList[2].one_back}}元
+              </template>
             </div>
+          </div>
+          <div class="share_b">
             <div class="invite_friends" @click="get_invitationPoster">
               <img src="../assets/buSchool/invite_friends_icon.png" alt="">
               <span>邀请好友</span>
@@ -277,6 +287,7 @@ export default {
     listGo(index){
       console.log(index);
       this.idx = 0
+
       if(index == 0){
         this.VipTitle = '入门VIP'
       }
@@ -287,6 +298,7 @@ export default {
         this.VipTitle = '至尊VIP'
       }
       this.$wxShare(this.VipTitle,this.desc,location.href,this.imgUrl)
+
       var that = this
       that.isActive = index;
       // console.log(index + 1);
@@ -320,6 +332,7 @@ export default {
       this.time_long = index1
       if(index1 == 1){
         this.VipCode = '月卡'
+        // this.two_back =
       }
       if(index1 == 2){
         this.VipCode = '季卡'
@@ -355,15 +368,9 @@ export default {
         this.video = res.data.video
         this.video_cover = res.data.video_cover
         this.want_study = res.data.want_study
-        this.one_back = res.data.one_back
-        this.two_back = res.data.two_back
         // this.two_back = (res.data.two_back/100).toFixed(2)
         // this.one_back = (res.data.one_back/100).toFixed(2)
-        // console.log(this.want_study)
         this.lesson = res.data.lesson
-        // this.lesson_id = this.lesson[0].id
-        // this.course_id = res.data.id
-        // console.log(this.course_id)
         if(this.want_study == 1){
           this.lay_type1 = 1
         }

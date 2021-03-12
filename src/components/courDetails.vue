@@ -71,7 +71,14 @@
                     <img :src="n.video_cover" alt="">
                   </div>
                   <div class="ri_b">
-                    <p class="title">{{n.title}}</p>
+                    <p class="title">
+                      <span class="p_sma_b">
+                      <img src="../assets/buSchool/video_play.png" alt="">
+                      <span>
+                        {{n.title}}
+                      </span>
+                      </span>
+                    </p>
                     <p>
                       <span>
                         <template v-if="n.have == true">
@@ -208,7 +215,7 @@
 </template>
 
 <script>
-// import payComp from "@/components/payComp";
+import {exitFullscreen} from '@/utils/tools'
 export default {
   name: "courDetails",
   data(){
@@ -641,6 +648,7 @@ export default {
           this.$refs.video.pause();
           this.$refs.video.currentTime = this.limit
           this.tcShow = true
+          console.log('结束')
         }
       })
     },
@@ -666,6 +674,7 @@ export default {
         const newDate = this.limit - e.target.currentTime
         this.timeout = setTimeout(() => {
           console.log('结束')
+          exitFullscreen('#video');
           this.$refs.video.pause();
           clearTimeout(this.timeout)
           this.tcShow = true
@@ -1058,6 +1067,20 @@ export default {
             .title{
               color: #333333;
               font-weight: bold;
+              .p_sma_b{
+                display: flex;
+                justify-content: flex-start;
+                align-items: flex-start;
+                img{
+                  margin-top: 7px;
+                }
+              }
+            }
+            img{
+              width: 20px;
+              object-fit: cover;
+              margin-right: 4px;
+              vertical-align: middle;
             }
             p{
               display: flex;
@@ -1066,6 +1089,7 @@ export default {
               font-family: PingFang SC;
               color: #666666;
               line-height: 32px;
+              align-items: center;
             }
           }
         }
