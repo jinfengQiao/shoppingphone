@@ -1,5 +1,5 @@
 <template>
-    <div style="border-top: 1px solid #DDDDDD;">
+    <div style="border-top: 1px solid #DDDDDD;background-color: #ffffff">
         <ul class="my_order_title" style="display: none;">
             <li :class="[ indexs == index? 'span_blue' : '' ]" v-for="(item,index) in my_order_title" :key="item.id" @click="my_order_list_click(index)" >
                 <span>{{ item.name }}</span>
@@ -29,20 +29,25 @@
                       <h2>{{ items.fullname }}</h2>
                       <div class="my_list_content_name_num">
                         <p class="my_list_content_name_num_price">
-                          ￥{{ items.price }}
+                          <template v-if="items.type == 2">
+                            定金：
+                          </template>
+                          <template v-else></template>
+                          ￥{{ (items.price/100).toFixed(2) }}
                         </p>
-                        <p class="my_list_content_num">×1</p>
+                        <p class="my_list_content_num">×{{ items.amount }}</p>
                       </div>
                     </div>
                   </div>
                   <div class="my_list_button">
                     <div class="my_list_button_left">
-                      <span>共{{ items.amount }}件商品</span>
+<!--                      <span>共{{ items.amount }}件商品</span>-->
+                      <span>商品</span>
                       <div class="my_list_button_left_num">
-                        <p>合计：</p>
+                        <p>共计：</p>
                         <div class="my_list_button_left_price">
                           <p>￥</p>
-                          <p>{{ items.amount * items.price }}</p>
+                          <p>{{ items.amount * (items.price/100).toFixed(2) }}</p>
                         </div>
                       </div>
                     </div>
@@ -52,7 +57,7 @@
                       <!--                        <van-button v-preventReClick v-if="item.status == 1 || item.status == 2">查看详情</van-button>-->
                       <van-button v-preventReClick v-if="item.status == 3 || item.status == 2" @click.stop="dele(item)" >删除订单</van-button>
                       <van-button v-preventReClick v-if="item.status == 3" @click.stop="again(items)">重新下单</van-button>
-                      <van-button v-preventReClick v-if="item.status == 1 && items.refund== null" @click.stop="refund(item)" >申请退款</van-button>
+                      <van-button v-preventReClick v-if="item.status == 1 && items.refund== null" @click.stop="refund(item)" >申请售后</van-button>
                       <van-button v-preventReClick v-if="(items.refund != null && items.refund.status == 1) || (items.refund != null && items.refund.status == 0)" @click.stop="refund_router(items)" class="blue">退款中</van-button>
                       <van-button v-preventReClick v-if="items.refund != null && items.refund.status == 2" @click.stop="refund_router(items)" class="blue">退款成功</van-button>
                       <van-button v-preventReClick v-if="items.refund != null && items.refund.status == 3" @click.stop="refund_router(items)" class="blue">退款失败</van-button>
@@ -61,6 +66,9 @@
                 </div>
             </li>
         </ul>
+      <div class="back_index">
+        <button type="button" @click="back_index">返回个人中心</button>
+      </div>
 
       <noSharing></noSharing>
 
@@ -94,7 +102,7 @@
               indexs: 0,
               list: [],
               // form: {
-              //     token: sessionStorage.getItem('token'),
+              //     token: localStorage.getItem('token'),
               //     refund: 0,
               //     num:'',
               //     status:'',
@@ -119,7 +127,6 @@
             },
             // 申请退款
             refund(e) {
-
               let obj= {}
 
               obj['id']= e.goods[0].id
@@ -164,7 +171,7 @@
             // 取消订单
             cancel(e) {
               this.$post(localStorage.getItem('http') + 'order/cancel',{
-                token: sessionStorage.getItem('token'),
+                token: localStorage.getItem('token'),
                 id: e.id
               })
                 .then(res=> {
@@ -175,7 +182,7 @@
                     }else if(this.indexs == 1){
 
                       let obj= {}
-                      obj['token']= sessionStorage.getItem('token')
+                      obj['token']= localStorage.getItem('token')
                       obj['status']= 0
 
                       this.get_list(obj)
@@ -190,7 +197,7 @@
             // 删除订单
             dele(e) {
               this.$post(localStorage.getItem('http') + 'order/del',{
-                token: sessionStorage.getItem('token'),
+                token: localStorage.getItem('token'),
                 id: e.id
               })
               .then(res=> {
@@ -208,7 +215,7 @@
             get_list() {
               console.log(this.status)
               this.$post(localStorage.getItem('http') + 'order/get_list', {
-                token: sessionStorage.getItem('token'),
+                token: localStorage.getItem('token'),
                 num:'',
                 refund:0,
                 status:this.status
@@ -227,7 +234,7 @@
                 if(e == 0) {
                   let obj= {}
 
-                  obj['token']= sessionStorage.getItem('token')
+                  obj['token']= localStorage.getItem('token')
                   obj['refund']= 0
 
                   this.get_list(obj)
@@ -237,7 +244,7 @@
 
                   let obj= {}
 
-                  obj['token']= sessionStorage.getItem('token')
+                  obj['token']= localStorage.getItem('token')
                   obj['status']= 0
 
                   this.get_list(obj)
@@ -245,7 +252,7 @@
                 }else if(e == 2) {
                   let obj= {}
 
-                  obj['token']= sessionStorage.getItem('token')
+                  obj['token']= localStorage.getItem('token')
                   obj['refund']= 1
 
                   this.get_list(obj)
@@ -264,6 +271,14 @@
               this.get_list()
 
             },
+            // 返回个人中心
+            back_index(){
+              this.$router.push({path: '/center'});
+            },
+            fun(){
+              console.log("监听到了");
+              this.$router.push({path: '/center'});
+            }
         },
         created() {
           // this.get_list(this.form)
@@ -280,11 +295,18 @@
             this.isActive = 2
           }
           this.get_list();
-
-
         },
         components: {
           noSharing
+        },
+        mounted(){
+          if (window.history && window.history.pushState) {
+            history.pushState(null, null, document.URL);
+            window.addEventListener('popstate', this.fun, false);//false阻止默认事件
+          }
+        },
+        destroyed(){
+          window.removeEventListener('popstate', this.fun, false);//false阻止默认事件
         }
     }
 </script>
@@ -337,10 +359,12 @@
       }
     }
     .nullBox{
+      position: fixed;
+      top: 50%;
+      margin-top: -80px;
       width: 100%;
-      text-align: center;
-      padding: 100px 0 0 0 ;
-      box-sizing: border-box;
+      left: 50%;
+      margin-left: -25%;
       img{
         width: 50%;
         height: 50%;
@@ -351,7 +375,7 @@
       color: #5D80FC!important;
     }
     .my_list{
-        padding: 52px 15px 12px 15px;
+        padding: 64px 15px 70px 15px;
         li{
             border-radius: 4px;
             background: white;
@@ -377,6 +401,7 @@
                 padding-top: 14px;
                 margin-bottom: 19.5px;
                 img{
+                  object-fit: cover;
                     width: 78px;
                     height: 78px;
                 }
@@ -438,6 +463,7 @@
                     .van-button{
                         width: 74px;
                         height: 25px;
+                        line-height: 25px;
                         border-radius: 13px;
                         padding: 0!important;
                         /deep/ .van-button__text{
@@ -465,4 +491,27 @@
         margin-bottom: 0;
     }
 
+    .back_index{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 0 15px;
+      height: 58px;
+      box-sizing: border-box;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      border-top: 1px solid #E7E7E7;
+      button{
+        width: 100%;
+        height: 40px;
+        background: linear-gradient(134deg, #6aaeff 0%, #005eff 100%);
+        color: #ffffff;
+        border-radius: 30px;
+        outline: none;
+        border: 0;
+        letter-spacing: 1px;
+      }
+    }
 </style>

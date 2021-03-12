@@ -96,8 +96,8 @@ export default {
       addtime:'',
       num:'',
       cybermoney:'',
-
       page: 1,
+      limit: 15,
       show:false,
       num_money:'',
       num_money1:'',
@@ -117,8 +117,8 @@ export default {
       // 滚动条的位置高度
       let scrollTop = document.documentElement.scrollTop
       // console.log(scrollTop + outerHeight );
-      // console.log(innerHeight + 308);
-      if(scrollTop + outerHeight == innerHeight + 308){
+      // console.log(innerHeight + 238);
+      if(scrollTop + outerHeight == innerHeight + 238){
         this.page++;
         this.getData();
       }
@@ -128,7 +128,7 @@ export default {
       this.$post(localStorage.getItem('http') + 'user_cybermoney/get_log',{
         token: this.token,
         page:this.page,
-        limit:15
+        limit:this.limit
       })
       .then(res=> {
         // console.log(res.data)
@@ -164,7 +164,7 @@ export default {
       }else{
         this.isAble = true;
         this.$post(localStorage.getItem('http') + 'user_cybermoney/to_balance',{
-          token: sessionStorage.getItem('token'),
+          token: localStorage.getItem('token'),
           num: this.num_money
         })
         .then(res=> {
@@ -192,7 +192,7 @@ export default {
       }else{
         this.isAble1 = true;
         this.$post(localStorage.getItem('http') + 'user_cybermoney/to_wechat',{
-          token: sessionStorage.getItem('token'),
+          token: localStorage.getItem('token'),
           num: this.num_money1,
           openid: localStorage.getItem('openid'),
         })
@@ -213,7 +213,7 @@ export default {
     },
     get_cybermoney(){
       this.$post(localStorage.getItem('http') + 'user_cybermoney/get_cybermeony',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
       })
       .then(res=> {
         // console.log(res.data)
@@ -263,16 +263,16 @@ export default {
     window.removeEventListener("scroll",this.onScroll);
   },
   created(){
-    this.token = sessionStorage.getItem('token');
+    this.token = localStorage.getItem('token');
     // console.log(this.token)
-    // this.cybermoney = sessionStorage.getItem('cybermoney');
+    // this.cybermoney = localStorage.getItem('cybermoney');
     // console.log(this.cybermoney)
     this.get_cybermoney();
     this.getData();
     //先在这里监听scroll事件
     window.addEventListener('scroll', this.onScroll)
 
-    var open_id = sessionStorage.getItem('openid')
+    var open_id = localStorage.getItem('openid')
     this.order_id = open_id
   },
   components: {

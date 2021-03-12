@@ -74,7 +74,7 @@ export default {
     },
     getCode(){
       this.$post(localStorage.getItem('http') + 'order/get_detail',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         id:this.$route.query.id
 
       })

@@ -24,58 +24,82 @@
       </div>
     </div>
     <footer_nav></footer_nav>
-    <div class="showQy" :style="height" v-if="open" @click="hide1"></div>
-    <div class="showQyBox" v-if="open">
-      <div class="showQyBox1">
-          <img src="../assets/center/showQyBox1_bg.png" alt="">
-      </div>
-      <div class="showQyBox2">
-        <div class="showQyBox2Head">
-          <p>{{ name }}</p>
-          <span>￥{{ price }}</span>
-        </div>
-        <div class="showQyBox2Cont">
-          <div class="title">选择支付方式</div>
-          <div class="zhifuBox">
-              <div class="weixinZhifu" @click="weixinZhifu">
-                <div class="weixinZhifuLeft">
-                  <img src="../assets/center/wechat.png" alt="" class="img1">
-                  <span>微信支付</span>
-                </div>
-                <div class="weixinZhifuRight">
-                  <input type="radio" name="zhifu" checked>
-                  <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="weixinSelect">
-                </div>
-              </div>
-              <div class="yueZhifu" name="zhifu" @click="yueZhifu">
-                <div class="yueZhifuLeft">
-                  <img src="../assets/center/yue.png" alt="" class="img1">
-                  <span>余额支付</span>
-                </div>
-                <div class="yueZhifuRight">
-                  <input type="radio" name="zhifu">
-                  <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="yueSelect">
-                </div>
-              </div>
-
-
-          </div>
-        </div>
-        <div class="jifenBox">
-          <div class="jifenBox1">
-            <div class="duihuan">
-              <img src="../assets/center/duihuan_bg.png" alt=""> 积分兑换
+    <div class="showQy" v-show="show_showQy" @click="close_showQy">
+      <div class="showQyBox">
+        <div class="showQyBox_b" @click.stop>
+          <div class="showQyBox1">
+            <div @click="get_invitationPoster">
+              <img src="../assets/buSchool/invite_friends_icon.png" alt="">
+              <span>邀请好友</span>
             </div>
-            <div class="jifenBox1Ri">100积分 = 1元</div>
           </div>
-          <div class="jifenBox2">
-            <div class="jifenBox2Le">我的积分 <span>{{score}}</span></div>
-            <input type="number" placeholder="输入兑换积分" v-model="use_score">
+          <div class="showQyBox2">
+            <div class="showQyBox2Head">
+              <p>{{ name }}</p>
+              <span>￥{{ price }}</span>
+            </div>
+            <div class="returnCom_b">
+              预计返佣：{{two_back}} ~ {{one_back}}元
+            </div>
+            <div class="showQyBox2Cont">
+              <div class="title">选择支付方式</div>
+              <div class="zhifuBox">
+                <div class="weixinZhifu" @click="weixinZhifu">
+                  <div class="weixinZhifuLeft">
+                    <img src="../assets/center/wechat.png" alt="" class="img1">
+                    <span>微信支付</span>
+                  </div>
+                  <div class="weixinZhifuRight">
+                    <input type="radio" name="zhifu" checked>
+                    <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="weixinSelect">
+                  </div>
+                </div>
+                <div class="yueZhifu" name="zhifu" @click="yueZhifu">
+                  <div class="yueZhifuLeft">
+                    <img src="../assets/center/yue.png" alt="" class="img1">
+                    <span>余额支付</span>
+                  </div>
+                  <div class="yueZhifuRight">
+                    <input type="radio" name="zhifu">
+                    <img src="../assets/center/select_icon.png" alt="" class="img2" v-show="yueSelect">
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+            <div class="jifenBox">
+              <div class="jifenBox1">
+                <div class="duihuan">
+                  <img src="../assets/center/duihuan_bg.png" alt=""> 积分兑换
+                </div>
+                <div class="jifenBox1Ri">100积分 = 1元</div>
+              </div>
+              <div class="jifenBox2">
+                <div class="jifenBox2Le">我的积分 <span>{{score}}</span></div>
+                <input type="number" placeholder="输入兑换积分" v-model="use_score">
+              </div>
+            </div>
+            <div class="btnBox_serve">
+              <button @click="serviceBtn">咨询客服</button>
+            </div>
+            <div class="btnBox">
+              <button @click="buyBtn">立即购买</button>
+            </div>
           </div>
         </div>
-        <div class="btnBox">
-          <button @click="buyBtn">立即购买</button>
-        </div>
+      </div>
+    </div>
+    <div class="grey_background" v-show="show_share" @click="close_invitationPoster">
+      <div class="invitationPoster_b">
+        <p class="invita_p1">
+          1<span>点击右上角分享给好友</span>
+          <img src="../assets/buSchool/share_icon.png" alt="">
+        </p>
+        <p class="invita_p1">
+          2<span>长按下方图片保存或扫码了解</span>
+        </p>
+        <img :src="pic_url_share" alt="" @click.stop>
       </div>
     </div>
   </div>
@@ -83,7 +107,6 @@
 
 <script>
 import footer_nav from "@/components/footer_bar";
-import share from "../utils/share.js";
 
 export default {
   name: "consul",
@@ -96,7 +119,6 @@ export default {
       weixinSelect:true,
       yueSelect:false,
       show12:false,
-      open:false,
       isActive:'',
       tabList:'',
       tabCont:'',
@@ -109,14 +131,19 @@ export default {
       integrityurl:'',
       // logo:'https://m.tjqpjt.com/logo.png',
       desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
-      imgUrl: 'https://m.tjqpjt.com/logo.png'
+      imgUrl: 'https://m.tjqpjt.com/logo.png',
+      show_showQy:false,
+      show_share:false,
+      pic_url_share:'',
+      two_back:'',
+      one_back:'',
     }
   },
   methods:{
     // back:function(){
     //   this.$router.go(-1);
     // },
-    hh(){
+    get_height(){
       this.height.height = window.innerHeight +'px'
     },
     jumpMoneyDetailed:function (){
@@ -139,12 +166,12 @@ export default {
     // 获取卡片列表
     tab_Cont(){
       this.$post(localStorage.getItem('http') + 'card/get_list',{
-        category_id:this.category_id
+        token: localStorage.getItem('token'),
+        category_id:this.category_id,
       })
       .then(res=> {
-        // console.log(res.data.list)
+        console.log(res)
         this.tabCont = res.data.list;
-
 
         if(res.data.list == '' || res.data.list == null){
           this.show12 = true;
@@ -154,7 +181,7 @@ export default {
       })
     },
     showQyBox(n){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         this.$dialog.confirm({
           title:'登录状态',
           message:'未登录，请登录',
@@ -166,15 +193,18 @@ export default {
               console.log('未登录')
             });
       }else{
-        this.open = true;
+        this.show_showQy = true;
         console.log(n);
         this.price = (n.price/100).toFixed(2);
         this.name = n.name;
         this.card_id = n.id;
+        this.two_back = n.two_back
+        this.one_back = n.one_back
       }
     },
-    hide1(){
-      this.open = false;
+    // 点击空白关闭盒子
+    close_showQy(){
+      this.show_showQy = false
     },
     weixinZhifu(){
       this.weixinSelect = true
@@ -184,6 +214,7 @@ export default {
       this.weixinSelect = false
       this.yueSelect = true
     },
+    // 立即购买
     buyBtn(){
       console.log(this.card_id)
 
@@ -193,7 +224,7 @@ export default {
       .then(()=>{
         console.log('支付中..')
         this.$post(localStorage.getItem('http') + 'card/to_pay',{
-          token: sessionStorage.getItem('token'),
+          token: localStorage.getItem('token'),
           card_id: this.card_id,
         })
             .then(res=> {
@@ -208,7 +239,7 @@ export default {
                 if(this.weixinSelect == true){
                   console.log('微信支付')
                   this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-                    token: sessionStorage.getItem('token'),
+                    token: localStorage.getItem('token'),
                     order_id: this.order_id,
                     openid: localStorage.getItem('openid'),
                     order_type: 2,
@@ -232,7 +263,7 @@ export default {
                 }else{
                   console.log('余额支付')
                   this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
-                    token: sessionStorage.getItem('token'),
+                    token: localStorage.getItem('token'),
                     order_id: this.order_id,
                     order_type: 2,
                     use_score: this.use_score
@@ -259,6 +290,11 @@ export default {
       });
 
 
+    },
+    // 咨询客服
+    serviceBtn(){
+      // console.log('咨询客服');
+      window.location.href='https://dft.zoosnet.net/LR/Chatpre.aspx?id=DFT45969991&cid=e6cb3acd84ab4bcab85999cc8bb28e43&lng=cn&sid=e6cb3acd84ab4bcab85999cc8bb28e43&p=http%3A//www.tj-jxsw.com/&rf1=&rf2=&e=%25u6765%25u81EA%25u9996%25u9875%25u7684%25u5BF9%25u8BDD&msg=&d=1615016952432';
     },
     share(title,desc,link,imgUrl){
       this.$post(localStorage.getItem('http') + 'wechat/get_jssdk_config',{
@@ -303,16 +339,49 @@ export default {
 
       });
     },
+    // 邀请好友
+    get_invitationPoster(){
+      if(!localStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
+        })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        this.show_share = true
+        this.$post(localStorage.getItem('http') + 'card/make_playbill', {
+          token: localStorage.getItem('token'),
+          id:1
+        }).then(res => {
+          console.log(res)
+          if(res.code == 1){
+            this.pic_url_share = res.data.pic_url
+          }
+        })
+      }
+    },
+    // 关闭邀请海报弹窗
+    close_invitationPoster(){
+      this.show_share = false
+    },
+
+
+
   },
   created(){
+    this.get_height();
     this.integrityurl = window.location.href;
     this.share();
-    var score = sessionStorage.getItem('score');
+    var score = localStorage.getItem('score');
     this.score = score
     // console.log(this.score)
     this.tab_List();
     this.tab_Cont();
-    this.hh();
     var wx = this.$wx
     wx.showOptionMenu();
     this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
@@ -401,7 +470,7 @@ export default {
   width: 100%;
   padding: 15px 15px 77px 15px;
   box-sizing: border-box;
-  background-color: #f3f4f6;
+  //background-color: #f3f4f6;
   ul{
     width: 100%;
     li{
@@ -469,9 +538,12 @@ export default {
     }
   }
   .nullBox{
-    margin-top: 60px;
+    position: fixed;
+    top: 50%;
+    margin-top: -80px;
     width: 100%;
-    text-align: center;
+    left: 50%;
+    margin-left: -25%;
     img{
       width: 50%;
       height: 50%;
@@ -479,7 +551,6 @@ export default {
     }
   }
 }
-
 .showQy{
   position: fixed;
   bottom: 0;
@@ -487,237 +558,399 @@ export default {
   top: 0;
   right: 0;
   z-index: 2000;
-  background: rgba(0, 0, 0, 0.25)
+  background: rgba(0, 0, 0, 0.25);
 }
-.showQyBox{
+.showQyBox {
   position: absolute;
   top: 50%;
   left: 0;
-  margin-top: -210px;
-  z-index: 2000;
+  margin-top: -240px;
+  //z-index: 2000;
   width: 100%;
-  padding: 0 30px;
+  padding: 0 10%;
   box-sizing: border-box;
-  //height: 360px;
-  .showQyBox1{
-        width: 100%;
-        height: 85px;
-        img{
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-  .showQyBox2{
-      width: 100%;
-      //height: 240px;
-      background: url("../assets/center/showQyBox2_bg.png") no-repeat;
-      background-size: 100% 100%;
-      padding: 30px 30px 20px 30px;
+
+  .showQyBox_b {
+    width: 100%;
+  }
+
+  .showQyBox1 {
+    width: 100%;
+    height: 85px;
+    background: url("../assets/center/showQyBox1_bg.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    div{
+      border: 2px solid #ffffff;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 2px 15px;
       box-sizing: border-box;
-      .showQyBox2Head{
-        width: 100%;
-        line-height: 24px;
-        display: flex;
-        justify-content: space-between;
-        p{
-          font-size: 14px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #999999;
-        }
-        span{
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #FA6E46;
-        }
+      border-radius: 20px;
+    }
+    img{
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+      vertical-align: middle;
+      align-items: center;
+    }
+    span{
+      font-size: 18px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #FFFFFF;
+    }
+  }
+
+  .showQyBox2 {
+    width: 100%;
+    //height: 240px;
+    //background: url("../assets/center/showQyBox2_bg.png") no-repeat;
+    //background-size: 100% 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+
+    .showQyBox2Head {
+      width: 100%;
+      line-height: 24px;
+      display: flex;
+      justify-content: space-between;
+
+      p {
+        font-size: 14px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #999999;
       }
-      .showQyBox2Cont{
-        width: 100%;
-        margin-top: 18px;
-        .title{
-          font-size: 16px;
-          font-family: PingFang SC;
-          font-weight: 500;
-          color: #333333;
-        }
-        .zhifuBox{
-          margin-top: 14px;
-          padding: 0 0 15px 0;
-          box-sizing: border-box;
-          border-bottom: 1px solid #dddddd;
-          .weixinZhifu{
-            position: relative;
-            display: flex;
-            height: 35px;
-            justify-content: space-between;
-            //align-items: center;
-            margin-bottom: 15px;
-            .weixinZhifuLeft{
-              img{
-                float: left;
-                width: 35px;height: 35px;
-              }
-              span{
-                float: left;
-                margin-left: 7px;
-                line-height: 35px;
-                font-size: 14px;
-                font-family: PingFang SC;
-                font-weight: 500;
-                color: #333333;
-              }
-            }
-            .weixinZhifuRight{
-              img{
-                float: right;
-                width: 18px;height: 18px;
-                margin-top: 8px;
-              }
-              input{
-                opacity: 0;
-                position: absolute;
-                right:0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-              }
-            }
-          }
-          .yueZhifu{
-            position: relative;
-            display: flex;
-            height: 35px;
-            justify-content: space-between;
-            align-items: center;
-            .yueZhifuLeft{
-              img{
-                float: left;
-                width: 35px;height: 35px;
-              }
-              span{
-                float: left;
-                margin-left: 7px;
-                line-height: 35px;
-                font-size: 14px;
-                font-family: PingFang SC;
-                font-weight: 500;
-                color: #333333;
-              }
-            }
-            .yueZhifuRight{
-              img{
-                float: right;
-                width: 18px;height: 18px;
-                margin-top: 8px;
-              }
-              input{
-                opacity: 0;
-                position: absolute;
-                right:0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-              }
-            }
-          }
-          //.img1{
-          //  width: 35px;height: 35px;
-          //}
-          //.img2{
-          //  width: 18px;height: 18px;
-          //}
-          //span{
-          //  font-size: 14px;
-          //  font-family: PingFang SC;
-          //  font-weight: 500;
-          //  color: #333333;
-          //}
-        }
+
+      span {
+        font-size: 24px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #FA6E46;
       }
-      .jifenBox{
-        width: 100%;
-        //height: 100px;
-        padding: 12px 0;
+    }
+    .returnCom_b{
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #ffffff;
+      border-radius: 2px;
+      padding: 3px 10px;
+      box-sizing: border-box;
+      background-color: #486eef;
+    }
+    .showQyBox2Cont {
+      width: 100%;
+      margin-top: 10px;
+
+      .title {
+        font-size: 16px;
+        font-family: PingFang SC;
+        font-weight: 500;
+        color: #333333;
+      }
+
+      .zhifuBox {
+        margin-top: 14px;
+        padding: 0 0 15px 0;
         box-sizing: border-box;
-        .jifenBox1{
-          width: 100%;
-          height: 20px;
-          line-height: 20px;
+        border-bottom: 1px solid #dddddd;
+
+        .weixinZhifu {
+          position: relative;
           display: flex;
+          height: 35px;
           justify-content: space-between;
-          align-items: center;
-          .duihuan{
-            font-size: 13px;
-            font-family: PingFang SC;
-            font-weight: 500;
-            color: #333333;
-            img{
-              vertical-align: middle;
-              width: 16px;
-              height: 16px;
+          //align-items: center;
+          margin-bottom: 15px;
+
+          .weixinZhifuLeft {
+            img {
+              float: left;
+              width: 35px;
+              height: 35px;
             }
-          }
-          .jifenBox1Ri{
-            font-size: 12px;
-            font-family: PingFang SC;
-            font-weight: 500;
-            color: #FA6E46;
-          }
-        }
-        .jifenBox2{
-          width: 100%;
-          margin-top: 12px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          .jifenBox2Le{
-            font-size: 12px;
-            font-family: PingFang SC;
-            font-weight: 500;
-            color: #666666;
-            span{
+
+            span {
+              float: left;
+              margin-left: 7px;
+              line-height: 35px;
               font-size: 14px;
               font-family: PingFang SC;
               font-weight: 500;
+              color: #333333;
             }
           }
-          input{
-            font-size: 12px;
-            font-family: PingFang SC;
-            font-weight: 500;
-            color: #666666;
-            width: 100px;
-            border: 1px solid #999999;
-            border-radius: 2px;
-            outline: none;
-            padding: 0 10px;
-            box-sizing: border-box;
+
+          .weixinZhifuRight {
+            img {
+              float: right;
+              width: 18px;
+              height: 18px;
+              margin-top: 8px;
+            }
+
+            input {
+              opacity: 0;
+              position: absolute;
+              right: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+            }
           }
+        }
+
+        .yueZhifu {
+          position: relative;
+          display: flex;
+          height: 35px;
+          justify-content: space-between;
+          align-items: center;
+
+          .yueZhifuLeft {
+            img {
+              float: left;
+              width: 35px;
+              height: 35px;
+            }
+
+            span {
+              float: left;
+              margin-left: 7px;
+              line-height: 35px;
+              font-size: 14px;
+              font-family: PingFang SC;
+              font-weight: 500;
+              color: #333333;
+            }
+          }
+
+          .yueZhifuRight {
+            img {
+              float: right;
+              width: 18px;
+              height: 18px;
+              margin-top: 8px;
+            }
+
+            input {
+              opacity: 0;
+              position: absolute;
+              right: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+
+        //.img1{
+        //  width: 35px;height: 35px;
+        //}
+        //.img2{
+        //  width: 18px;height: 18px;
+        //}
+        //span{
+        //  font-size: 14px;
+        //  font-family: PingFang SC;
+        //  font-weight: 500;
+        //  color: #333333;
+        //}
+      }
+    }
+
+    .jifenBox {
+      width: 100%;
+      //height: 100px;
+      padding: 12px 0;
+      box-sizing: border-box;
+
+      .jifenBox1 {
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .duihuan {
+          font-size: 13px;
+          font-family: PingFang SC;
+          font-weight: 500;
+          color: #333333;
+
+          img {
+            vertical-align: middle;
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        .jifenBox1Ri {
+          font-size: 12px;
+          font-family: PingFang SC;
+          font-weight: 500;
+          color: #FA6E46;
         }
       }
 
-
-      .btnBox{
+      .jifenBox2 {
         width: 100%;
-        padding: 0 30px;
-        box-sizing: border-box;
-        button{
-          //margin-top: 20px;
-          width: 100%;
-          height: 38px;
-          line-height: 38px;
-          border: 0;
-          outline: none;
-          background: #FA6E46;
-          border-radius: 20px;
-          font-size: 18px;
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .jifenBox2Le {
+          font-size: 12px;
           font-family: PingFang SC;
-          color: #FFFFFF;
+          font-weight: 500;
+          color: #666666;
+
+          span {
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-weight: 500;
+          }
+        }
+
+        input {
+          font-size: 12px;
+          font-family: PingFang SC;
+          font-weight: 500;
+          color: #666666;
+          width: 100px;
+          border: 1px solid #999999;
+          border-radius: 2px;
+          outline: none;
+          padding: 0 10px;
+          box-sizing: border-box;
         }
       }
     }
+
+    .btnBox_serve {
+      margin-bottom: 12px;
+      width: 100%;
+      padding: 0 30px;
+      box-sizing: border-box;
+
+      button {
+        //margin-top: 20px;
+        width: 100%;
+        height: 38px;
+        line-height: 38px;
+        border: 0;
+        outline: none;
+        background: #486eef;
+        border-radius: 20px;
+        font-size: 18px;
+        font-family: PingFang SC;
+        color: #FFFFFF;
+      }
+    }
+
+    .btnBox {
+      width: 100%;
+      padding: 0 30px;
+      box-sizing: border-box;
+
+      button {
+        //margin-top: 20px;
+        width: 100%;
+        height: 38px;
+        line-height: 38px;
+        border: 0;
+        outline: none;
+        background: #FA6E46;
+        border-radius: 20px;
+        font-size: 18px;
+        font-family: PingFang SC;
+        color: #FFFFFF;
+      }
+    }
+  }
+
 }
+.grey_background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 9;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2001;
+  .invitationPoster_b {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15%;
+    box-sizing: border-box;
+    flex-direction: column;
+    p{
+      //margin-top: 5px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #ffffff;
+    }
+    p:last-child{
+      margin-bottom: 5px;
+    }
+    .invita_p1{
+      position: relative;
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #FFFFFF;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      img{
+        position: absolute;
+        right: -35px;
+        top: -20px;
+        width: 80px;
+        object-fit: cover;
+      }
+      span{
+        margin-left: 10px;
+        padding: 3px 10px;
+        box-sizing: border-box;
+        //opacity: 0.81;
+        border-radius: 15px;
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #FFFFFF;
+        background-color: rgba(112, 112, 112, 0.81);
+      }
+    }
+    img{
+      object-fit: cover;
+      width: 100%;
+      //height: 100%;
+    }
+  }
+}
+
 
 </style>

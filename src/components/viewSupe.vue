@@ -59,7 +59,7 @@ export default {
       // console.log(level)
       // console.log(user_id)
       this.$post(localStorage.getItem('http') + 'user_relation/get_detail',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         level: level,
         user_id: user_id
       })
@@ -100,7 +100,7 @@ export default {
     // 获取上级信息
     jumpShangji(){
       this.$post(localStorage.getItem('http') + 'user_relation/get_detail',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         level: 2,
         user_id: this.parentId
       })

@@ -5,10 +5,10 @@
 <!--                <i @click="bank" class="iconfont icon-fanhui"></i>-->
 <!--                <h2>订单支付</h2>-->
 <!--            </div>-->
-            <div class="deta_header_state">
+            <div class="deta_header_state" v-show="statusShow">
                 <div class="deta_header_state_left">
                     <h2>{{ deta_title }}</h2>
-                    <p>剩余 <van-count-down :time="time11" style="display: inline-block;color:#ffffff;" /> 自动关闭</p>
+                    <p>剩余 <van-count-down :time="begintime" style="display: inline-block;color:#ffffff;" /> 自动关闭</p>
                 </div>
                 <img src="" alt="">
             </div>
@@ -25,7 +25,7 @@
                         <p>{{ default_address_obj.name }}</p>
                         <p>{{ default_address_obj.real_phone }}</p>
                     </div>
-                    <p class="deta_address_p">{{ default_address_obj.province.name }}{{ default_address_obj.city.name }}{{ default_address_obj.area.name }}{{ default_address_obj.address }}</p>
+                    <p class="deta_address_p">{{ default_address_obj.province.name }} - {{ default_address_obj.city.name }} - {{ default_address_obj.area.name }} - {{ default_address_obj.address }}</p>
                 </div>
             </div>
             <i v-if="harvest_address_show" class="iconfont icon-fanhui"></i>
@@ -36,11 +36,17 @@
         <div class="goods_list_item">
             <div v-for="item in arr_spu" :key="item.id">
               <div class="goods_list_title">
-                <img :src="item.obj_spus.pic_url" alt="">
+                <img :src="item.obj_spus.pic_url" alt="" @click="jumpGoods_deta">
                 <div class="goods_list_title_address">
                   <h2>{{ item.obj_spus.name }}</h2>
                   <div class="goods_list_price">
-                    <p>￥{{ item.price }}</p>
+                    <p>
+                      <template v-if="show_type">
+                        定金：
+                      </template>
+                      <template v-else></template>
+                      ￥{{ (item.price/100).toFixed(2) }}
+                    </p>
                     <p>×{{ item.num }}</p>
                   </div>
                 </div>
@@ -51,14 +57,14 @@
               </div>
               <div class="goods_list_count">
                 <p>商品单价</p>
-                <p>￥{{ item.price }}</p>
+                <p>￥{{ (item.price/100).toFixed(2) }}</p>
               </div>
             </div>
             <div class="goods_list_order_count">
                 <p>订单总价</p>
                 <div class="goods_list_order_price">
                     <p>￥</p>
-                  <p>{{ num_price }}</p>
+                  <p>{{ (num_price/100).toFixed(2) }}</p>
                 </div>
             </div>
             <i class="triangle"></i>
@@ -88,7 +94,7 @@
                     </div>
                     <div class="pay_price">
                         <p>￥</p>
-                      <p>{{ num_price }}</p>
+                      <p>{{ (num_price/100).toFixed(2) }}</p>
                     </div>
                 </div>
             </div>
@@ -111,7 +117,7 @@
                         <svg class="icon yue" aria-hidden="true">
                           <use xlink:href="#icon-yanzhengma"></use>
                         </svg>
-                        <p>余额支付</p>
+                        <p>余额支付(剩余&nbsp;{{ (balance/100).toFixed(2)}}&nbsp;元)</p>
                       </div>
                       <van-radio name="2" icon-size="24px"></van-radio>
                     </div>
@@ -119,6 +125,7 @@
                 </van-radio-group>
             </div>
         </div>
+      <div class="jifenBox" v-show="jifenBox">
         <div class="renxinghua">
           <div class="renxinghua1">
             <div class="rxhLeft">
@@ -134,6 +141,7 @@
           </div>
           <input type="number" placeholder="输入兑换积分" v-model="use_score">
         </div>
+      </div>
         <div v-if="order_info_show" :style="{marginTop: order_info_show? '12px' : ''}">
           <!--订单信息-->
 
@@ -170,11 +178,17 @@
 
         <!--操作-->
         <div class="deta_button">
+          <div class="weizhifuB" v-show="weizhifuB">
             <van-button v-if="obj_show" @click="cancel" class="empty">取消订单</van-button>
             <van-button v-if="dele_show" @click="dele" class="empty">删除订单</van-button>
             <van-button v-if="again_show" @click="again" class="blue">重新下单</van-button>
             <van-button v-if="obj_show" @click="pay_click" class="blue">立即支付</van-button>
             <van-button v-if="refund_show" @click="refund_click" class="blue">申请退款</van-button>
+          </div>
+          <van-button v-if="chulizhong" class="empty" @click="jumpRe">处理中</van-button>
+          <van-button v-if="tuikuanOk" class="empty">退款成功</van-button>
+          <van-button v-if="tuikuanfail" class="empty">退款失败</van-button>
+
         </div>
 
         <div id="pays" ref="pays">
@@ -218,6 +232,7 @@
                   area: {
                     name: null
                   },
+                  address:null
                 },
                 address_id: null,
                 dele_show: false,
@@ -242,6 +257,19 @@
                 time11:24 * 60 * 60 * 1000,
                 score:0,
                 use_score:0,
+                statusShow:true,
+                jifenBox:true,
+                chulizhong:false,
+                tuikuanOk:false,
+                tuikuanfail:false,
+              begintime:'',
+              weizhifuB:false,
+              obj1:'',
+              obj2:'',
+              obj3:'',
+              obj4:'',
+              balance:'',
+              show_type:true,
             }
         },
         created() {
@@ -251,10 +279,10 @@
             let obj_spu= {}
             let id = this.$route.query.id
             console.log(id)
-            // console.log(JSON.parse(sessionStorage.getItem('obj')))
-            // if(JSON.parse(sessionStorage.getItem('obj')) != null) {
+            // console.log(JSON.parse(localStorage.getItem('obj')))
+            // if(JSON.parse(localStorage.getItem('obj')) != null) {
             if(id == undefined || !id || id == "") {
-              obj_spu= JSON.parse(sessionStorage.getItem('obj'))
+              obj_spu= JSON.parse(localStorage.getItem('obj'))
               this.order_info_show= false
               this.harvest_address_show= true
               this.obj_show= true
@@ -264,7 +292,7 @@
               this.arr_spu.push(obj_spu);
               this.num_price = (parseFloat(obj_spu.price) * obj_spu.num).toFixed(2);
 
-              if(sessionStorage.getItem('token')) {
+              if(localStorage.getItem('token')) {
                 if(this.$route.query.address_id) {
                   this.user_address_get_detail()
                 }else{
@@ -278,26 +306,65 @@
             this.get_money();
 
 
-            var open_id = sessionStorage.getItem('openid')
+            var open_id = localStorage.getItem('openid')
             this.open_id = open_id
-            console.log(this.open_id)
+            // console.log(this.open_id)
+            this.get_yue();
         },
         methods: {
             // 获取订单详情
             get_detail() {
               console.log(this.$route.query.id);
               this.$post(localStorage.getItem('http') + 'order/get_detail',{
-                token: sessionStorage.getItem('token'),
+                token: localStorage.getItem('token'),
                 id: this.$route.query.id
               })
                 .then(res=> {
                   console.log(res)
+
+                  this.obj1 = res.data.goods[0].id
+                  this.obj2 = res.data.goods[0].pic_url
+                  this.obj3 = res.data.goods[0].fullname
+                  this.obj4 = res.data.goods[0].price
+                  console.log(this.obj1)
+                  console.log(this.obj2)
+                  console.log(this.obj3)
+                  console.log(this.obj4)
+                  console.log(res.data.goods[0].type)
+                  if(res.data.goods[0].type == 2){
+                    this.show_type = true
+                  } else{
+                    this.show_type = false
+                  }
+
+
+                  this.status = res.data.status
+                  if(this.status == 0){
+                    this.statusShow = true
+                  }else{
+                    this.statusShow = false
+                  }
+                  if(this.status == 1||this.status == 0){
+                    this.weizhifuB = true
+                  }else {
+                    this.weizhifuB = false
+                  }
+                  if(this.status == 3){
+                    this.weizhifuB = true
+                  }
+
+                  this.begintime = res.data.begintime * 1000;
+
+
+
                   this.order_goods_id= res.data.goods[0].id
                   this.spu_id= res.data.goods[0].spu_id
                   this.order_id= res.data.id
 
                   res.data.goods.forEach((item)=> {
-                    console.log(item);
+                    console.log(item)
+                    this.id1 = item.id
+                    this.id = item.spu_id
                     var obj_spu= {
                       obj_spus: {
                         obj_spus: null,
@@ -328,48 +395,82 @@
                   this.default_address_obj.province.name= res.data.province.name
                   this.default_address_obj.city.name= res.data.city.name
                   this.default_address_obj.area.name= res.data.area.name
+                  this.default_address_obj.address = res.data.take_address
 
+                  // chulizhong:false,
+                  // tuikuanOk:false,
+                  // tuikuanfail:false,
+
+                  if(!res.data.goods[0].refund){
+                    console.log('没退款')
+                  }else{
+                    this.status1 = res.data.goods[0].refund.status
+                    console.log(this.status1)
+                  }
+                  if(this.status1 == 1){
+                    this.chulizhong = true
+                    this.weizhifuB = false
+                  }
+                  if(this.status1 == 2){
+                    this.tuikuanOk = true
+                  }
+                  if(this.status1 == 3){
+                    this.tuikuanfail = true
+                  }
 
                   if(res.data.status == 0) {
                     this.deta_title= '等待支付'
                     this.order_info_show= false
                     this.obj_show= true
+                    this.jifenBox = true
                   }else if(res.data.status == 1) {
                     this.deta_title= '支付完成'
                     this.order_info_show= true
                     this.refund_show= true
+                    this.jifenBox = false
                   }else if(res.data.status == 2) {
                     this.deta_title= '服务完成'
                     this.dele_show= true
+                    this.jifenBox = false
                   }else if(res.data.status == 3) {
                     this.deta_title= '交易关闭'
                     this.dele_show= true
                     this.again_show= true
+                    this.jifenBox = false
                   }
                 })
+            },
+            jumpRe() {
+              console.log(this.id1)
+              this.$router.push({
+                path: '/refund',
+                query: {
+                  id: this.id1
+                }
+              })
             },
             // 下单接口
             make_order() {
               let obj= {}
               obj['order_id']= this.order_id
-              obj['token']= sessionStorage.getItem('token')
+              obj['token']= localStorage.getItem('token')
               console.log(this.radio)
               if(this.radio == 1) {
                 obj['type']= '2'
               }else{
                 obj['type']= '1'
               }
-              this.wap_pay(obj)
+              // this.wap_pay(obj)
             },
             // 申请退款
             refund_click() {
               let obj= {}
-              obj['id']= this.order_goods_id
-              obj['pic_url']= this.obj_spu.obj_spus.pic_url
-              obj['name']= this.obj_spu.obj_spus.name
-              obj['price']= this.obj_spu.price * this.obj_spu.num
+              obj['id']= this.obj1
+              obj['pic_url']= this.obj2
+              obj['name']= this.obj3
+              obj['price']= this.obj4
 
-            //  console.log(obj)
+             // console.log(obj)
 
               this.$router.push({
                 path: '/order/apply_address',
@@ -393,7 +494,7 @@
             // 删除订单
             dele() {
                 let obj= {}
-                obj['token']= sessionStorage.getItem('token')
+                obj['token']= localStorage.getItem('token')
                 obj['id']= this.order_id
                 this.dele_order(obj)
             },
@@ -426,13 +527,13 @@
                 if(this.address_clicks) {
                   this.$router.go(-1)
                   let obj= null
-                  sessionStorage.setItem('obj',obj)
+                  localStorage.setItem('obj',obj)
                 }else{
                   // 取消订单接口
 
                   let obj= {}
 
-                  obj['token']= sessionStorage.getItem('token')
+                  obj['token']= localStorage.getItem('token')
                   obj['id']= this.order_id
 
                   this.cancel_order(obj)
@@ -441,7 +542,7 @@
             // 获取收货地址列表
             user_address_get_list() {
               this.$post(localStorage.getItem('http') + 'user_address/get_list',{
-                token: sessionStorage.getItem('token')
+                token: localStorage.getItem('token')
               })
                 .then(res=> {
                   // console.log(res.data.list)
@@ -459,7 +560,7 @@
             // 获取收货地址详情
             user_address_get_detail() {
               this.$post(localStorage.getItem('http') + 'user_address/get_detail',{
-                token: sessionStorage.getItem('token'),
+                token: localStorage.getItem('token'),
                 id: this.$route.query.address_id
               })
                 .then(res=> {
@@ -478,8 +579,8 @@
             add_address() {
               if(this.address_clicks) {
                 if(this.harvest_address_show) {
-              //   console.log(sessionStorage.getItem('token'))
-                  if(sessionStorage.getItem('token')) {
+              //   console.log(localStorage.getItem('token'))
+                  if(localStorage.getItem('token')) {
                     this.$router.push({
                       path: '/order/add_address'
                     })
@@ -514,7 +615,7 @@
             // 连接socket
             get_id() {
               this.$post(localStorage.getItem('http') + 'pay/get_id',{
-                token: sessionStorage.getItem('token')
+                token: localStorage.getItem('token')
               }).then((res)=> {
                   // console.log(res.data);
                   this.socket= res.data
@@ -563,7 +664,7 @@
           // 获取积分
           get_money(){
             this.$post(localStorage.getItem('http') + 'user_info/get_money',{
-              token: sessionStorage.getItem('token'),
+              token: localStorage.getItem('token'),
             })
             .then(res=> {
               // console.log(res.data)
@@ -584,7 +685,7 @@
             console.log(this.openid)
             console.log('微信支付')
             this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-              token: sessionStorage.getItem('token'),
+              token: localStorage.getItem('token'),
               order_id: this.order_id,
               openid: localStorage.getItem('openid'),
               order_type: 1,
@@ -609,7 +710,7 @@
           // 余额支付
           yueZhifu(){
             this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
-              token: sessionStorage.getItem('token'),
+              token: localStorage.getItem('token'),
               order_id:this.order_id,
               order_type: 1,
               use_score: this.use_score
@@ -624,12 +725,12 @@
                 this.$router.push('order/my_order');
               }
             })
-          }
+          },
           // 立即支付
           // pay_click() {
           //   // 下单
           //   let obj= {}
-          //   obj['token']= sessionStorage.getItem('token')
+          //   obj['token']= localStorage.getItem('token')
           //   obj['user_address_id']= this.address_id
           //
           //   this.arr_spu.forEach((item)=> {
@@ -643,7 +744,7 @@
           //   }else{
           //     let obj= {}
           //     obj['order_id']= this.order_id
-          //     obj['token']= sessionStorage.getItem('token')
+          //     obj['token']= localStorage.getItem('token')
           //     // console.log(this.radio)
           //     if(this.radio == 1) {
           //       obj['type']= '3'
@@ -723,10 +824,30 @@
           //     }
           //   }
           // },
+          // 点击图片跳转到详情
+          jumpGoods_deta(id){
+              console.log(id)
+              this.$router.push({
+                path:'/order/goods_deta',
+                query:{
+                  id:this.id
+                }
+              })
+          },
+          // 获取余额
+          get_yue(){
+            this.$post(localStorage.getItem('http') + 'user_info/detail', {
+              token: localStorage.getItem('token'),
+            })
+            .then(res=> {
+              console.log(res.data)
+              this.balance = res.data.balance
+            })
+          }
         },
         sockets: {
           connect(){
-            // var token = sessionStorage.getItem('token')
+            // var token = localStorage.getItem('token')
             console.log("connet....");
             this.get_id();
           },

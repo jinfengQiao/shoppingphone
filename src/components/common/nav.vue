@@ -69,7 +69,7 @@
           // 跳转我的订单
           tokens(e) {
             if(e.id == 2) {
-              if(sessionStorage.getItem('token')) {
+              if(localStorage.getItem('token')) {
                 this.$router.push({
                   path: '/order/my_order'
                 })

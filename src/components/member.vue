@@ -7,18 +7,18 @@
 <!--      </div>-->
       <div class="headContBox">
         <div class="quanyi">
-          <span @click="showQyBox">会员权益</span>
+<!--          <span @click="showQyBox">会员权益</span>-->
         </div>
         <div class="dengjiBox">
           <span>{{name}}</span>
-          <p>返佣系数：{{ rate_level_one }} - {{rate_level_two}}%</p>
+          <p>返佣系数：{{rate_level_two}} - {{ rate_level_one }}%</p>
         </div>
         <div class="cont">
           <div class="contHead">
             <img src="../assets/center/huiyuan_icon.png" alt="">
             <span>会员定义</span>
           </div>
-          <div class="contCont">线下发展 或者 根据充值金额不同 提升会员等级，返利金额不同。来源：后台设定规则。线下发展 或者 根据充值金额不同 提升会员等级，返利金额不同。来源：后台设定规则。</div>
+          <div class="contCont" v-html="content" :style="height"></div>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ export default {
       this.$router.go(-1);
     },
     hh(){
-      this.height.height = window.innerHeight +'px'
+      this.height.height = window.innerHeight-292 +'px'
     },
     showQyBox(){
       this.open = true;
@@ -71,10 +71,10 @@ export default {
     // 获取我的等级
     get_myGrade(){
       this.$post(localStorage.getItem('http') + 'user_info/detail',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
       })
       .then(res=> {
-        // console.log(res.data)
+        // console.log(res)
         this.level = res.data.level
         this.get_memlevelDetails(this.level)
       })
@@ -85,7 +85,7 @@ export default {
         id:this.level
       })
       .then(res=> {
-        // console.log(res.data)
+        // console.log(res)
         this.name = res.data.name
         this.rate_level_one = res.data.rate_level_one
         this.rate_level_two = res.data.rate_level_two
@@ -218,9 +218,13 @@ export default {
       font-family: PingFang SC;
       font-weight: 500;
       color: #999999;
-      padding: 0 0 0 30px;
+      //padding: 0 0 0 30px;
       box-sizing: border-box;
+      overflow: auto;
     }
+    //.contCont::-webkit-scrollbar {
+    //  display: none;
+    //}
   }
 }
 .showQy{

@@ -18,7 +18,6 @@
 <script>
 
     import footer_nav from "@/components/footer_bar";
-    import share from "../utils/share.js";
 
     export default {
         data() {
@@ -68,7 +67,7 @@
         .all_service_item{
             margin-bottom: 12px;
             background: #ffffff;
-            padding: 20px 0px 0;
+            padding: 20px 0;
             h2{
                 font-size: 18px;
                 margin-bottom: 16px;
@@ -76,18 +75,24 @@
             }
             .all_service_ul{
                 /*display: flex;*/
-                overflow: hidden;
+                //overflow: hidden;
+                display: flex;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                flex-direction: row;
                 li{
                     float: left;
                     cursor: pointer;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    width: 48px;
-                    height: 68.5px;
-                    margin-bottom: 20px;
-                    margin-right: 29.5px;
-                    margin-left: 16px;
+                    //width: 48px;
+                    width: 25%;
+                    //margin-bottom: 20px;
+                    //margin-right: 29.5px;
+                    //margin-left: 16px;
+                    margin: 10px 0;
+                    text-align: center;
                     img{
                         width: 27px;
                         height: 24.5px;

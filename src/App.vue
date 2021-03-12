@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import {getUrlCode} from './utils/getUrlCode'
 
 export default {
   methods:{
@@ -11,17 +12,17 @@ export default {
       this.$post(localStorage.getItem('http') + 'user/login_by_openid',{
         openid: openid
       })
-          .then(res=> {
-            // console.log(res.data)
-            // console.log(res.data.token)
-            // console.log(res.data.phone)
-            if(res.code == 1){
-              sessionStorage.setItem('token',res.data.token)
-              sessionStorage.setItem('phone',res.data.phone)
-            }else{
-
-            }
-          })
+      .then(res=> {
+        if(res.code == 1){
+          // localStorage.setItem('token',res.data.token)
+          // localStorage.setItem('phone',res.data.phone)
+          localStorage.setItem('token',res.data.token)
+          localStorage.setItem('phone',res.data.phone)
+          if(getUrlCode().code){
+            location.href = 'https://m.tjqpjt.com/#' + this.$route.fullPath
+          }
+        }
+      })
     },
     get_openid(){
       function getUrlPara(name) {
@@ -31,7 +32,8 @@ export default {
       }
       let code = getUrlPara("code");
       if(!code){
-        let redirect_url = encodeURIComponent(window.location.href);
+        // let path = this.$route.path
+        let redirect_url = encodeURIComponent(location.href);
         location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6bb6df7430479e17&redirect_uri="+redirect_url+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
       }
       this.$post(localStorage.getItem('http') + 'wechat/get_openid',{
@@ -44,13 +46,22 @@ export default {
   },
 
   created() {
+
+    if(this.$route.query.openid) {
+      // console.log('這是openid' + this.$route.query.openid)
+      localStorage.setItem('invite_openid', this.$route.query.openid)
+      // this.$notify(localStorage.getItem('invite_openid'));
+    }
+
+
+
     // 手机商城
-    //localStorage.setItem('http', 'http://of.kurohane.com/api/')
-    //localStorage.setItem('uttp', 'http://192.168.1.244/official/public/api/')
-    // localStorage.setItem('url', 'http://of.kurohane.com')
-    // localStorage.setItem('hrl', 'http://192.168.1.244/official/public')
-    localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
-    localStorage.setItem('url', 'https://of.tjqpjt.com')
+    localStorage.setItem('http', 'http://of.kurohane.com/api/')
+    localStorage.setItem('url', 'http://192.168.1.244/official/public/api/')
+    // localStorage.setItem('http', 'http://of.kurohane.com/')
+    // localStorage.setItem('url', 'http://192.168.1.244/official/public/')
+    // localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
+    // localStorage.setItem('url', 'https://of.tjqpjt.com')
 
 
     var ua = window.navigator.userAgent.toLowerCase();
@@ -61,13 +72,25 @@ export default {
       }else{
         this.auto_login(openid);
       }
-    }else{
-
     }
+
+    var _hmt = _hmt || [];
+    window._hmt = _hmt; // 修改为window 全局变量
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?174ed9804ea40f6ed7a93e63c2a4c7d1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+
+
+
   },
   mounted () {
     // id 是我需要获取的参数名，如果你要获取user等其他，自行更换即可
     // console.log(this.Utils.getUrlKey('openid'))
+
+
   }
 }
 </script>
@@ -100,6 +123,9 @@ export default {
   }
   a{
     text-decoration: none;
+  }
+  html{
+    background-color: #ffffff;
   }
   /*共用商品列表*/
   .goods_list{
@@ -210,5 +236,8 @@ export default {
     }
   }
 
+  .van-popover__content{
+    border-radius: 4px!important;
+  }
 </style>
 

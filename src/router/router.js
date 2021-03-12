@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 import Index from '../view/index'
 import index_home from "../components/index_home";
 import order_list from "../components/order_list";
@@ -37,6 +37,8 @@ import courDetails from "../components/courDetails";
 import artiDetails from "../components/artiDetails";
 import payComp from "../components/payComp";
 import balance from "../components/balance";
+import refund_page from "../components/refund_page";
+import rebate_rules from "../components/rebate_rules";
 
 
 import deta from "../view/deta";
@@ -44,16 +46,14 @@ import refund from "../view/refund";
 
 import login from "../view/login";
 
-Vue.use(VueRouter)
+Vue.use(Router)
 
 
-const originalReplace = VueRouter.prototype.replace;
-VueRouter.prototype.replace = function replace(location) {
+const originalReplace = Router.prototype.replace;
+Router.prototype.replace = function replace(location) {
     return originalReplace.call(this, location).catch(err => err);
 };
-const router = new VueRouter({
-    // mode: 'history',
-    routes: [
+const routes= [
         {
             path: '/',
             component: Index,
@@ -62,7 +62,8 @@ const router = new VueRouter({
                     path: 'index_home',
                     component: index_home,
                     meta: {
-                        title: '首页'
+                        title: '首页',
+                        // allowBack: false
                     }
                 },
                 {
@@ -186,6 +187,13 @@ const router = new VueRouter({
             component: rebate,
             meta: {
                 title: '返利'
+            }
+        },
+        {
+            path:'/rebate_rules',
+            component: rebate_rules,
+            meta: {
+                title: '返利规则'
             }
         },
         {
@@ -328,29 +336,49 @@ const router = new VueRouter({
                 title: '余额'
             }
         },
+        {
+            path:'/refund_page',
+            component: refund_page,
+            meta: {
+                title: '售后服务'
+            }
+        },
+
 
     ]
-})
 
-const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(location) {
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
     return originalPush.call(this, location).catch(err => err)
 }
 
+const router = new Router({
+    routes: routes
+})
+
+
+
 router.beforeEach((to,form,next) => {
-    // if(to.path != '/' ){
-    //     if(sessionStorage.getItem('token') != null){
-    document.title= to.meta.title
-    next()
-    //         next()
-    //     }else{
-    //         document.title= to.meta.title
-    //         next({path: '/'})
-    //     }
-    // }else{
-    //     document.title= to.meta.title
-    //     next()
+    if (window._hmt) {
+        if (to.path) {
+            window._hmt.push(['_trackPageview', '/#' + to.fullPath])
+        }
+    }
+    if(to.meta.title){
+        document.title = to.meta.title
+    }
+    next();
+
+
+    // // 监听路由变化，阻止首页后退
+    // this.allowBack = true; // 设置默认值
+    // if (to.meta.allowBack !== undefined) {
+    //     this.allowBack = to.meta.allowBack;
     // }
+    // if (!to.meta.allowBack) {
+    //     history.pushState(null, null, location.href);
+    // }
+    // next()
 })
 
 

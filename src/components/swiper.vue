@@ -1,8 +1,15 @@
 <template>
     <div>
-        <mu-carousel transition="fade" :hide-indicators="true" :hide-controls="true">
-            <mu-carousel-item v-for="item in list" :key="item.id" >
+        <mu-carousel transition="fade" :hide-controls="true">
+            <mu-carousel-item v-for="item in list" :key="item.id">
+              <template v-if="!item.link">
                 <img :src="item.phone_pic_url" alt="">
+              </template>
+              <template v-else>
+                <a :href="item.link">
+                  <img :src="item.phone_pic_url" alt="">
+                </a>
+              </template>
             </mu-carousel-item>
         </mu-carousel>
     </div>
@@ -12,7 +19,7 @@
     export default {
         data() {
             return{
-                list: ''
+                list: '',
             }
         },
         created() {
@@ -23,7 +30,7 @@
             get_swiper() {
                 this.$post(localStorage.getItem('http') + 'banner/get_shop_banner')
                     .then((res)=> {
-                        // console.log(res.data)
+                        console.log(res)
 
                         res.data.forEach((item,k)=> {
                             res.data[k].phone_pic_url= item.phone_pic_url

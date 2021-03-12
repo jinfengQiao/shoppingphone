@@ -69,9 +69,9 @@ export default {
         this.imgList = res.data.media_url.img
 
         if(!this.imgList){
-          this.$wxShare(res.data.title,this.desc,location.href,res.data.media_url.img)
+          this.$wxShare(this.title,this.desc,location.href,res.data.media_url.img)
         }else{
-          this.$wxShare(res.data.title,this.desc,location.href,'https://m.tjqpjt.com/logo.png')
+          this.$wxShare(this.title,this.desc,location.href,'https://m.tjqpjt.com/logo.png')
         }
 
       })

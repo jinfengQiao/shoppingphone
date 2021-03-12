@@ -1,5 +1,5 @@
-
 <script>
+//已废弃 用share.js
 export default {
 name: "share",
   data(){
@@ -31,7 +31,7 @@ name: "share",
           // link = link + "&openid=";
 
           wx.updateAppMessageShareData({
-            title: "权鹏集团 - " + title, // 分享标题
+            title: title, // 分享标题
             desc: desc, // 分享描述
             link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: imgUrl, // 分享图标
@@ -42,7 +42,7 @@ name: "share",
           });
 
           wx.updateTimelineShareData({
-            title: "权鹏商城 - " + title, // 分享标题
+            title: title, // 分享标题
             link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: imgUrl, // 分享图标
             success: function () {
@@ -69,9 +69,8 @@ name: "share",
       // alert("没有拼接");
       link = link + "?openid=" + openid;
     }
-
-
     this.share(this.title,this.resume,link,this.logo);
+
   }
 }
 </script>

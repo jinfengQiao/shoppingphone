@@ -11,6 +11,7 @@
         <div class="btnBox">
           邀请码：{{yaoqingCode}}
         </div>
+        <button type="button" @click="get_invitationPoster">点击生成邀请海报</button>
       </div>
     </div>
     <div class="cont" :style="height">
@@ -25,6 +26,7 @@
         <div class="contCont1" v-show="tabState==1">
           <ul>
             <li v-for="(n,inx) in yijiList" :key="inx" @click="jumpViewSupe1(n.id)">
+              <div class="cont_left_b">
               <template v-if="n.face_url == null || n.face_url == ''">
                 <img src="../assets/center/headImg.png" alt="">
               </template>
@@ -40,6 +42,7 @@
                 </template>
                 <div class="time">{{ n.addtime }}</div>
               </div>
+              </div>
               <div class="money">{{ n.sum_price }}</div>
             </li>
             <div class="overDi">没有更多了</div>
@@ -48,6 +51,7 @@
         <div class="contCont2" v-show="tabState==2">
           <ul>
             <li v-for="(n,inx) in erjiList" :key="inx" @click="jumpViewSupe2(n.id)">
+              <div class="cont_left_b">
               <template v-if="n.face_url == null || n.face_url == ''">
                 <img src="../assets/center/headImg.png" alt="">
               </template>
@@ -62,6 +66,7 @@
                   <span>{{n.nickname}}</span>
                 </template>
                 <div class="time">{{ n.addtime }}</div>
+              </div>
               </div>
 <!--              <button @click="jumpViewSupe">查看上级</button>-->
               <div class="money">{{ n.sum_price }}</div>
@@ -81,6 +86,13 @@
 <!--    />-->
 <!--    <wechatInv></wechatInv>-->
     <noSharing></noSharing>
+
+    <div class="grey_background" v-show="show" @click="close_invitationPoster">
+      <div class="invitationPoster_b">
+        <img :src="pic_url" alt="" @click.stop>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -90,109 +102,126 @@ import noSharing from "@/components/noSharing";
 
 export default {
   name: "subordinate",
-  data(){
-    return{
+  data() {
+    return {
       // showShare: false,
       options: [
-        { name: '微信', icon: 'wechat' },
+        {name: '微信', icon: 'wechat'},
         // { name: '微博', icon: 'weibo' },
         // { name: '复制链接', icon: 'link' },
         // { name: '分享海报', icon: 'poster' },
         // { name: '二维码', icon: 'qrcode' },
       ],
       tabState: 1,
-      isActive:'',
-      height:{
-        width:'',
-        height:'',
+      isActive: '',
+      height: {
+        width: '',
+        height: '',
       },
-      height1:{
-        width:'',
-        height:'',
+      height1: {
+        width: '',
+        height: '',
       },
-      contHeadBoxLi:[
-          '一级','二级'
+      contHeadBoxLi: [
+        '一级', '二级'
       ],
-      yijiList:[
-
-      ],
-      erjiList:[
-
-      ],
-      level:'',
-      integrityurl:'',
+      yijiList: [],
+      erjiList: [],
+      level: '',
+      integrityurl: '',
       yaoqingCode: 0,
+      show:false,
+      pic_url:'',
     }
   },
   methods: {
-    back:function(){
+    back: function () {
       this.$router.go(-1);
     },
-    hh(){
-      this.height.height = window.innerHeight-285 +'px'
+    hh() {
+      this.height.height = window.innerHeight - 285 + 'px'
     },
-    hh1(){
-      this.height1.height = window.innerHeight - 377 +'px'
+    hh1() {
+      this.height1.height = window.innerHeight - 377 + 'px'
     },
-    toggle(inx){
+    toggle(inx) {
       this.isActive = inx;
       var inx1 = inx + 1
       this.tabState = inx1;
     },
     // 跳转到详情
-    jumpViewSupe1(id){
+    jumpViewSupe1(id) {
       // this.$router.push('/viewSupe');
       this.$router.push({
         path: '/viewSupe',
         query: {
-          level : 1,
-          id : id
+          level: 1,
+          id: id
         }
       })
     },
-    jumpViewSupe2(id){
+    jumpViewSupe2(id) {
       // this.$router.push('/viewSupe');
       this.$router.push({
         path: '/viewSupe',
         query: {
-          level : 2,
-          id : id,
+          level: 2,
+          id: id,
         }
       })
     },
     // 获取下级用户列表
-    get_list(){
-      this.$post(localStorage.getItem('http') + 'user_relation/get_list',{
-        token: sessionStorage.getItem('token'),
-        level:1
+    get_list() {
+      this.$post(localStorage.getItem('http') + 'user_relation/get_list', {
+        token: localStorage.getItem('token'),
+        level: 1
       })
-      .then(res=> {
-        // console.log(res.data)
-        this.yijiList = res.data
-      })
+          .then(res => {
+            // console.log(res.data)
+            this.yijiList = res.data
+          })
     },
-    get_list1(){
-      this.$post(localStorage.getItem('http') + 'user_relation/get_list',{
-        token: sessionStorage.getItem('token'),
-        level:2
+    get_list1() {
+      this.$post(localStorage.getItem('http') + 'user_relation/get_list', {
+        token: localStorage.getItem('token'),
+        level: 2
       })
-      .then(res=> {
-        // console.log(res.data)
-        this.erjiList = res.data
-      })
+          .then(res => {
+            // console.log(res.data)
+            this.erjiList = res.data
+          })
     },
     // 获取邀请码
-    get_Code(){
-      this.$post(localStorage.getItem('http') + 'user_info/get_invite_code',{
-        token: sessionStorage.getItem('token'),
-      })
-      .then(res=> {
+    get_Code() {
+      this.$post(localStorage.getItem('http') + 'user_info/get_invite_code', {
+        token: localStorage.getItem('token'),
+      }).then(res => {
         console.log(res.data)
         this.yaoqingCode = res.data.invite_code
       })
     },
+    // 生成邀请海报
+    get_invitationPoster(){
+      // console.log(123)
+      this.show = true
+      this.$post(localStorage.getItem('http') + 'user_info/make_playbill', {
+        token: localStorage.getItem('token'),
+      }).then(res => {
+        // console.log(res)
+        if(res.code == 1){
+          // console.log(res)
+          this.pic_url = res.data.pic_url
+        }
+      })
+    },
+    // 关闭邀请海报弹窗
+    close_invitationPoster(){
+      this.show = false
+    }
+
+
   },
-  created(){
+  created() {
     this.integrityurl = window.location.href;
     this.get_Code();
     this.hh();
@@ -206,7 +235,8 @@ export default {
   components: {
     noSharing
   }
-}
+};
+
 </script>
 
 <style lang="less" scoped>
@@ -280,14 +310,16 @@ export default {
       font-family: PingFang SC;
       font-weight: 500;
       color: #4E60E5;
-      //img{
-      //  position: absolute;
-      //  left: 18px;
-      //  top: 50%;
-      //  margin-top: -12px;
-      //  width: 25px;
-      //  height: 25px;
-      //}
+    }
+    button{
+      outline: none;
+      border: 0;
+      background-color: rgba(0,0,0,0);
+      font-size: 18px;
+      font-family: WenYue XinQingNianTi;
+      font-weight: normal;
+      color: #ffffff;
+      margin-left: 24px;
     }
 
   }
@@ -314,30 +346,32 @@ export default {
     .contHeadBox{
       width: 100%;
       height: 52px;
-      background: rgba(5, 150, 235, 0.36);
+      background: rgba(78, 119, 235, 0.18);
       border-radius: 5px;
-      padding: 12px 0;
       box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       ul{
         width: 100%;
-        height: 28px;
         li{
           float: left;
           width: 50%;
-          height: 28px;
-          line-height: 28px;
+          height: 52px;
           text-align: center;
           font-size: 16px;
           font-family: PingFang SC;
           font-weight: bold;
-          color: #FFFFFF;
+          color: #4E77EB;
+          line-height: 52px;
         }
         li:first-child{
-          border-right: 1px solid rgba(5, 150, 235, 1);
-          box-sizing: border-box;
+
         }
         .addCls{
-          color: rgba(78, 119, 235, 1);
+          color: #FFFFFF;;
+          background: #4E77EB;
+          border-radius: 5px;
         }
       }
     }
@@ -348,6 +382,11 @@ export default {
     overflow: auto;
     background: #FFFFFF;
     border-radius: 5px;
+    .cont_left_b{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
     .contCont1{
       float: left;
       width: 100%;
@@ -369,6 +408,7 @@ export default {
             height: 44px;
             border-radius: 50%;
             object-fit: cover;
+            margin-right: 10px;
           }
           .middle{
             span{
@@ -428,6 +468,8 @@ export default {
             width: 44px;
             height: 44px;
             border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
           }
           .middle{
             span{
@@ -483,6 +525,29 @@ export default {
     }
   }
 }
+.grey_background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 9;
+  background-color: rgba(0, 0, 0, 0.4);
+  .invitationPoster_b {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15%;
+    box-sizing: border-box;
+    img{
+      object-fit: cover;
+      width: 100%;
+      //height: 100%;
+    }
+  }
 
+}
 
 </style>

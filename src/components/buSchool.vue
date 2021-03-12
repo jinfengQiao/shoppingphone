@@ -9,7 +9,7 @@
         <button type="button" class="kecheng" :class="{cur:index==isActive}" @click="listGo(index)" v-for="(n,index) in buttonText" :key="index">{{n}}</button>
       </div>
     </div>
-    <div class="cont">
+    <div class="cont" :style="height_cont">
       <div class="cont1" v-show="tabState==1">
         <div class="banner">
         <div class="bannerBox">
@@ -22,10 +22,11 @@
           </div>
         </div>
         </div>
-        <div class="contCont">
-          <div class="contContHead">
+        <div class="contCont" id="contCont_box">
+          <div class="contContHead" id="contContHead">
             <ul>
-              <li v-for="(n,index) in contContHead" :key="index" :class="{contContHeadAdd:index==isSelect}" @click="changeCls(index,n.id)">{{n.name}}</li>
+<!--              <li>全部</li>-->
+              <li v-for="(n,index) in contContHead" :key="index" :class="{contContHeadAdd:index===isSelect}" @click="changeCls(index,n.id)">{{n.name}}</li>
             </ul>
           </div>
           <div class="contContCont" id="contContCont" :style="height">
@@ -50,10 +51,16 @@
       </div>
       <div class="cont2" v-show="tabState==2">
         <div class="cont2Head">
+<!--          <van-tabs>-->
+<!--            <van-tab v-for="(n,index) in cont2HeadLi" :key="index" :title="n.name" @click="liAddCls(index,n.id)">-->
+<!--            </van-tab>-->
+<!--          </van-tabs>-->
           <ul>
-            <li v-for="(n,index) in cont2HeadLi" :key="index" :class="{liAddCls:index==isliAddCls}" @click="liAddCls(index,n.id)">{{n.name}}</li>
+            <li v-for="(n,index) in cont2HeadLi" :key="index" :class="{liAddCls:index===isliAddCls}" @click="liAddCls(index,n.id)">{{n.name}}</li>
           </ul>
-          <img src="../assets/buSchool/search_icon.png" alt="" @click="jumpSearch">
+          <div class="img_bo" @click="jumpSearch">
+            <img src="../assets/buSchool/search_icon.png" alt="">
+          </div>
         </div>
         <div class="cont2Cont" id="contContCont1" :style="height1">
           <div class="cont2Cont1" v-for="(n,inx) in contContCont1" :key="inx" @click="jumpArtiDetails(n.id)">
@@ -97,6 +104,10 @@ export default {
   name: "buSchool",
   data(){
     return{
+      height_cont:{
+        width:'',
+        height:'',
+      },
       height:{
         width:'',
         height:'',
@@ -123,8 +134,8 @@ export default {
       contContCont:[],
       contContCont11:[],
       keyword:'',
-      category_id:'',
-      category_id1:1,
+      category_id:0,
+      category_id1:0,
       info:'',
       publishtime:'',
       hit:'',
@@ -139,12 +150,16 @@ export default {
       integrityurl:'',
       logo:'https://m.tjqpjt.com/logo.png',
       desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
-      imgUrl: 'https://m.tjqpjt.com/logo.png'
+      imgUrl: 'https://m.tjqpjt.com/logo.png',
+      id_set:'',
     }
   },
   methods:{
+    get_height_cont(){
+      this.height_cont.height = window.innerHeight +'px'
+    },
     hh(){
-      this.height.height = window.innerHeight-313 +'px'
+      // this.height.height = window.innerHeight +'px'
     },
     hh1(){
       this.height1.height = window.innerHeight +'px'
@@ -177,6 +192,7 @@ export default {
 
     },
     changeCls(index,id){
+      // console.log(id)
       this.isSelect = index;
       // console.log(id);
       this.category_id = id;
@@ -194,7 +210,7 @@ export default {
       this.get_clsTextList();
     },
     jumpCurrVip(){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         this.$dialog.confirm({
           title:'登录状态',
           message:'未登录，请登录',
@@ -210,7 +226,7 @@ export default {
       }
     },
     jumpSearch(){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         this.$dialog.confirm({
           title:'登录状态',
           message:'未登录，请登录',
@@ -226,28 +242,34 @@ export default {
       }
     },
     jumpCourDetails(id){
-      if(!sessionStorage.getItem('token')){
-        this.$dialog.confirm({
-          title:'登录状态',
-          message:'未登录，请登录',
-        })
-            .then(()=>{
-              this.$router.push('/login')
-            })
-            .catch(()=>{
-              console.log('未登录')
-            });
-      }else{
-        this.$router.push({
-          path:'courDetails',
-          query:{
-            id:id
-          }
-        })
-      }
+      // if(!localStorage.getItem('token')){
+      //   this.$dialog.confirm({
+      //     title:'登录状态',
+      //     message:'未登录，请登录',
+      //   })
+      //       .then(()=>{
+      //         this.$router.push('/login')
+      //       })
+      //       .catch(()=>{
+      //         console.log('未登录')
+      //       });
+      // }else{
+      //   this.$router.push({
+      //     path:'courDetails',
+      //     query:{
+      //       id:id
+      //     }
+      //   })
+      // }
+      this.$router.push({
+        path:'courDetails',
+        query:{
+          id:id
+        }
+      })
     },
     jumpArtiDetails(id){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         this.$dialog.confirm({
           title:'登录状态',
           message:'未登录，请登录',
@@ -267,14 +289,13 @@ export default {
         })
       }
     },
-
-
     // 获取课程分类
     get_class() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        // console.log(res.data)
+        console.log(res)
         this.contContHead= res.data
+        this.contContHead_id = res.data[0].id
         // this.category_id = res.data.id
         // console.log(this.category_id)
       })
@@ -286,8 +307,8 @@ export default {
       var outerHeight = document.documentElement.clientHeight
       // 滚动条的位置高度
       var scrollTop = document.documentElement.scrollTop
-      console.log(scrollTop + outerHeight );
-      console.log(innerHeight + this.plus_height);
+      // console.log(scrollTop + outerHeight );
+      // console.log(innerHeight + this.plus_height);
       if(scrollTop + outerHeight == innerHeight + this.plus_height){
         this.page++;
         if(this.list_type == 1){
@@ -370,10 +391,12 @@ export default {
     },
   },
   created(){
-
+    this.isSelect = 0
+    this.isliAddCls = 0;
     // window.addEventListener('scroll1', this.onScroll1);
     this.get_class();
     this.get_clsList();
+    this.get_height_cont();
     this.hh();
     this.hh1();
     this.get_classText();
@@ -383,6 +406,7 @@ export default {
     wx.showOptionMenu();
 
     this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
+
 
   },
   beforeDestroy() {
@@ -475,6 +499,8 @@ export default {
   float: left;
   position: relative;
   width: 100%;
+  //padding: 0 0 0 0;
+  box-sizing: border-box;
   .banner{
     position: fixed;
     top: 36px;
@@ -538,15 +564,15 @@ export default {
     float: left;
     width: 100%;
     background-color: #ffffff;
-    padding: 251px 15px 62px;
+    padding: 156px 15px 0;
     box-sizing: border-box;
-    overflow: auto;
+    //overflow: auto;
     .contContHead{
-      padding: 0 15px;
+      //padding: 0 15px;
       box-sizing: border-box;
-      position: fixed;
-      top: 156px;
-      left: 0;
+      //position: fixed;
+      //top: 156px;
+      //left: 0;
       z-index: 11;
       width: 100%;
       background-color: #ffffff;
@@ -557,7 +583,7 @@ export default {
         flex-wrap: wrap;
         li{
           margin-top: 15px;
-          padding: 4px 24px;
+          padding: 4px 18px;
           box-sizing: border-box;
           background: rgba(220, 220, 220, 0.27);
           border-radius: 12px;
@@ -567,23 +593,26 @@ export default {
           color: #666666;
         }
       }
-      ul:after {content: "";width: 163px;}
+      //ul:after {content: "";width: 163px;}
+      ul:after {content: "";width: 204px;}
     }
     .contContHeadAdd{
       background: rgba(13, 104, 255, 0.27)!important;
       color: #0E69FF!important;
     }
     .contContCont::-webkit-scrollbar {
-      //display: none;
+      display: none;
     }
     .contContCont{
       width: 100%;
-      //overflow: auto;
+      overflow: auto;
+      padding: 0 0 62px 0;
+      box-sizing: border-box;
 
       ul{
         width: 100%;
         li{
-          width: 100%;
+          //width: 100%;
           height: 110px;
           border-bottom: 1px solid rgba(220, 220, 220, 0.34);
           padding: 15px 0 14px;
@@ -594,7 +623,8 @@ export default {
           img{
             margin-right: 5px;
             width: 130px;
-            height: 80px;
+            //height: 80px;
+            object-fit: cover;
           }
           .box1{
             position: relative;
@@ -646,15 +676,6 @@ export default {
         //  margin-bottom: 62px;
         //}
       }
-      .nullBox{
-        width: 100%;
-        text-align: center;
-        img{
-          width: 50%;
-          height: 50%;
-          object-fit: cover;
-        }
-      }
     }
   }
 
@@ -669,21 +690,27 @@ export default {
     top: 36px;
     left: 0;
     z-index: 2;
-
     width: 100%;
-    height: 57px;
+    //height: 57px;
     line-height: 42px;
     padding: 15px 15px 0 15px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     background-color: #ffffff;
+    ul::-webkit-scrollbar {
+      display: none; }
     ul{
       float: left;
-      height: 42px;
-      display: flex;
-      justify-content: space-between;
+      //height: 42px;
+      flex: 1;
+      overflow: auto;
+      //display: flex;
+      //justify-content: space-between;
+      flex-wrap: nowrap;
+      white-space: nowrap;
       li{
+        display: inline-block;
         padding: 0 2px;
         margin-right: 8px;
         color: rgba(153, 153, 153, 1);
@@ -692,15 +719,25 @@ export default {
         font-weight: bold;
       }
       .liAddCls{
-        border-bottom: 2px solid rgba(93, 128, 252, 1);
+        //border-bottom: 2px solid rgba(93, 128, 252, 1);
         color: rgba(93, 128, 252, 1)!important;
       }
     }
-    img{
+    .img_bo{
       float: right;
-      margin-top: 11px;
-      width: 20px;
-      height: 20px;
+      margin-top: 6px;
+      margin-left: 15px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background-color: #F6F6F6;
+      border-radius: 4px;
+    }
+    img{
+      vertical-align: middle;
+      width: 16px;
+      height: 16px;
     }
   }
   .cont2Cont{
@@ -807,17 +844,33 @@ export default {
         }
       }
     }
-    .nullBox{
-      padding: 100px 0 0 0;box-sizing: border-box;
-      width: 100%;
-      text-align: center;
-      img{
-        width: 50%;
-        height: 50%;
-        object-fit: cover;
-      }
-    }
+    //.nullBox{
+    //  width: 100%;
+    //  display: flex;
+    //  width: 100%;
+    //  text-align: center;
+    //  justify-content: center;
+    //  align-items: center;
+    //  height: 100%;
+    //  img{
+    //    width: 50%;
+    //    height: 50%;
+    //    object-fit: cover;
+    //  }
+    //}
 
+  }
+}
+.nullBox{
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  img{
+    width: 181px;
+    height: 181px;
   }
 }
 

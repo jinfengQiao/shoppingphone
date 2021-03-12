@@ -81,14 +81,15 @@
                   category_pid: null
                 },
                 show: true,
-                title: '首页',
+                title: '权鹏集团-企业服务国际知名品牌',
                 integrityurl:'',
                 // logo:'https://m.tjqpjt.com/logo.png',
-                desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+                desc:'助力企业快速成长，为企业提供财税筹划、工商注册、软件开发等服务。',
                 imgUrl: 'https://m.tjqpjt.com/logo.png'
             }
         },
         created() {
+
           // 获取导航
           this.get_nav();
           this.get_nav_recom();
@@ -134,25 +135,26 @@
                 })
             },
             details_list(e) {
-              if(!sessionStorage.getItem('token')){
-                this.$dialog.confirm({
-                  title:'登录状态',
-                  message:'未登录，请登录',
-                })
-                    .then(()=>{
-                      this.$router.push('/login')
-                    })
-                    .catch(()=>{
-                      console.log('未登录')
-                    });
-              }else{
+              // if(!localStorage.getItem('token')){
+              //   this.$dialog.confirm({
+              //     title:'登录状态',
+              //     message:'未登录，请登录',
+              //   })
+              //       .then(()=>{
+              //         this.$router.push('/login')
+              //       })
+              //       .catch(()=>{
+              //         console.log('未登录')
+              //       });
+              // }else{
+              // var query = {}
                 this.$router.push({
                   path: '/order_list',
                   query: {
-                    id: e.id
+                    pid: e.id
                   }
                 })
-              }
+              // }
             },
             all_list() {
               this.$router.push({
@@ -192,10 +194,11 @@
         display: flex;
         justify-content: space-between;
         li{
+          text-align: center;
           font-weight: 600;
             img{
-                width: 45px;
-                height: 45px;
+                width: 42px;
+                height: 42px;
                 //border-radius: 50%;
             }
         }
@@ -320,7 +323,7 @@
         li:nth-child(4) span,li:nth-child(5) span{
           text-align: left;
           float: left;
-          width: 50%;
+          width: 48%;
           position: absolute;
           left: 18px;
           bottom: 20px;

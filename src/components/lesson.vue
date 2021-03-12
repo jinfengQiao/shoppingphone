@@ -12,12 +12,12 @@
     <div class="cont">
       <div class="firstLi">
         <span>课程VIP卡</span>
-        <div class="btnBox">
+        <div class="btnBox" @click="jump_currVip">
           ·血拼购物不如买份课程·GO
         </div>
       </div>
       <ul>
-        <li class="nthChildLi" v-for="(n,inx) in lessonList" :key="inx" @click="jumpDetails(n.course_id)">
+        <li class="nthChildLi" v-for="(n,inx) in lessonList" :key="inx" @click="jumpDetails(n)">
           <p>
             <span>{{ spanName }}</span>
             {{n.title}}
@@ -27,10 +27,10 @@
             <span>{{n.lesson_count}}课时</span>
           </div>
           <div class="baomingBox">
-            <div class="baomingBoxLeft" v-show="false">
-              <img src="../assets/center/headImg.png" alt="">
-              <span>烽火戏诸侯</span>
-            </div>
+<!--            <div class="baomingBoxLeft" v-show="false">-->
+<!--              <img src="../assets/center/headImg.png" alt="">-->
+<!--              <span>烽火戏诸侯</span>-->
+<!--            </div>-->
             <div class="baomingBoxRight">
               <img src="../assets/center/baomingImg1.png" alt="">
             </div>
@@ -61,7 +61,7 @@ export default {
           // '财税','法律','融资','股权','资本','人力'
       ],
       lessonList:'',
-      category_id:'',
+      category_id:0,
       show12:false,
       spanName:'',
 
@@ -78,51 +78,36 @@ export default {
       this.$router.push('./moneyDetailed');
     },
     listGo(index,name){
+      console.log(index)
+      console.log(name)
       this.isActive = index;
-      var index1 = index + 1;
+      // var index1 = index + 1;
       this.spanName = name
       // console.log(this.spanName)
-      this.category_id = index1
+      this.category_id = index
       // console.log(this.category_id)
-      this.get_user_lesson1();
+      this.get_user_lesson();
     },
     // 获取课程分类
     get_class() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        // console.log(res.data)
+        // console.log(res)
         this.tabList= res.data
         this.spanName = res.data[0].name
       })
     },
     // 获取课程列表
     get_user_lesson(page,limit){
+      // console.log(this.category_id)
       this.$post(localStorage.getItem('http') + 'user_info/get_user_lesson',{
-        token: sessionStorage.getItem('token'),
-        page:page,
-        limit: limit,
-        category_id:1
-      })
-      .then(res=> {
-        // console.log(res.data)
-        this.lessonList = res.data
-
-        if(this.lessonList == '' || this.lessonList == null){
-          this.show12 = true;
-        }else{
-          this.show12 = false;
-        }
-      })
-    },
-    get_user_lesson1(page,limit){
-      this.$post(localStorage.getItem('http') + 'user_info/get_user_lesson',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         page:page,
         limit: limit,
         category_id:this.category_id
       })
       .then(res=> {
-        // console.log(res.data)
+        console.log(res)
         this.lessonList = res.data
         if(this.lessonList == '' || this.lessonList == null){
           this.show12 = true;
@@ -131,13 +116,18 @@ export default {
         }
       })
     },
-    jumpDetails(course_id){
+    jumpDetails(n){
+      this.course_id = n.course_id
       this.$router.push({
         path:'courDetails',
         query:{
-          id:course_id
+          id:this.course_id
         }
       })
+    },
+    // 血拼不如买卡GO调到课程卡
+    jump_currVip(){
+      this.$router.push('./currVip');
     }
   },
   created(){

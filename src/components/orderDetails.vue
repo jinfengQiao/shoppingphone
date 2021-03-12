@@ -34,7 +34,13 @@
           <div class="goods_list_title_address">
             <h2>{{ item.obj_spus.name }}</h2>
             <div class="goods_list_price">
-              <p>￥{{ item.price }}</p>
+              <p>
+                <template v-if="show_type">
+                  定金：
+                </template>
+                <template v-else></template>
+                ￥{{ item.price }}
+              </p>
               <p>×{{ item.num }}</p>
             </div>
           </div>
@@ -155,21 +161,29 @@ export default {
       // 总价
       num_price: 0,
       // 微信浏览器标识
-      is_weixin: false
+      is_weixin: false,
+      show_type:true,
     }
   },
-  created() {
+  mounted() {
     let obj_spu= {}
-      obj_spu= JSON.parse(sessionStorage.getItem('obj'))
+      obj_spu= JSON.parse(localStorage.getItem('obj'))
       this.order_info_show= false
       this.harvest_address_show= true
       this.obj_show= true
       this.address_clicks= true
 
       this.arr_spu.push(obj_spu);
+      this.showType = obj_spu.obj_spus.type
+      // console.log(this.showType);
+      if(this.showType == 2){
+        this.show_type = true
+      }else{
+        this.show_type = false
+      }
       this.num_price = (parseFloat(obj_spu.price) * obj_spu.num).toFixed(2);
 
-      if(sessionStorage.getItem('token')) {
+      if(localStorage.getItem('token')) {
         if(this.$route.query.address_id) {
           this.user_address_get_detail()
         }else{
@@ -182,7 +196,7 @@ export default {
     pay_click() {
       // 下单
       let obj= {}
-      obj['token']= sessionStorage.getItem('token')
+      obj['token']= localStorage.getItem('token')
       obj['user_address_id']= this.address_id
 
       //判断 user_address_id，token 是否有值
@@ -195,16 +209,22 @@ export default {
       //判断 amount sku_id 是否有值
 
       if(this.token != ''){
-        this.make_order(obj)
+        // this.make_order(obj)
       }
       else{
         this.$toast.error('请登录');
       }
       if(this.user_address_id != ''){
-        this.make_order(obj)
+        // this.make_order(obj)
       }
       else{
         this.$toast.error('地址不能为空');
+      }
+      if(this.token != '' && this.user_address_id != ''){
+        this.make_order(obj)
+      }
+      else{
+        return;
       }
 
     },
@@ -236,7 +256,7 @@ export default {
     // 获取收货地址列表
     user_address_get_list() {
       this.$post(localStorage.getItem('http') + 'user_address/get_list',{
-        token: sessionStorage.getItem('token')
+        token: localStorage.getItem('token')
       })
           .then(res=> {
             // console.log(res.data.list)
@@ -254,7 +274,7 @@ export default {
     // 获取收货地址详情
     user_address_get_detail() {
       this.$post(localStorage.getItem('http') + 'user_address/get_detail',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         id: this.$route.query.address_id
       })
           .then(res=> {
@@ -273,8 +293,8 @@ export default {
     add_address() {
       if(this.address_clicks) {
         if(this.harvest_address_show) {
-          //   console.log(sessionStorage.getItem('token'))
-          if(sessionStorage.getItem('token')) {
+          //   console.log(localStorage.getItem('token'))
+          if(localStorage.getItem('token')) {
             this.$router.push({
               path: '/order/add_address'
             })

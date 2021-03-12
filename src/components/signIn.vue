@@ -121,7 +121,7 @@ export default {
 
     get_calendar(){
       this.$post(localStorage.getItem('http') + 'calendar/get_list',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         month:this.currentMonth,
         year:this.currentYear
       }).then(res=> {
@@ -134,7 +134,7 @@ export default {
     get_signIn(){
       this.date = this.currentYear + '-' + this.currentMonth
       this.$post(localStorage.getItem('http') + 'user_score/get_sign_log',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         date: this.date
       })
       .then(res=> {
@@ -147,7 +147,7 @@ export default {
     // signIn(day){
       // console.log(this.currentYear + "-" +  this.currentMonth+ "-" + day);
       // this.$post(localStorage.getItem('http') + 'user_score/add',{
-      //   token: sessionStorage.getItem('token'),
+      //   token: localStorage.getItem('token'),
       //   source: 1,
       // })
       // .then(res=> {

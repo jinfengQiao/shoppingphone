@@ -55,7 +55,7 @@
             // 获取收货地址列表
             get_list() {
               this.$post(localStorage.getItem('http') + 'user_address/get_list',{
-                token: sessionStorage.getItem('token')
+                token: localStorage.getItem('token')
               })
                   .then(res=> {
                       console.log(res.data.list)

@@ -260,10 +260,12 @@ export default {
     }
   }
   .nullBox{
+    position: fixed;
+    top: 50%;
+    margin-top: -80px;
     width: 100%;
-    text-align: center;
-    padding: 24px 0 ;
-    box-sizing: border-box;
+    left: 50%;
+    margin-left: -25%;
     img{
       width: 50%;
       height: 50%;

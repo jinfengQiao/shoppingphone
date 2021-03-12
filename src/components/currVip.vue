@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="buyBtn1" v-show="btnShow">
-          <button @click="kaitongBtn">立即开通</button>
+          <button @click="kaitongBtn_1">立即开通</button>
         </div>
       </div>
       <div class="cont2" v-show="tabState==2">
@@ -63,7 +63,7 @@
         </div>
         <div class="cont22">
           <ul>
-            <li v-for="(n,index) in contContHead" :key="index" :class="{contContHeadAdd1:index==isSelect2}" @click="changeCls2(index)">{{n.name}}</li>
+            <li v-for="(n,index) in contContHead" :key="index" :class="{contContHeadAdd1:index==isSelect2}" @click="changeCls2(index,n.id,n)">{{n.name}}</li>
           </ul>
         </div>
         <div class="buyBtn2">
@@ -72,7 +72,7 @@
       </div>
       <div class="cont3" v-show="tabState==3">
         <div class="bgImg">
-          <img src="../assets/buSchool/vipBgImg2.png" alt="">
+          <img src="../assets/buSchool/vipBgImg3.png" alt="">
         </div>
         <div class="cont31">
           <ul>
@@ -123,16 +123,26 @@
               <template v-if="VipTitle == '入门VIP'">
                 <p>{{title}}</p>
               </template>
-              <template v-if="VipTitle == '贵宾VIP'">
+              <template v-else-if="VipTitle == '贵宾VIP'">
                 <p>{{changeCls2Text}}</p>
               </template>
               <template v-else>
 <!--                <p>{{changeCls2Text}}</p>-->
+                <p></p>
               </template>
               <span>￥{{ money }}</span>
             </div>
             <div class="guanbi">
               <img src="../assets/center/zhifuTancTuichu.png" alt="" @click="guanbi">
+            </div>
+          </div>
+          <div class="share_b">
+            <div class="returnCom_b">
+              预计返佣：{{two_back}} ~ {{one_back}}元
+            </div>
+            <div class="invite_friends" @click="get_invitationPoster">
+              <img src="../assets/buSchool/invite_friends_icon.png" alt="">
+              <span>邀请好友</span>
             </div>
           </div>
           <div class="payMethod">
@@ -179,6 +189,19 @@
         </div>
       </div>
     </div>
+
+    <div class="grey_background" v-show="show_share" @click="close_invitationPoster">
+      <div class="invitationPoster_b">
+        <p class="invita_p1">
+          1<span>点击右上角分享给好友</span>
+          <img src="../assets/buSchool/share_icon.png" alt="">
+        </p>
+        <p class="invita_p1">
+<!--          2<span>长按下方图片保存或扫码了解</span>-->
+        </p>
+<!--        <img :src="pic_url" alt="" @click.stop>-->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -198,7 +221,7 @@ export default {
       isSelect:'',
       isSelect1:'',
       isSelect11:'',
-      isSelect2:'',
+      isSelect2:1,
       tabList:[
           '入门VIP','贵宾VIP','至尊VIP'
       ],
@@ -209,7 +232,7 @@ export default {
       time_long:1,
       course_id:'',
       category_id:1,
-      category_id1:1,
+      category_id1:0,
 
       tcShow:false,
       weixinSelect:true,
@@ -227,7 +250,12 @@ export default {
       integrityurl:'',
       // logo:'https://m.tjqpjt.com/logo.png',
       desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
-      imgUrl: 'https://m.tjqpjt.com/logo.png'
+      imgUrl: 'https://m.tjqpjt.com/logo.png',
+      idx:0,
+      two_back:'',
+      one_back:'',
+      show_share:false,
+      pic_url:'',
     }
   },
   methods:{
@@ -240,8 +268,15 @@ export default {
     jumpMoneyDetailed:function (){
       this.$router.push('./moneyDetailed');
     },
+    changeCls2(index,id,n){
+      this.isSelect2 = index;
+      this.changeCls2Text = n.name
+      console.log(n)
+      this.course_id = id
+    },
     listGo(index){
       console.log(index);
+      this.idx = 0
       if(index == 0){
         this.VipTitle = '入门VIP'
       }
@@ -270,35 +305,18 @@ export default {
       console.log(this.category_id1);
       this.get_clsList();
     },
-    changeCls1(index){
-      this.isSelect1 = index;
-    },
-    changeCls2(index){
-      this.isSelect2 = index;
-      console.log(index);
-      if(index == 0){
-        this.changeCls2Text = '财税'
-      }if(index == 1){
-        this.changeCls2Text = '法律'
-      }if(index == 2){
-        this.changeCls2Text = '融资'
-      }if(index == 3){
-        this.changeCls2Text = '股权'
-      }if(index == 4){
-        this.changeCls2Text = '资本'
-      }if(index == 5){
-        this.changeCls2Text = '人力'
-      }
-    },
+    // changeCls1(index){
+    //   this.isSelect1 = index;
+    // },
     son(idx,money){
       // this.inx = 0
       // this.idx = 0
-      // console.log(idx)
-      console.log(money);
+      console.log(idx)
+      // console.log(money);
       this.money = money
       this.index=idx;
       var index1 = idx + 1
-      console.log(index1);
+      // console.log(index1);
       this.time_long = index1
       if(index1 == 1){
         this.VipCode = '月卡'
@@ -312,16 +330,19 @@ export default {
 
     },
     toggleAddCls(index,id){
+      // console.log(index)
+      // if(index == 0){
+      //   this.get_courDetails();
+      // }
       this.isSelect11 = index;
       this.course_id = id
       console.log(this.course_id);
-      this.get_courDetails();
     },
     // 获取课程详情
     get_courDetails() {
       console.log(this.course_id);
       this.$post(localStorage.getItem('http') + 'school/get_course_detail',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         id:this.course_id
       })
       .then(res=> {
@@ -334,6 +355,10 @@ export default {
         this.video = res.data.video
         this.video_cover = res.data.video_cover
         this.want_study = res.data.want_study
+        this.one_back = res.data.one_back
+        this.two_back = res.data.two_back
+        // this.two_back = (res.data.two_back/100).toFixed(2)
+        // this.one_back = (res.data.one_back/100).toFixed(2)
         // console.log(this.want_study)
         this.lesson = res.data.lesson
         // this.lesson_id = this.lesson[0].id
@@ -344,25 +369,27 @@ export default {
         }
       })
     },
-
-
     // 获取课程卡
     get_courCard() {
       this.$post(localStorage.getItem('http') + 'school/get_card',{
+        token: localStorage.getItem('token'),
         type:1
       })
       .then(res=> {
-        console.log(res.data)
+        console.log(res)
         this.monthList= res.data.price
         this.money = res.data.price[0].money
+        this.two_back = res.data.price[0].two_back
+        this.one_back = res.data.price[0].one_back
       })
     },
     get_courCard1(index1) {
       this.$post(localStorage.getItem('http') + 'school/get_card',{
+        token: localStorage.getItem('token'),
         type:index1
       })
       .then(res=> {
-        console.log(res.data)
+        console.log(res)
         this.monthList= res.data.price
         this.money = res.data.price[0].money
       })
@@ -371,7 +398,7 @@ export default {
     get_class() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        console.log(res.data)
+        console.log(res)
         this.contContHead= res.data
         this.title1 = res.data[0].name
         // this.category_id = res.data.id
@@ -391,7 +418,6 @@ export default {
         this.contContCont= res.data.list
         // console.log(this.course_id);
         console.log(this.contContCont);
-        this.get_courDetails();
 
         if(res.data.list == '' || res.data.list == null){
           this.show12 = true;
@@ -403,9 +429,12 @@ export default {
         }
       })
     },
-    kaitongBtn(){
+    kaitongBtn_1(){
       this.tcShow = true
       this.get_courDetails();
+    },
+    kaitongBtn(){
+      this.tcShow = true
     },
     guanbi(){
       this.tcShow = false
@@ -432,7 +461,7 @@ export default {
       .then(()=>{
         console.log('支付中..')
         this.$post(localStorage.getItem('http') + 'school/make_card_order',{
-          token: sessionStorage.getItem('token'),
+          token: localStorage.getItem('token'),
           card_id: this.card_id,
           time_long: this.time_long,
           course_id: this.course_id,
@@ -451,7 +480,7 @@ export default {
                   console.log('微信支付')
 
                   this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-                    token: sessionStorage.getItem('token'),
+                    token: localStorage.getItem('token'),
                     order_id: this.order_id,
                     openid: localStorage.getItem('openid'),
                     order_type: 3,
@@ -475,7 +504,7 @@ export default {
                 }else{
                   console.log('余额支付')
                   this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
-                    token: sessionStorage.getItem('token'),
+                    token: localStorage.getItem('token'),
                     order_id: this.order_id,
                     order_type: 3,
                     use_score: this.use_score
@@ -500,7 +529,26 @@ export default {
       .catch(()=>{
         console.log('未支付')
       });
-    }
+    },
+
+    // 邀请好友 海报
+    get_invitationPoster(){
+        this.show_share = true
+        this.$post(localStorage.getItem('http') + 'school/make_playbill', {
+          token: localStorage.getItem('token'),
+          id:this.id_share
+        }).then(res => {
+          console.log(res)
+          if(res.code == 1){
+            // console.log(res)
+            this.pic_url = res.data.pic_url
+          }
+        })
+    },
+    // 关闭邀请海报弹窗
+    close_invitationPoster(){
+      this.show_share = false
+    },
 
 
 
@@ -512,13 +560,15 @@ export default {
     this.get_class();
     this.get_clsList();
 
+    this.course_id = 1
+    this.index = 0
 
 
-    var score = sessionStorage.getItem('score');
+    var score = localStorage.getItem('score');
     this.score = score
     console.log(this.score)
 
-    var open_id = sessionStorage.getItem('openid')
+    var open_id = localStorage.getItem('openid')
     this.order_id = open_id
     console.log(this.open_id)
   },
@@ -712,7 +762,8 @@ export default {
           img{
             margin-right: 5px;
             width: 130px;
-            height: 80px;
+            //height: 80px;
+            object-fit: cover;
           }
           .box1{
             position: relative;
@@ -830,6 +881,9 @@ export default {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
+        li:first-child{
+          display: none;
+        }
         li{
           margin-top: 15px;
           padding: 4px 20px;
@@ -1012,7 +1066,7 @@ export default {
       .tanchuangBox1Head{
         position: relative;
         width: 100%;
-        height: 78px;
+        //height: 78px;
         //display: flex;
         //justify-content: flex-start;
         img{
@@ -1064,8 +1118,49 @@ export default {
           }
         }
       }
+      .share_b{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .returnCom_b{
+        display: inline-block;
+        font-size: 14px;
+        font-family: PingFang SC;
+        font-weight: 500;
+        color: #ffffff;
+        border-radius: 2px;
+        padding: 3px 10px;
+        box-sizing: border-box;
+        background-color: #486eef;
+      }
+      .invite_friends {
+        float: right;
+        position: relative;
+        background: linear-gradient(323deg, #FFA600 0%, #F1B100 100%);
+        box-shadow: 0px 3px 6px rgba(255, 145, 0, 0.64);
+        opacity: 1;
+        border-radius: 22px;
+        padding: 3px 10px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        img{
+          width: 12px;
+          height: 12px;
+          margin-right: 5px;
+        }
+        span{
+          font-size: 14px;
+          font-family: PingFang SC;
+          font-weight: 500;
+          color: #FFFFFF;
+        }
+      }
       .payMethod{
-        padding: 16px 0 0 0;
+        padding: 10px 0 0 0;
         box-sizing: border-box;
         width: 100%;
         p{
@@ -1239,6 +1334,71 @@ export default {
     font-size: 18px;
     font-family: PingFang SC;
     color: #FFFFFF;
+  }
+}
+.grey_background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2000;
+  background-color: rgba(0, 0, 0, 0.4);
+  .invitationPoster_b {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10% 15%;
+    box-sizing: border-box;
+    flex-direction: column;
+    p{
+      //margin-top: 5px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #ffffff;
+    }
+    p:last-child{
+      margin-bottom: 5px;
+    }
+    .invita_p1{
+      position: relative;
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #FFFFFF;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      img{
+        position: absolute;
+        right: -35px;
+        top: -20px;
+        width: 80px;
+        object-fit: cover;
+      }
+      span{
+        margin-left: 10px;
+        padding: 3px 10px;
+        box-sizing: border-box;
+        //opacity: 0.81;
+        border-radius: 15px;
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #FFFFFF;
+        background-color: rgba(112, 112, 112, 0.81);
+      }
+    }
+    img{
+      object-fit: cover;
+      width: 100%;
+      //height: 100%;
+    }
   }
 }
 </style>

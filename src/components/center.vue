@@ -20,7 +20,7 @@
         <div class="vip" v-show="show1">
           <div class="vipBox">
             <img src="../assets/center/vip_icon.png" alt="">
-            <span>{{nicheng}}</span>
+            <span @click="jumpMember">{{nicheng}}</span>
           </div>
         </div>
         <div class="tab">
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div class="service" :style="height">
+    <div class="service">
       <div class="serTitle">我的服务</div>
       <ul>
         <li v-for="(n,inx) in serList" :key="inx" @click="jumpJ">
@@ -52,7 +52,7 @@
 <script>
 import footer_nav from "@/components/footer_bar";
 import noSharing from "@/components/noSharing";
-// token: sessionStorage.getItem('token'),
+// token: localStorage.getItem('token'),
 export default {
   name: "center",
   data() {
@@ -72,6 +72,10 @@ export default {
         {
           imgurl:require('../assets/center/ser_icon1.png'),
           text:'返利'
+        },
+        {
+          imgurl:require('../assets/center/ser_icon_guize.png'),
+          text:'返利规则'
         },
         {
           imgurl:require('../assets/center/ser_icon2.png'),
@@ -115,7 +119,7 @@ export default {
         },
         {
           imgurl:require('../assets/center/tab_icon3.png'),
-          text:'退换货'
+          text:'售后服务'
         },
         {
           imgurl:require('../assets/center/tab_icon4.png'),
@@ -127,7 +131,7 @@ export default {
   },
   created() {
     this.hh();
-    var token = sessionStorage.getItem('token');
+    var token = localStorage.getItem('token');
     // console.log(token)
 
     // 判断token
@@ -142,7 +146,7 @@ export default {
       // console.log(123)
       this.show1 = true
       this.$post(localStorage.getItem('http') + 'user_info/detail',{
-        token: sessionStorage.getItem('token')
+        token: localStorage.getItem('token')
       })
       .then(res=> {
         // console.log(res.data)
@@ -153,8 +157,8 @@ export default {
         this.score = res.data.score
         this.balance = res.data.balance
         // console.log(this.score);
-        sessionStorage.setItem('score',res.data.score)
-        sessionStorage.setItem('cybermoney',res.data.cybermoney)
+        localStorage.setItem('score',res.data.score)
+        localStorage.setItem('cybermoney',res.data.cybermoney)
         if(!this.face_url){
           this.face_url=require('../assets/center/headImg.png')
         }
@@ -170,12 +174,15 @@ export default {
     hh(){
       this.height.height = window.innerHeight-310 +'px'
     },
+    jumpMember(){
+      this.$router.push('/member');
+    },
     jumpModifyPage:function (){
       var that = this;
       that.$router.push('/modifyPage');
     },
     jumpJ:function (e){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         this.$dialog.confirm({
           title:'登录状态',
           message:'未登录，请登录',
@@ -189,6 +196,9 @@ export default {
       }else{
         if(e.target.innerHTML == '返利'){
           this.$router.push("/rebate");
+        }
+        if(e.target.innerHTML == '返利规则'){
+          this.$router.push("/rebate_rules");
         }
         if(e.target.innerHTML == '积分'){
           // this.$router.push("/integral");
@@ -233,7 +243,7 @@ export default {
       this.$router.push("/login");
     },
     jumpMy_order(inx){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         this.$dialog.confirm({
           title:'登录状态',
           message:'未登录，请登录',
@@ -266,7 +276,12 @@ export default {
         }
         if(inx == 2){
           this.status = 2
-          console.log(2)
+          this.$router.push({
+            path:'/refund_page',
+            query:{
+              status:this.status
+            }
+          })
         }
         if(inx == 3){
           this.status = null
@@ -284,7 +299,7 @@ export default {
 
     },
     tuichuBtn(){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         this.$toast.error('请登录!')
       }else{
         window.sessionStorage.clear();
@@ -466,7 +481,7 @@ export default {
   z-index: 1;
   width: 100%;
   margin-top: 310px;
-  padding: 30px 30px 62px 30px;
+  padding: 30px 30px 72px 30px;
   box-sizing: border-box;
   background-color: #ffffff;
   overflow: auto;
@@ -490,7 +505,7 @@ export default {
       position: relative;
       margin-top: 24px;
       width: 72px;
-      //height: 65px;
+      height: 68px;
       text-align: center;
       //border: 1px solid #000;
       img{
@@ -501,7 +516,7 @@ export default {
       span{
         position: absolute;
         left: 0;
-        top: 0;
+        bottom: 0;
         width: 100%;
         height: 100%;
         margin-top: -4px;

@@ -37,6 +37,10 @@
           </div>
         </li>
       </ul>
+
+      <div class="nullBox" v-show="show12">
+        <img src="../assets/buSchool/nullBoxImg1.png" alt="">
+      </div>
     </div>
     <div class="btnBox" v-show="jifenDuihuan">
       <button type="button">兑换积分</button>
@@ -64,6 +68,7 @@ export default {
       score:'',
       page:1,
       limit:15,
+      show12:false,
     }
   },
   methods:{
@@ -76,7 +81,7 @@ export default {
     jumpSignIn:function (){
       // console.log(this.currentYear + "-" +  this.currentMonth+ "-" + day);
       this.$post(localStorage.getItem('http') + 'user_score/add',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         source: 1,
       })
       .then(res=> {
@@ -95,8 +100,8 @@ export default {
       // 滚动条的位置高度
       let scrollTop = document.documentElement.scrollTop
       // console.log(scrollTop + outerHeight );
-      // console.log(innerHeight + 358);
-      if(scrollTop + outerHeight == innerHeight + 358){
+      // console.log(innerHeight + 790);
+      if(scrollTop + outerHeight == innerHeight + 790){
         this.page++;
         this.get_list();
       }
@@ -104,14 +109,12 @@ export default {
     // 获取积分记录
     get_list() {
       this.$post(localStorage.getItem('http') + 'user_score/get_list',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         page:this.page,
         limit:this.limit
       })
       .then(res=> {
-        // console.log(res.data)
-        // this.jifenList= res.data.list
-
+        console.log(res)
         if (res.data.list.length != 0){
           var arr = [];
           arr = this.jifenList;
@@ -119,7 +122,9 @@ export default {
             arr.push(v);
           })
           this.jifenList = arr;
+          this.show12 = false;
         }else{
+          this.show12 = true;
           this.$toast.error('没有更多了!');
           res.data.list = ''
         }
@@ -128,7 +133,7 @@ export default {
     // 获取积分
     get_money(){
       this.$post(localStorage.getItem('http') + 'user_info/get_money',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
       })
       .then(res=> {
         // console.log(res)
@@ -321,6 +326,19 @@ export default {
     color: #FFFFFF;
     outline: none;
     border: 0;
+  }
+}
+.nullBox{
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  img{
+    width: 50%;
+    height: 50%;
+    object-fit: cover;
   }
 }
 </style>

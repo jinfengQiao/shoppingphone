@@ -14,18 +14,18 @@
                 <van-field
                     v-model="form.price"
                     name="price"
-                    placeholder="不可修改，最多￥1999"
+                    :placeholder="data1"
+                    :v-mode="data1"
                     :rules="[
                             { required: true, message: '请填写退款金额' },
-                            { validator, message: '退款金额不可超过1999元' }
+                            { validator, message: data2}
                         ]"
                 >
                     <div slot="label" class="title_van">
                         <p>退款金额</p>
-                        <p>￥{{ order_obj.price }}</p>
+                        <p>￥{{ price11 }}</p>
                     </div>
                 </van-field>
-
 
                 <van-field
                     name="reason"
@@ -69,14 +69,20 @@
                   pic_url: null,
                   name: null,
                   price: null
-                }
+                },
+                price11:'',
+                data1:'',
+                data2:'',
             }
         },
-        created() {
-            this.order_obj= JSON.parse(this.$route.query.order)
-            console.log(this.order_obj)
-            // this.html= '<div class=\'title_van\'><p>退款金额</p><p>{{ this.order_obj.price }}</p></div>'
-        },
+      created() {
+        this.order_obj = JSON.parse(this.$route.query.order)
+        console.log(this.order_obj)
+        this.price11 = (this.order_obj.price / 100).toFixed(2)
+        // this.html= '<div class=\'title_van\'><p>退款金额</p><p>{{ this.order_obj.price }}</p></div>'
+        this.data1 = '不可修改，最多￥'+this.price11
+        this.data2 = '退款金额不可超过￥'+this.price11+'元'
+      },
         methods: {
             // 申请退款提交接口
             reg_refund(y) {
@@ -85,7 +91,7 @@
                     console.log(res)
                     if(res.code == 1) {
                         this.$router.push({
-                          path: '/order/my_order'
+                          path: '/refund_page'
                         })
                         this.$toast.success(res.msg);
                     }else {
@@ -102,7 +108,7 @@
                 let obj= {}
 
                 obj['order_goods_id']= this.order_obj.id
-                obj['token']= sessionStorage.getItem('token')
+                obj['token']= localStorage.getItem('token')
                 obj['price']= val.price
                 obj['reason']= val.reason
 

@@ -68,22 +68,35 @@
                                     </div>
                                 </template>
                             </mu-form-item>
-                            <mu-form-item help-text="" prop="phone" v-show="tuijianren">
-                              <mu-text-field underline-color="#2196f3" v-model="validateForm.invite_code" prop="username"></mu-text-field>
+
+                            <mu-form-item v-show="Invitation_code">
+                              <mu-text-field underline-color="#2196f3" type="text" v-model="validateForm.invite_code"></mu-text-field>
                               <template v-slot:label>
-                                <div style="display: flex; align-items: flex-end; ">
-                                  <i class="iconfont icon-shoujihao" style="color: #486EEF; "></i>
-                                  <p style="margin-left: 9px; line-height: 22px; color: #486EEF;">推荐人</p>
+                                <div style="display: flex; align-items: center; ">
+                                  <img src="../assets/login/Invitation_code_icon.png" alt="" style="width:16px;height: 16px;">
+                                  <p style="margin-left: 9px; line-height: 22px; color: #486EEF;">邀请码</p>
                                 </div>
                               </template>
                             </mu-form-item>
+
+
+
+<!--                            <mu-form-item help-text="" prop="phone" v-show="tuijianren">-->
+<!--                              <mu-text-field underline-color="#2196f3" v-model="validateForm.invite_code" prop="username"></mu-text-field>-->
+<!--                              <template v-slot:label>-->
+<!--                                <div style="display: flex; align-items: flex-end; ">-->
+<!--                                  <i class="iconfont icon-shoujihao" style="color: #486EEF; "></i>-->
+<!--                                  <p style="margin-left: 9px; line-height: 22px; color: #486EEF;">推荐人</p>-->
+<!--                                </div>-->
+<!--                              </template>-->
+<!--                            </mu-form-item>-->
                             <mu-form-item v-show="yanzhengmaBox" label="验证码" prop="verify" :rules="verify" :style="{marginBottom: password_show? '15px' : ''}">
                                 <div class="ver_code" style="display: flex;">
                                     <mu-text-field underline-color="#2196f3" type="password" v-model="validateForm.verify" prop="password"></mu-text-field>
                                     <div class="verify">
 <!--                                      <img v-if="verify_img_show" @click="get_verify" :src="verify_img" alt="">-->
 <!--                                      <div v-if="!verify_img_show">-->
-                                        <mu-button v-if="!count_down_show" style="margin: 0;"  @click="get_verify_num" color="primary">获取验证码</mu-button>
+<!--                                        <mu-button v-if="!count_down_show" style="margin: 0;"  @click="get_verify_num" color="primary">获取验证码</mu-button>-->
                                         <span v-if="count_down_show">{{ count_down }}</span>
 <!--                                      </div>-->
                                     </div>
@@ -102,9 +115,10 @@
                                       <p style="width: 50px;" v-if="!password_show" @click="look_for_password_info">忘记密码</p>
                                     </div>
                                     <mu-button v-if="login1" style="margin: 0; height: 44px;" color="primary" @click="submit">登录</mu-button>
-                                    <mu-button v-if="login2" style="margin: 0; height: 44px;" color="primary" @click="submit_ce">注册</mu-button>
+                                    <mu-button v-if="login2" style="margin: 0; height: 44px;position: relative;" color="primary" @click="submit_ce">注册</mu-button>
+
                                     <mu-button v-if="login3" style="margin: 0; height: 44px;" color="primary" @click="confirm">确认</mu-button>
-                                  <div class="submit_button_span" v-if="!password_show" >
+                                    <div class="submit_button_span" v-if="!password_show" >
                                         <div style="width: 130px; display: flex; justify-content: center;" @click="register">
                                           <span>还没有账号？</span>
                                           <p>立即注册</p>
@@ -123,6 +137,12 @@
 
       <noSharing></noSharing>
 
+      <div class="loading_b" v-if="show_loading">
+        <div class="load_b">
+          <van-loading size="24px" vertical>注册中...</van-loading>
+        </div>
+      </div>
+
     </div>
 </template>
 
@@ -135,7 +155,6 @@
                 tuijianren:false,
                 logo: null,
                 logo_url: null,
-                invite_code: '',
                 phone: [
                     { validate: (val) => !!val, message: '必须填写手机号'},
                     { validate: (val) => val.length >= 3, message: '用户名长度大于3'},
@@ -157,9 +176,10 @@
                     pass_two: null,
                     verify: null,
                     isAgree: false,
-                    invite_code: null
+                    invite_code:null,
                 },
                 password_show: false,
+                Invitation_code: false,
                 nav_list: [
                   {
                     id:1,
@@ -173,7 +193,7 @@
                   },
                 ],
                 service_show: false,
-                verify_img: null,
+                // verify_img: null,
                 login1: true,
                 login2: false,
                 login3: false,
@@ -183,26 +203,32 @@
                 count_down_show: false,
                 setInterval: null,
                 count_down: 300,
-              yanzhengmaBox:false,
+                yanzhengmaBox:false,
+                show_loading:false,
+
             }
         },
-        created() {
+      created() {
 
-            // 获取logo
-            this.get_logo()
-            // 获取导航
-            // this.get_nav()
-            // 获取图形验证码
-            // this.get_verify()
+        // 获取logo
+        this.get_logo()
+        // 获取导航
+        // this.get_nav()invite_openid
+        // 获取图形验证码
+        // this.get_verify()
 
+        this.invite_openid = localStorage.getItem('invite_openid')
+        // this.invite_openid = 'ouQXG1Ek07X-Rtl_aHj3GIvXgLi0'
+        console.log(this.invite_openid);
+        this.get_Invitation_code();
 
-        },
+      },
         methods: {
 
             // 跳转我的订单
             tokens(e) {
               if(e.id == 2) {
-                if(sessionStorage.getItem('token')) {
+                if(localStorage.getItem('token')) {
                   this.$router.push({
                     path: '/order/my_order'
                   })
@@ -230,9 +256,11 @@
               console.log(y.openid)
               this.$post(localStorage.getItem('http') + 'user/login',y)
                 .then(res=> {
+
+                  console.log(res)
                   if(res.code == 1) {
-                    sessionStorage.setItem('token',res.data.token)
-                    sessionStorage.setItem('phone',res.data.phone)
+                    localStorage.setItem('token',res.data.token)
+                    localStorage.setItem('phone',res.data.phone)
 
                     this.$router.push('/center')
                     this.$toast.success(res.msg);
@@ -267,34 +295,30 @@
             },
             // 注册接口
             user_reg(y) {
-
-              var invite_openid = localStorage.getItem('invite_openid');
-              if(invite_openid){
-                this.$post(localStorage.getItem('http') + 'user/get_invite_code_by_openid', {
-                  invite_openid:invite_openid
+                this.show_loading = true
+                this.$post(localStorage.getItem('http') + 'user/reg',y).then(res=> {
+                  console.log('获取到了'+ res)
+                  if(res.code == 1) {
+                    const TIME_COUNT = 2
+                    if (!this.timer) {
+                      this.count = TIME_COUNT
+                      this.timer = setInterval(() => {
+                        if (this.count > 1 && this.count <= TIME_COUNT) { //限制倒计时区间
+                          this.count--
+                        } else {
+                          clearInterval(this.timer)   //删除定时器
+                          this.timer = null
+                          //跳转的页面写在此处
+                          this.show_loading = false
+                          this.back_login()
+                          this.$toast.success(res.msg);
+                        }
+                      }, 1000)
+                    }
+                  }else{
+                    this.$toast.error(res.msg);
+                  }
                 })
-                    .then(res=> {
-                      if (res.code == 1){
-                        y.invite_code = res.data.invite_code;
-                      }else{
-                        console.log(res);
-                      }
-                      y.openid = localStorage.getItem('openid')
-                      this.$post(localStorage.getItem('http') + 'user/reg',y)
-                          .then(res=> {
-                            if(res.code == 1) {
-                              this.back_login()
-                              this.$toast.success(res.msg);
-                            }else{
-                              this.$toast.error(res.msg);
-                            }
-                          })
-
-                    })
-              }
-
-
-
             },
             // 注册
             submit_ce() {
@@ -309,6 +333,7 @@
                   }
                 }
               });
+
             },
             // 忘记密码接口
             edit_pass(y) {
@@ -336,6 +361,18 @@
                   }
               });
             },
+            // 获取邀请码
+            get_Invitation_code(){
+              this.$post(localStorage.getItem('http') + 'user/get_invite_code_by_openid',{
+                invite_openid: this.invite_openid
+              })
+              .then(res=> {
+                console.log(res)
+                this.validateForm.invite_code= res.data.invite_code
+                console.log(this.validateForm)
+              })
+            },
+
             // 倒计时
             down() {
               this.count_down_show= true
@@ -363,25 +400,25 @@
               }
             },
             // 获取验证码
-            get_verify_num() {
-              if(this.validateForm.phone != null) {
-                this.$post(localStorage.getItem('http') + 'user/get_forget_verify',{
-                  phone: this.validateForm.phone
-                })
-                    .then((res)=> {
-                      console.log(res)
-                      if(res.code == 1) {
-                        this.down();
-                        this.$toast.success(res.msg);
-                      }else {
-                        this.$toast.error(res.msg);
-                      }
-                    })
-              }else{
-                this.$toast.error('请输入手机号');
-              }
-
-            },
+            // get_verify_num() {
+            //   if(this.validateForm.phone != null) {
+            //     this.$post(localStorage.getItem('http') + 'user/get_forget_verify',{
+            //       phone: this.validateForm.phone
+            //     })
+            //         .then((res)=> {
+            //           console.log(res)
+            //           if(res.code == 1) {
+            //             this.down();
+            //             this.$toast.success(res.msg);
+            //           }else {
+            //             this.$toast.error(res.msg);
+            //           }
+            //         })
+            //   }else{
+            //     this.$toast.error('请输入手机号');
+            //   }
+            //
+            // },
             // 获取图形验证码
             // get_verify() {
             //   this.verify_img= localStorage.getItem('http') + 'user/get_verify?'+ Math.random();
@@ -389,20 +426,21 @@
             // 注册
             register() {
               // this.get_verify()
-              this.$refs['form'].clear();
+              // this.$refs['form'].clear();
               this.login1= false
               this.login2= true
               this.login3= false
               this.tuijianren = false
-              this.validateForm= {
-                  phone: null,
-                  pass: null,
-                  pass_two: null,
-                  verify: null,
-                  isAgree: false,
-                  invite_code:null
-              }
+              this.validateForm.phone = null
+              this.validateForm.pass = null
+              this.validateForm.pass_two = null
+              this.validateForm.verify = null
+              this.validateForm.isAgree = false
+
+
+
               this.password_show= true
+              this.Invitation_code = true
               this.yanzhengmaBox= false
               this.verify = null;
             },
@@ -413,6 +451,8 @@
               this.login2= false
               this.login3= true
               this.verify_img_show= false
+              this.Invitation_code = false
+              this.yanzhengmaBox = false
               this.validateForm= {
                   phone: null,
                   pass: null,
@@ -423,13 +463,14 @@
               }
               this.password_show= true
               this.yanzhengmaBox= true
-              this.verify=[
-                { validate: (val) => !!val, message: '必须填写验证码'}
-              ]
+              // this.verify=[
+              //   { validate: (val) => !!val, message: '必须填写验证码'}
+              // ]
             },
             // 回到登录
             back_login() {
               // this.get_verify()
+              this.Invitation_code= false
               this.password_show= false
               this.$refs['form'].clear();
               this.login1= true
@@ -446,7 +487,7 @@
                   invite_code:null
               }
               this.yanzhengmaBox= false
-              this.verify = null;
+              // this.verify = null;
             },
             get_logo() {
                 this.$post(localStorage.getItem('http') + 'setting/get_detail')
@@ -685,6 +726,26 @@
 
 
     }
+.loading_b{
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  .load_b{
+    position: fixed;
+    left: 50%;
+    margin-left: -45px;
+    top: 50%;
+    margin-top: -45px;
+    background: rgba(0,0,0,0.5);
+    width: 90px;
+    height: 90px;
+    .van-loading__spinner--circular{
+      margin-top: 20px;
+    }
+  }
+}
 
 
 

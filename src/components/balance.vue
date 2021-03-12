@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <img src="../assets/center/money_icon.png" alt="">
+      <img src="../assets/center/money_icon1.png" alt="">
       <p>我的余额</p>
       <span>￥{{ balance }}</span>
     </div>
@@ -36,7 +36,7 @@ export default {
     },
     get_money(){
       this.$post(localStorage.getItem('http') + 'user_info/get_money',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
       })
       .then(res=> {
         // console.log(res)

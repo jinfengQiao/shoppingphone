@@ -49,7 +49,7 @@ export default {
     },
     get_list(){
       this.$post(localStorage.getItem('http') + 'invest/get_list',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
       })
       .then(res=> {
         // console.log(res)
@@ -78,7 +78,8 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  background-color: #f3f4f6;
+  //background-color: #f3f4f6;
+  background-color: #ffffff;
 }
 .head{
   position: fixed;

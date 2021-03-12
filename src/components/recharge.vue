@@ -80,7 +80,7 @@ export default {
     },
     chongzhiBtn(){
       this.$post(localStorage.getItem('http') + 'invest/to_pay',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         total: this.moneyNum
       }).then(res=> {
         // console.log(res);
@@ -90,7 +90,7 @@ export default {
         // console.log(this.order_type);
         if(res.code == 1){
           this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
-            token: sessionStorage.getItem('token'),
+            token: localStorage.getItem('token'),
             order_id: this.order_id,
             openid: localStorage.getItem('openid'),
             order_type: this.order_type,
@@ -107,10 +107,12 @@ export default {
                 //   path: '/lesson'
                 // })
               }else{
-                alert(res);
+                // alert(res);
               }
             });
           })
+        }else{
+          this.$toast.error(res.msg);
         }
       });
     }

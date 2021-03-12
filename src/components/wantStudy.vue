@@ -4,7 +4,7 @@
 <!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
 <!--      <span>我想学</span>-->
 <!--    </div>-->
-    <div class="cont">
+    <div class="cont" :style="height">
       <ul>
         <li v-for="(n,inx) in wantStudyList" :key="inx" @click="jumpDetails(n.id)">
           <img :src="n.video_cover" alt="">
@@ -39,6 +39,10 @@ export default {
         //   time:'09:42'
         // },
       ],
+      height:{
+        width:'',
+        height: '',
+      }
     }
   },
   methods:{
@@ -48,12 +52,12 @@ export default {
     // 获取我想学课程
     get_want_study(page,limit) {
       this.$post(localStorage.getItem('http') + 'user_info/get_want_study',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         page:page,
         limit:limit
       })
       .then(res=> {
-        // console.log(res.data)
+        console.log(res)
         // this.monthList= res.data.price
         this.wantStudyList = res.data.list
         if(res.data.list.length == 0){
@@ -72,9 +76,13 @@ export default {
           id:id
         }
       })
-    }
+    },
+    get_height(){
+      this.height.height = window.innerHeight +'px'
+    },
   },
   created(){
+    this.get_height();
     this.get_want_study();
   },
   components: {

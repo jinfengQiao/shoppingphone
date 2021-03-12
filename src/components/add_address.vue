@@ -119,7 +119,7 @@
                 obj['province_id']= values.province_id
                 obj['city_id']= values.city_id
                 obj['area_id']= values.area_id
-                obj['token']= sessionStorage.getItem('token')
+                obj['token']= localStorage.getItem('token')
                 if(values.is_def) {
                   obj['is_def']= 1
                 }else{

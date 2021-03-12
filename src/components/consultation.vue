@@ -9,7 +9,7 @@
         <li v-for="(n,index) in tabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index,n.id)">{{n.name}}</li>
       </ul>
     </div>
-    <div class="cont">
+    <div class="cont" :style="height">
       <ul>
         <li v-for="(n,inx) in tabCont" :key="inx" @click="jumpLink(n.card_info.link)">
           <img :src="n['card_info'].pic_url" alt="">
@@ -39,7 +39,11 @@ export default {
       tabList:[],
       tabCont:[],
       show12:false,
-      category_id:0
+      category_id:0,
+      height:{
+        width:'',
+        height: ''
+      }
     }
   },
   methods:{
@@ -69,10 +73,10 @@ export default {
       // console.log(this.category_id);
       this.$post(localStorage.getItem('http') + 'user_card/get_list',{
         category_id:this.category_id,
-        token: sessionStorage.getItem('token')
+        token: localStorage.getItem('token')
       })
       .then(res=> {
-        console.log(res.data);
+        console.log(res);
         if(res.data.length == 0){
           this.show12 = true;
           this.tabCont = [];
@@ -85,10 +89,14 @@ export default {
     jumpLink(link){
       console.log(link)
       window.location.href=link
+    },
+    get_height(){
+      this.height.height = window.innerHeight-52 +'px'
     }
   },
   created(){
     this.tab_List();
+    this.get_height();
   },
   components: {
     noSharing
@@ -179,7 +187,8 @@ export default {
       margin-bottom: 15px;
       width: 100%;
       height: 150px;
-      padding: 10px 30px;
+      //padding: 10px 30px;
+      padding: 10px 20px;
       box-sizing: border-box;
       display: flex;
       justify-content: space-between;

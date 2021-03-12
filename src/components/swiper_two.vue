@@ -45,7 +45,7 @@
         methods: {
             // 精选优品跳转列表
             selected() {
-              if(!sessionStorage.getItem('token')){
+              if(!localStorage.getItem('token')){
                 this.$dialog.confirm({
                   title:'登录状态',
                   message:'未登录，请登录',

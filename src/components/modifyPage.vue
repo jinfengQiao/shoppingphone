@@ -144,30 +144,37 @@ export default {
       let $target = e.target || e.srcElement
       let file = $target.files[0]
       this.file = file;
-      var reader = new FileReader()
-      reader.onload = (data) => {
-        let res = data.target || data.srcElement
-        this.userInfo = res.result
+
+      const fileMaxSize = 1024*1024
+      if (file.size > fileMaxSize) {
+        this.$toast.error('图片大小不能超过1M！')
+      } else {
+        var reader = new FileReader()
+        reader.onload = (data) => {
+          let res = data.target || data.srcElement
+          this.userInfo = res.result
+        }
+        reader.readAsDataURL(file)
+        let formData = new FormData() // 创建form对象
+        formData.append('file', file);
+        formData.append('token', localStorage.getItem("token"));
+
+        this.axios({
+          method:"POST",
+          url:localStorage.getItem('http') + 'upload/img',
+          header:{'Content-Type':'multipart/form-data'},
+          data:formData,
+        }).then((res)=>{
+          console.log(res)
+          if(res.data.code == 1){
+            this.face_url = res.data.data.save_name
+          }else{
+            this.$toast.error('上传失败');
+          }
+        })
       }
 
-      reader.readAsDataURL(file)
-      let formData = new FormData() // 创建form对象
-      formData.append('file', file);
-      formData.append('token', sessionStorage.getItem("token"));
 
-      this.axios({
-        method:"POST",
-        url:localStorage.getItem('http') + 'upload/img',
-        header:{'Content-Type':'multipart/form-data'},
-        data:formData,
-      }).then((res)=>{
-        console.log(res)
-        if(res.data.code == 1){
-          this.face_url = res.data.data.save_name
-        }else{
-          this.$toast.error('上传失败');
-        }
-      })
     },
     // 显示弹窗
     showPopup () {
@@ -230,7 +237,7 @@ export default {
 
       console.log(this.zhuangtai)
       this.$post(localStorage.getItem('http') + 'user_info/edit',{
-        token: sessionStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         nickname: this.zhuangtai,
         face_url: this.face_url,
         province_id: this.province_id,
@@ -255,11 +262,11 @@ export default {
   created(){
     this.hh();
     this.$post(localStorage.getItem('http') + 'user_info/detail',{
-      token: sessionStorage.getItem('token')
+      token: localStorage.getItem('token')
     })
     .then(res=> {
 
-      console.log(res.data)
+      console.log(res)
       this.face_url = res.data.face_url
       console.log(this.face_url)
       this.zhuangtai = res.data.nickname
@@ -272,13 +279,16 @@ export default {
         this.face_url = require('../assets/center/headImg.png');
       }
 
-
       this.province_name = res.data.province_name
       this.city_name = res.data.city_name
-
       console.log(this.province_name)
       console.log(this.city_name)
-      this.areaValue = `${this.province_name}-${this.city_name}`
+
+      if(!this.province_name || !this.city_name){
+        this.areaValue = '请选择'
+      }else{
+        this.areaValue = `${this.province_name}-${this.city_name}`
+      }
       this.province_id = res.data.province_id
       this.city_id = res.data.city_id
       console.log(this.province_id)

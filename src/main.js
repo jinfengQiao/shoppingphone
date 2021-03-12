@@ -74,7 +74,12 @@ new Vue({
 
 import utils from './utils/utils'
 let openid = utils.getUrlKey('openid')
-localStorage.setItem('invite_openid',openid);
+
+console.log(openid);
+
+
+// import Mui from 'vue-awesome-mui';
+// Vue.use(Mui);
 
 
 

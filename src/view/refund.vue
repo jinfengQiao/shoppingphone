@@ -1,14 +1,14 @@
 <template>
     <div>
         <div class="deta_header">
-            <div class="deta_header_title">
-                <i @click="back" class="iconfont icon-fanhui"></i>
-                <h2>退款详情</h2>
-            </div>
+<!--            <div class="deta_header_title">-->
+<!--                <i @click="back" class="iconfont icon-fanhui"></i>-->
+<!--                <h2>退款详情</h2>-->
+<!--            </div>-->
             <div class="deta_header_state">
                 <div class="deta_header_state_left">
                     <h2>{{ refund_title }}</h2>
-                    <p>{{ refund_obj.addtime }}</p>
+<!--                    <p>{{ refund_obj.addtime }}</p>-->
                 </div>
                 <img src="" alt="">
             </div>
@@ -100,13 +100,15 @@
           // 获取退款详情
           refund_detail() {
             this.$post(localStorage.getItem('http') + 'order/refund_detail',{
-              token: sessionStorage.getItem('token'),
+              token: localStorage.getItem('token'),
               order_goods_id: this.$route.query.id
             })
                 .then(res=> {
                   console.log(res.data)
-                  if(res.data.status == 1) {
-                    this.refund_title= '退款中'
+                  if(res.data.status == 0) {
+                    this.refund_title= '待处理'
+                  }else if(res.data.status == 1) {
+                    this.refund_title= '处理中'
                   }else if(res.data.status == 2) {
                     this.refund_title= '退款成功'
                   }else if(res.data.status == 3) {
@@ -247,6 +249,12 @@
             font-size: 13px;
             color: #666666;
         }
+    }
+
+    .deta_header_state{
+      h2{
+        margin-bottom: 0!important;
+      }
     }
 
 

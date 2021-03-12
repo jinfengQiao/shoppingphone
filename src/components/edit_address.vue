@@ -99,7 +99,7 @@
             // 删除
             delete_address() {
               this.$post(localStorage.getItem('http') + 'user_address/del',{
-                token: sessionStorage.getItem('token'),
+                token: localStorage.getItem('token'),
                 id: this.id
               })
                 .then(res=> {
@@ -130,7 +130,7 @@
             // 获取详情
             get_detail() {
                 this.$post(localStorage.getItem('http') + 'user_address/get_detail',{
-                  token: sessionStorage.getItem('token'),
+                  token: localStorage.getItem('token'),
                   id: this.$route.query.id
                 })
                     .then(res=> {
@@ -182,7 +182,7 @@
                 obj['name']= values.name
                 obj['phone']= values.phone
                 obj['address']= values.address
-                obj['token']= sessionStorage.getItem('token')
+                obj['token']= localStorage.getItem('token')
                 if(values.is_def) {
                   obj['is_def']= 1
                 }else{

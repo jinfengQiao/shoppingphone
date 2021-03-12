@@ -92,7 +92,7 @@ export default {
   //z-index: 9999;
   z-index: 1999;
   background: #FFFFFF;
-  border: 1px solid #E7E7E7;
+  border-top: 1px solid #E7E7E7;
   box-sizing: border-box;
   color: #AAAAAA;
   ul{
@@ -100,9 +100,10 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     li{
       width: 60px;
-      height: 62px;
+      //height: 62px;
       //line-height: 62px;
       text-align: center;
       cursor: pointer;
