@@ -146,7 +146,7 @@ export default {
       scroll_element:"#contContCont",
       plus_height:359,
       sell:'',
-      title: '商学院',
+      title: '权鹏商学院，各领域实战经验干货课程在线分享，精彩不容错过。',
       integrityurl:'',
       logo:'https://m.tjqpjt.com/logo.png',
       desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
@@ -171,6 +171,13 @@ export default {
       this.$router.push('./moneyDetailed');
     },
     listGo(index){
+      if(index == 0){
+        this.title = '权鹏商学院，各领域实战经验干货课程在线分享，精彩不容错过。'
+      }else{
+        this.title = '文章'
+      }
+      this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
+
       this.isActive = index;
       // console.log(index + 1);
       var index1 = index + 1
@@ -210,20 +217,20 @@ export default {
       this.get_clsTextList();
     },
     jumpCurrVip(){
-      if(!localStorage.getItem('token')){
-        this.$dialog.confirm({
-          title:'登录状态',
-          message:'未登录，请登录',
-        })
-            .then(()=>{
-              this.$router.push('/login')
-            })
-            .catch(()=>{
-              console.log('未登录')
-            });
-      }else{
+      // if(!localStorage.getItem('token')){
+      //   this.$dialog.confirm({
+      //     title:'登录状态',
+      //     message:'未登录，请登录',
+      //   })
+      //       .then(()=>{
+      //         this.$router.push('/login')
+      //       })
+      //       .catch(()=>{
+      //         console.log('未登录')
+      //       });
+      // }else{
         this.$router.push('/currVip');
-      }
+      // }
     },
     jumpSearch(){
       if(!localStorage.getItem('token')){
@@ -405,7 +412,6 @@ export default {
     var wx = this.$wx
     wx.showOptionMenu();
 
-    this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
 
   },

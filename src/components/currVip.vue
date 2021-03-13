@@ -29,7 +29,7 @@
         </div>
         <div class="cont13">
           <ul>
-            <li v-for="(n,index) in contContCont" :key="index" :class="{contContContAdd:index==isSelect11}" @click="toggleAddCls(index,n.id)">
+            <li v-for="(n,index) in contContCont" :key="index" :class="{contContContAdd:index+1 ==isSelect11}" @click="toggleAddCls(index,n.id)">
               <img :src="n.video_cover" alt="">
               <div class="box1">
                 <div class="title">{{n.title}}</div>
@@ -139,13 +139,13 @@
           <div class="share_b">
             <div class="returnCom_b">
               <template v-if="VipCode == '月卡'">
-                预计返佣：{{this.monthList[0].two_back}} ~ {{this.monthList[0].one_back}}元
+                预计返佣：{{monthList[0].two_back}} ~ {{monthList[0].one_back}}元
               </template>
               <template v-else-if="VipCode == '季卡'">
-                预计返佣：{{this.monthList[1].two_back}} ~ {{this.monthList[1].one_back}}元
+                预计返佣：{{monthList[1].two_back}} ~ {{monthList[1].one_back}}元
               </template>
               <template v-else>
-                预计返佣：{{this.monthList[2].two_back}} ~ {{this.monthList[2].one_back}}元
+                预计返佣：{{monthList[2].two_back}} ~ {{monthList[2].one_back}}元
               </template>
             </div>
           </div>
@@ -202,14 +202,18 @@
 
     <div class="grey_background" v-show="show_share" @click="close_invitationPoster">
       <div class="invitationPoster_b">
-        <p class="invita_p1">
-          1<span>点击右上角分享给好友</span>
-          <img src="../assets/buSchool/share_icon.png" alt="">
-        </p>
-        <p class="invita_p1">
-<!--          2<span>长按下方图片保存或扫码了解</span>-->
-        </p>
-<!--        <img :src="pic_url" alt="" @click.stop>-->
+        <div class="p_bo">
+          <p class="invita_p1">
+            1<span>点击右上角分享给好友</span>
+            <img src="../assets/buSchool/share_icon.png" alt="">
+          </p>
+          <p class="invita_p1 invita_p2">
+            2<span>长按下方图片保存或扫码了解</span>
+          </p>
+        </div>
+        <div class="img_bo">
+          <img :src="pic_url" alt="" @click.stop>
+        </div>
       </div>
     </div>
   </div>
@@ -230,7 +234,7 @@ export default {
       isActive:'',
       isSelect:'',
       isSelect1:'',
-      isSelect11:'',
+      isSelect11:1,
       isSelect2:1,
       tabList:[
           '入门VIP','贵宾VIP','至尊VIP'
@@ -266,6 +270,8 @@ export default {
       one_back:'',
       show_share:false,
       pic_url:'',
+      card_id_share:1,
+      course_id_j:'',
     }
   },
   methods:{
@@ -309,6 +315,8 @@ export default {
 
       that.card_id = index1
 
+      this.son(0);
+
     },
     changeCls(index,id){
       this.isSelect = index;
@@ -332,7 +340,6 @@ export default {
       this.time_long = index1
       if(index1 == 1){
         this.VipCode = '月卡'
-        // this.two_back =
       }
       if(index1 == 2){
         this.VipCode = '季卡'
@@ -343,13 +350,16 @@ export default {
 
     },
     toggleAddCls(index,id){
-      // console.log(index)
+      console.log(index)
+      console.log(id)
       // if(index == 0){
       //   this.get_courDetails();
       // }
-      this.isSelect11 = index;
       this.course_id = id
+      this.get_courDetails(this.course_id)
       console.log(this.course_id);
+      this.isSelect11 = index+1
+      this.$route.query.id = id
     },
     // 获取课程详情
     get_courDetails() {
@@ -399,6 +409,7 @@ export default {
         console.log(res)
         this.monthList= res.data.price
         this.money = res.data.price[0].money
+        this.card_id_share = index1
       })
     },
     // 获取课程分类
@@ -437,8 +448,29 @@ export default {
       })
     },
     kaitongBtn_1(){
-      this.tcShow = true
-      this.get_courDetails();
+      if(!localStorage.getItem('token')){
+        this.$dialog.confirm({
+          title:'登录状态',
+          message:'未登录，请登录',
+        })
+            .then(()=>{
+              this.$router.push('/login')
+            })
+            .catch(()=>{
+              console.log('未登录')
+            });
+      }else{
+        this.tcShow = true
+        if(this.$route.query.id) {
+            console.log('单个详情跳转');
+            this.course_id = this.$route.query.id
+            this.get_courDetails(this.course_id)
+
+        }else{
+          console.log('详情跳转');
+          this.get_courDetails()
+        }
+      }
     },
     kaitongBtn(){
       this.tcShow = true
@@ -537,13 +569,12 @@ export default {
         console.log('未支付')
       });
     },
-
     // 邀请好友 海报
     get_invitationPoster(){
         this.show_share = true
-        this.$post(localStorage.getItem('http') + 'school/make_playbill', {
+        this.$post(localStorage.getItem('http') + 'school/make_card_playbill', {
           token: localStorage.getItem('token'),
-          id:this.id_share
+          card_id:this.card_id_share
         }).then(res => {
           console.log(res)
           if(res.code == 1){
@@ -567,17 +598,20 @@ export default {
     this.get_class();
     this.get_clsList();
 
-    this.course_id = 1
+    // this.course_id = 1
     this.index = 0
-
-
+    // this.isSelect11 = ''
     var score = localStorage.getItem('score');
     this.score = score
     console.log(this.score)
 
     var open_id = localStorage.getItem('openid')
     this.order_id = open_id
-    console.log(this.open_id)
+    // console.log(this.open_id)
+    if(this.$route.query.id) {
+      this.isSelect11 = 0
+      // this.course_id_1 = this.$route.query.id
+    }
   },
 }
 </script>
@@ -1045,6 +1079,9 @@ export default {
 
 //弹窗
 .tanchuang{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   left: 0;
   top: 0;
@@ -1054,9 +1091,9 @@ export default {
   z-index: 1999;
   color: #ffffff;
   .tanchuangBox{
-    position: absolute;
-    top: 50%;
-    margin-top: -180px;
+    //position: absolute;
+    //top: 50%;
+    //margin-top: -180px;
     width: 100%;
     //height: 360px;
     padding: 0 30px;
@@ -1357,9 +1394,18 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10% 15%;
+    padding: 0 15%;
     box-sizing: border-box;
     flex-direction: column;
+    .p_bo{
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      padding: 20px 15% 5px;
+      box-sizing: border-box;
+      //height: 110px;
+    }
     p{
       //margin-top: 5px;
       width: 100%;
@@ -1369,11 +1415,16 @@ export default {
       font-weight: 500;
       color: #ffffff;
     }
-    p:last-child{
-      margin-bottom: 5px;
-    }
+    //p:last-child{
+    //  margin-bottom: 5px;
+    //}
     .invita_p1{
       position: relative;
+      //position: absolute;
+      //top: 0;
+      //left: 0;
+      width: 100%;
+      //padding: 20px 15% 0;
       font-size: 30px;
       font-family: PingFang SC;
       font-weight: bold;
@@ -1382,9 +1433,12 @@ export default {
       justify-content: flex-start;
       align-items: center;
       img{
+        margin-top: 0;
         position: absolute;
-        right: -35px;
-        top: -20px;
+        //right: 20px;
+        //top: 0;
+        right: -40px;
+        top: -16px;
         width: 80px;
         object-fit: cover;
       }
@@ -1400,6 +1454,16 @@ export default {
         color: #FFFFFF;
         background-color: rgba(112, 112, 112, 0.81);
       }
+    }
+    .invita_p2{
+      //top: 45px;
+    }
+    .img_bo{
+      position: absolute;
+      top: 140px;
+      left: 0;
+      width: 100%;
+      padding: 0 15%;
     }
     img{
       object-fit: cover;

@@ -92,14 +92,18 @@
     </div>
     <div class="grey_background" v-show="show_share" @click="close_invitationPoster">
       <div class="invitationPoster_b">
-        <p class="invita_p1">
-          1<span>点击右上角分享给好友</span>
-          <img src="../assets/buSchool/share_icon.png" alt="">
-        </p>
-        <p class="invita_p1">
-          2<span>长按下方图片保存或扫码了解</span>
-        </p>
-        <img :src="pic_url_share" alt="" @click.stop>
+        <div class="p_bo">
+          <p class="invita_p1">
+            1<span>点击右上角分享给好友</span>
+            <img src="../assets/buSchool/share_icon.png" alt="">
+          </p>
+          <p class="invita_p1 invita_p2">
+            2<span>长按下方图片保存或扫码了解</span>
+          </p>
+        </div>
+        <div class="img_bo">
+          <img :src="pic_url_share" alt="" @click.stop>
+        </div>
       </div>
     </div>
   </div>
@@ -127,7 +131,7 @@ export default {
       category_id:1,
       card_id:'',
       use_score:0,
-      title: '咨询卡',
+      title: '行业专家7*24在线答疑，帮您解决企业经营中的各种难题。',
       integrityurl:'',
       // logo:'https://m.tjqpjt.com/logo.png',
       desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
@@ -370,6 +374,7 @@ export default {
     // 关闭邀请海报弹窗
     close_invitationPoster(){
       this.show_share = false
+      this.pic_url_share = ''
     },
 
 
@@ -885,7 +890,6 @@ export default {
       }
     }
   }
-
 }
 .grey_background {
   position: fixed;
@@ -902,9 +906,18 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 15%;
+    padding: 0 15%;
     box-sizing: border-box;
     flex-direction: column;
+    .p_bo{
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      padding: 20px 15% 5px;
+      box-sizing: border-box;
+      //height: 110px;
+    }
     p{
       //margin-top: 5px;
       width: 100%;
@@ -914,11 +927,16 @@ export default {
       font-weight: 500;
       color: #ffffff;
     }
-    p:last-child{
-      margin-bottom: 5px;
-    }
+    //p:last-child{
+    //  margin-bottom: 5px;
+    //}
     .invita_p1{
       position: relative;
+      //position: absolute;
+      //top: 0;
+      //left: 0;
+      width: 100%;
+      //padding: 20px 15% 0;
       font-size: 30px;
       font-family: PingFang SC;
       font-weight: bold;
@@ -927,9 +945,12 @@ export default {
       justify-content: flex-start;
       align-items: center;
       img{
+        margin-top: 0;
         position: absolute;
-        right: -35px;
-        top: -20px;
+        //right: 20px;
+        //top: 0;
+        right: -40px;
+        top: -16px;
         width: 80px;
         object-fit: cover;
       }
@@ -945,6 +966,16 @@ export default {
         color: #FFFFFF;
         background-color: rgba(112, 112, 112, 0.81);
       }
+    }
+    .invita_p2{
+      //top: 45px;
+    }
+    .img_bo{
+      position: absolute;
+      top: 140px;
+      left: 0;
+      width: 100%;
+      padding: 0 15%;
     }
     img{
       object-fit: cover;

@@ -201,14 +201,18 @@
 
     <div class="grey_background" v-show="show_share" @click="close_invitationPoster">
       <div class="invitationPoster_b">
-        <p class="invita_p1">
-          1<span>点击右上角分享给好友</span>
-          <img src="../assets/buSchool/share_icon.png" alt="">
-        </p>
-        <p class="invita_p1">
-          2<span>长按下方图片保存或扫码了解</span>
-        </p>
-        <img :src="pic_url" alt="" @click.stop>
+        <div class="p_bo">
+          <p class="invita_p1">
+            1<span>点击右上角分享给好友</span>
+            <img src="../assets/buSchool/share_icon.png" alt="">
+          </p>
+          <p class="invita_p1">
+            2<span>长按下方图片保存或扫码了解</span>
+          </p>
+        </div>
+        <div class="img_bo">
+          <img :src="pic_url" alt="" @click.stop>
+        </div>
       </div>
     </div>
   </div>
@@ -409,20 +413,26 @@ export default {
     },
     // 点击开通跳转vip卡页
     jumpCurrVip(){
-      if(!localStorage.getItem('token')){
-        this.$dialog.confirm({
-          title:'登录状态',
-          message:'未登录，请登录',
-        })
-            .then(()=>{
-              this.$router.push('/login')
-            })
-            .catch(()=>{
-              console.log('未登录')
-            });
-      }else{
-        this.$router.push('./currVip');
-      }
+      // if(!localStorage.getItem('token')){
+      //   this.$dialog.confirm({
+      //     title:'登录状态',
+      //     message:'未登录，请登录',
+      //   })
+      //       .then(()=>{
+      //         this.$router.push('/login')
+      //       })
+      //       .catch(()=>{
+      //         console.log('未登录')
+      //       });
+      // }else{
+        console.log(this.course_id)
+        this.$router.push({
+            path: './currVip',
+            query:{
+              id: this.course_id
+            }
+        });
+      // }
     },
     payClick(){
       // this.show1 = true
@@ -826,12 +836,10 @@ export default {
   height: 201px;
   //background: url("../assets/buSchool/videoBox_bg.png") no-repeat;
   //background-size: 100% 100%;
-  video,img{
-    width: 100%;
-    height: 100%;
-  }
   img{
     object-fit: cover;
+    width: 100%;
+    height: 100%;
   }
   //img{
   //  position: absolute;
@@ -1191,7 +1199,7 @@ export default {
   bottom: 0;
   //background-color: rgba(0, 0, 0, 0.25);
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 2000;
+  z-index: 2001;
   color: #ffffff;
   .tanchuangBox{
     position: absolute;
@@ -1201,6 +1209,7 @@ export default {
     //height: 360px;
     padding: 0 30px;
     box-sizing: border-box;
+    z-index: 2001;
     .tanchuangBox1{
       width: 100%;
       height: 100%;
@@ -1490,9 +1499,18 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10% 15%;
+    padding: 0 15%;
     box-sizing: border-box;
     flex-direction: column;
+    .p_bo{
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      padding: 20px 15% 5px;
+      box-sizing: border-box;
+      //height: 110px;
+    }
     p{
       //margin-top: 5px;
       width: 100%;
@@ -1502,11 +1520,12 @@ export default {
       font-weight: 500;
       color: #ffffff;
     }
-    p:last-child{
-      margin-bottom: 5px;
-    }
+    //p:last-child{
+    //  margin-bottom: 5px;
+    //}
     .invita_p1{
       position: relative;
+      width: 100%;
       font-size: 30px;
       font-family: PingFang SC;
       font-weight: bold;
@@ -1515,9 +1534,10 @@ export default {
       justify-content: flex-start;
       align-items: center;
       img{
+        margin-top: 0;
         position: absolute;
-        right: -35px;
-        top: -20px;
+        right: -40px;
+        top: -16px;
         width: 80px;
         object-fit: cover;
       }
@@ -1534,6 +1554,13 @@ export default {
         background-color: rgba(112, 112, 112, 0.81);
       }
     }
+    .img_bo{
+      position: absolute;
+      top: 140px;
+      left: 0;
+      width: 100%;
+      padding: 0 15%;
+    }
     img{
       object-fit: cover;
       width: 100%;
@@ -1547,5 +1574,11 @@ export default {
 }
 .btn_price{
   background-color: #999999!important;
+}
+video{
+  position: relative;
+  z-index: 2000;
+  width: 100%;
+  height: 100%;
 }
 </style>

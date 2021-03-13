@@ -133,14 +133,18 @@
       </van-popup>
       <div class="grey_background" v-show="show_share" @click="close_invitationPoster">
         <div class="invitationPoster_b">
-          <p class="invita_p1">
-            1<span>点击右上角分享给好友</span>
-            <img src="../assets/buSchool/share_icon.png" alt="">
-          </p>
-          <p class="invita_p1">
-            2<span>长按下方图片保存或扫码了解</span>
-          </p>
-          <img :src="pic_url_share" alt="" @click.stop>
+          <div class="p_bo">
+            <p class="invita_p1">
+              1<span>点击右上角分享给好友</span>
+              <img src="../assets/buSchool/share_icon.png" alt="">
+            </p>
+            <p class="invita_p1">
+              2<span>长按下方图片保存或扫码了解</span>
+            </p>
+          </div>
+          <div class="img_bo">
+            <img :src="pic_url_share" alt="" @click.stop>
+          </div>
         </div>
       </div>
     </div>
@@ -192,15 +196,6 @@
             var e = this.$route.query.id
             console.log(e)
 
-            // this.token = localStorage.getItem('token')
-            // console.log(this.token)
-            // if(this.token){
-            //   this.existence_token = true
-            //   this.isActive = false
-            // }else{
-            //   this.existence_token = false
-            //   this.isActive = true
-            // }
 
             // this.isActive_cls = 0
 
@@ -429,17 +424,30 @@
         },
         // 邀请好友
         get_invitationPoster(){
-          this.show_share = true
-          this.$post(localStorage.getItem('http') + 'goods/make_playbill', {
-            token: localStorage.getItem('token'),
-            id:this.id_share
-          }).then(res => {
-            console.log(res)
-            if(res.code == 1){
-              // console.log(res)
-              this.pic_url_share = res.data.pic_url
-            }
-          })
+          if(!localStorage.getItem('token')){
+            this.$dialog.confirm({
+              title:'登录状态',
+              message:'未登录，请登录',
+            })
+                .then(()=>{
+                  this.$router.push('/login')
+                })
+                .catch(()=>{
+                  console.log('未登录')
+                });
+          }else {
+            this.show_share = true
+            this.$post(localStorage.getItem('http') + 'goods/make_playbill', {
+              token: localStorage.getItem('token'),
+              id: this.id_share
+            }).then(res => {
+              console.log(res)
+              if (res.code == 1) {
+                // console.log(res)
+                this.pic_url_share = res.data.pic_url
+              }
+            })
+          }
         },
         // 关闭邀请海报弹窗
         close_invitationPoster(){
@@ -511,6 +519,7 @@
           this.existence_token = false
           this.isActive = true
         }
+
       }
     }
 </script>
@@ -532,6 +541,7 @@
             margin-bottom: 12px;
             .estimate_share_b{
               margin-top: 5px;
+              float: left;
               //display: flex;
               //justify-content: space-between;
               //align-items: center;
@@ -875,18 +885,25 @@
       right: 0;
       z-index: 10000;
       background-color: rgba(0, 0, 0, 0.4);
-
       .invitationPoster_b {
         width: 100%;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 15%;
+        padding: 0 15%;
         box-sizing: border-box;
         flex-direction: column;
-
-        p {
+        .p_bo{
+          position: absolute;
+          top: 20px;
+          left: 0;
+          width: 100%;
+          padding: 20px 15% 5px;
+          box-sizing: border-box;
+          //height: 110px;
+        }
+        p{
           //margin-top: 5px;
           width: 100%;
           text-align: center;
@@ -895,13 +912,16 @@
           font-weight: 500;
           color: #ffffff;
         }
-
-        p:last-child {
-          margin-bottom: 5px;
-        }
-
-        .invita_p1 {
+        //p:last-child{
+        //  margin-bottom: 5px;
+        //}
+        .invita_p1{
           position: relative;
+          //position: absolute;
+          //top: 0;
+          //left: 0;
+          width: 100%;
+          //padding: 20px 15% 0;
           font-size: 30px;
           font-family: PingFang SC;
           font-weight: bold;
@@ -909,16 +929,17 @@
           display: flex;
           justify-content: flex-start;
           align-items: center;
-
-          img {
+          img{
+            margin-top: 0;
             position: absolute;
-            right: -35px;
-            top: -20px;
+            //right: 20px;
+            //top: 0;
+            right: -40px;
+            top: -16px;
             width: 80px;
             object-fit: cover;
           }
-
-          span {
+          span{
             margin-left: 10px;
             padding: 3px 10px;
             box-sizing: border-box;
@@ -928,23 +949,32 @@
             font-family: Microsoft YaHei;
             font-weight: 400;
             color: #FFFFFF;
-            background-color: #707070;
+            background-color: rgba(112, 112, 112, 0.81);
           }
-
-
         }
-        img {
+        .invita_p2{
+          //top: 45px;
+        }
+        .img_bo{
+          position: absolute;
+          top: 140px;
+          left: 0;
+          width: 100%;
+          padding: 0 15%;
+        }
+        img{
           object-fit: cover;
           width: 100%;
           //height: 100%;
         }
       }
-      .active_login {
-        float: left !important;
-        margin-top: 10px;
-      }
     }
     .active_cls{
       color: #486eef;
+    }
+
+    .active_login {
+      float: left!important;
+      margin-top: 10px;
     }
 </style>

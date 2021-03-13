@@ -23,7 +23,7 @@
         data() {
             return{
                 list: [],
-                title: '全部服务',
+                title: '为企业提供从注册到上市全生命周期服务；权鹏集团，助力企业快速成长。',
                 integrityurl:'',
                 // logo:'https://m.tjqpjt.com/logo.png',
                 desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
