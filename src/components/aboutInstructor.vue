@@ -77,6 +77,9 @@ export default {
       limit:15,
       category_id:'',
       clsList:[],
+      title: '',
+      desc:'',
+      imgUrl:'',
 
     }
   },
@@ -102,16 +105,24 @@ export default {
       this.get_clsList(this.category_id);
     },
     // 获取讲师详情
-    get_teacherDetail(){
+    get_teacherDetail(teacher_id){
       this.$post(localStorage.getItem('http') + 'teacher/get_detail',{
         token: localStorage.getItem('token'),
-        id:this.teacher_id
+        id:teacher_id
       }).then(res=>{
         console.log(res)
         this.teacher_detail = res.data
         this.list_curr = res.data.category
-        this.category_id = res.data.category[0].id
-        this.get_clsList(this.category_id);
+        if(res.data.category == ''){
+          // console.log('不存在')
+        }else{
+          this.category_id = res.data.category[0].id
+          this.get_clsList(this.category_id);
+        }
+
+        // console.log(location.href)
+
+        this.$wxShare(res.data.name,res.data.info,location.href,res.data.face_url)
       })
     },
     // 获取课程列表
@@ -144,7 +155,7 @@ export default {
     this.isSel = 0
     let teacher_id = this.$route.query.id;
     this.teacher_id = teacher_id
-    this.get_teacherDetail(this.teacher_id);
+    this.get_teacherDetail(teacher_id);
   }
 }
 </script>
@@ -255,27 +266,40 @@ export default {
   width: 100%;
   background-color: #ffffff;
   .instructor_c_h{
-    padding: 20px 15px 10px;
+    padding: 20px 15px;
     box-sizing: border-box;
     background-color: #ffffff;
+    ul::-webkit-scrollbar {
+      display: none; }
     ul{
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      //display: flex;
+      //justify-content: space-between;
+      //flex-wrap: nowrap;
+      //overflow: auto;
+      overflow: auto;
+      flex-wrap: nowrap;
+      white-space: nowrap;
       li{
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: inline-block;
+        //display: flex;
+        //justify-content: center;
+        //align-items: center;
         width: 75px;
         //height: 35px;
         height: 32px;
+        line-height: 32px;
+        text-align: center;
         background: #F6F6F6;
         font-size: 16px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #68A0FF;
-        margin-bottom: 10px;
+        //margin-bottom: 10px;
+        margin-right: 15px;
+      }
+      li:last-child{
+        margin-right: 0;
       }
     }
   }

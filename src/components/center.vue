@@ -503,13 +503,18 @@ export default {
   }
   ul{
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    //display: flex;
+    //justify-content: space-between;
+    //flex-wrap: wrap;
     //padding: 0 0 30px 0;
     //box-sizing: border-box;
+    li:nth-child(4n){
+      margin-right: 0;
+    }
     li{
       position: relative;
+      float: left;
+      margin-right: 9px;
       margin-top: 24px;
       width: 72px;
       height: 68px;

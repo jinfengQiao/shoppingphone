@@ -636,12 +636,18 @@ export default {
       background-color: #ffffff;
       ul{
         width: 100%;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        //display: flex;
+        //justify-content: space-between;
+        //flex-wrap: wrap;
         li{
+          float: left;
           margin-top: 15px;
-          padding: 4px 18px;
+          margin-right: 15px;
+          //padding: 4px 18px;
+          width: 75px;
+          height: 32px;
+          line-height: 32px;
+          text-align: center;
           box-sizing: border-box;
           background: rgba(220, 220, 220, 0.27);
           border-radius: 12px;
@@ -649,6 +655,9 @@ export default {
           font-family: PingFang SC;
           font-weight: bold;
           color: #666666;
+        }
+        li:nth-child(4n){
+          margin-right: 0;
         }
       }
       //ul:after {content: "";width: 163px;}

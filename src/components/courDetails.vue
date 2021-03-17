@@ -56,7 +56,7 @@
         </div>
       </div>
       <van-tabs v-model="active_tab" sticky @change="change_tab">
-        <van-tab title="讲师介绍">
+        <van-tab title="讲师介绍" :disabled="no_teacher">
           <div class="lecturerBox">
             <div class="lecturer_h">
               <div class="name_b" @click="jump_courseDetails(teacher_de.id)">
@@ -311,7 +311,8 @@ export default {
         attr:'',
         info:'',
         id:'',
-      }
+      },
+      no_teacher:true,
     }
   },
   methods:{
@@ -410,9 +411,15 @@ export default {
         if(this.want_study == 1){
           this.lay_type1 = 1
         }
-
         if(this.price == 0 || this.have == true){
           this.show_price = false
+        }
+        if(res.data.teacher_id == 0){
+          console.log('没有讲师')
+          this.no_teacher = true
+        }else{
+          console.log('有讲师')
+          this.no_teacher = false
         }
 
         console.log(location.href)
