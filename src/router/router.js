@@ -39,6 +39,8 @@ import payComp from "../components/payComp";
 import balance from "../components/balance";
 import refund_page from "../components/refund_page";
 import rebate_rules from "../components/rebate_rules";
+import follow from "../components/follow";
+import aboutInstructor from "../components/aboutInstructor";
 
 
 import deta from "../view/deta";
@@ -246,6 +248,13 @@ const routes= [
             }
         },
         {
+            path:'/follow',
+            component: follow,
+            meta: {
+                title: '我的关注'
+            }
+        },
+        {
             path:'/signIn',
             component: signIn,
             meta: {
@@ -343,8 +352,13 @@ const routes= [
                 title: '售后服务'
             }
         },
-
-
+        {
+            path:'/aboutInstructor',
+            component: aboutInstructor,
+            meta: {
+                title: '讲师介绍'
+            }
+        },
     ]
 
 const originalPush = Router.prototype.push

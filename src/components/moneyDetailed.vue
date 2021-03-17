@@ -27,6 +27,9 @@
           </div>
         </li>
       </ul>
+      <div class="nullBox" v-show="show12">
+        <img src="../assets/buSchool/nullBoxImg1.png" alt="">
+      </div>
     </div>
     <noSharing></noSharing>
 
@@ -41,6 +44,7 @@ export default {
   data(){
     return{
       getList:[],
+      show12:true,
     }
   },
   methods:{
@@ -52,18 +56,14 @@ export default {
         token: localStorage.getItem('token'),
       })
       .then(res=> {
-        // console.log(res)
-        this.getList = res.data
-
-        // if(type == 1){
-        //   console.log('充值成功');
-        // }else{
-        //   console.log('消费成功');
-        // }
-        // this.balance = res.data.balance
-        // if(!this.balance){
-        //   this.balance = 0;
-        // }
+        console.log(res)
+        if(res.data.length == 0){
+          this.show12 = true;
+          this.getList = [];
+        }else{
+          this.show12 = false;
+          this.getList = res.data;
+        }
       })
     }
   },
@@ -165,6 +165,17 @@ export default {
         }
       }
     }
+  }
+}
+.nullBox{
+  margin-top: 60px;
+  margin-bottom: 60px;
+  width: 100%;
+  text-align: center;
+  img{
+    width: 50%;
+    height: 50%;
+    object-fit: cover;
   }
 }
 </style>

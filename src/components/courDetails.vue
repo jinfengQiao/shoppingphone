@@ -56,6 +56,33 @@
         </div>
       </div>
       <van-tabs v-model="active_tab" sticky @change="change_tab">
+        <van-tab title="讲师介绍">
+          <div class="lecturerBox">
+            <div class="lecturer_h">
+              <div class="name_b" @click="jump_courseDetails(teacher_de.id)">
+                <div class="img_b">
+                  <img :src="teacher_de.face_url" alt="">
+                </div>
+                <div class="name">
+                  <span>{{teacher_de.name}}</span>
+                  <span class="degree">热度值：{{ teacher_de.hit }}</span>
+                </div>
+              </div>
+              <div class="cli_follow_b" @click="cli_follow(teacher_de.id)">
+                <template v-if="teacher_de.attr == 1">
+                  <span class="follow_ok">已关注</span>
+                </template>
+                <template v-else>
+                  <span class="follow_no">关注</span>
+                </template>
+              </div>
+            </div>
+            <div class="lecturer_c">
+              <span>讲师介绍</span>
+              <div class="lecturer_text" v-html="teacher_de.info"></div>
+            </div>
+          </div>
+        </van-tab>
         <van-tab title="课程介绍">
           <div class="introBox">
 <!--            <div class="title">课程介绍</div>-->
@@ -235,6 +262,7 @@ export default {
       lay_type1:0,
       id:'',
       content:'',
+      lecturer_text:'',
       price:'',
       old_price:'',
       special:'',
@@ -263,7 +291,7 @@ export default {
       desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
       imgUrl: '',
       existence_token:true,
-      active_tab:1,
+      active_tab:2,
       title_title:'',
       two_back:'',
       one_back:'',
@@ -275,6 +303,15 @@ export default {
       timeout: '',
       show_price:true,
       goods_id:'',
+      // follow_ok:true,
+      teacher_de:{
+        name:'',
+        hit:'',
+        pic_url:'',
+        attr:'',
+        info:'',
+        id:'',
+      }
     }
   },
   methods:{
@@ -342,6 +379,7 @@ export default {
       })
       .then(res=> {
         console.log(res)
+        this.teacher_de = res.data.teacher
         this.have = res.data.have
         this.lessonId = res.data.id
         this.id_share = res.data.id
@@ -395,7 +433,7 @@ export default {
           console.log(res)
           this.lesson = res.data.list
           this.title = res.data.list[0].title
-          this.count = '目录 ' + '(' + res.data.count + ')'
+          this.count = '课程目录 ' + '(' + res.data.count + ')'
         })
       }
     },
@@ -408,7 +446,7 @@ export default {
         console.log(res)
         this.lesson = res.data.list
         this.title = res.data.list[0].title
-        this.count = '目录 ' + '(' + res.data.count + ')'
+        this.count = '课程目录 ' + '(' + res.data.count + ')'
       })
     },
     // 点击开通跳转vip卡页
@@ -753,8 +791,28 @@ export default {
           }
         })
       }
-    }
-
+    },
+    // 关注切换
+    cli_follow(id_follow){
+      this.$post(localStorage.getItem('http') + 'teacher/attr',{
+        token: localStorage.getItem('token'),
+        id:id_follow
+      }).then(res=>{
+        console.log(res)
+        if(res.code == 1){
+          this.get_courDetails(this.id_set);
+        }
+      })
+    },
+    // 点击头像跳转到讲师详情
+    jump_courseDetails(id){
+      this.$router.push({
+        path:'./aboutInstructor',
+        query:{
+          id:id
+        }
+      })
+    },
 
   },
   created(){
@@ -1051,7 +1109,8 @@ export default {
           font-size: 14px;
           font-family: PingFang SC;
           color: #666666;
-          padding: 18px 10px;
+          //padding: 18px 10px;
+          padding: 15px 10px;
           box-sizing: border-box;
           display: flex;
           justify-content: flex-start;
@@ -1101,6 +1160,87 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+  .lecturerBox{
+    .lecturer_h{
+      width: 100%;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 4px solid #F3F4F6;
+      .name_b {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .img_b{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-right: 10px;
+          background-color: #efefef;
+        }
+        img{
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+        .name{
+          display: flex;
+          justify-content: flex-start;
+          flex-direction: column;
+          span{
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #333333;
+          }
+          .degree{
+            font-size: 12px;
+          }
+        }
+      }
+      .cli_follow_b{
+        span{
+          letter-spacing: 2px;
+          text-align: center;
+          width: 60px;
+          height: 24px;
+          font-size: 14px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          border-radius: 21px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .follow_ok{
+          background: #F2F2F2;
+          color: #999999;
+        }
+        .follow_no{
+          border: 1px solid #333333;
+          background: #ffffff;
+          color: #333333;
+          box-sizing: border-box;
+        }
+      }
+    }
+    .lecturer_c{
+      width: 100%;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      font-size: 12px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      span{
+        font-size: 14px;
+        color: #333333;
       }
     }
   }

@@ -49,7 +49,33 @@
           </div>
         </div>
       </div>
-      <div class="cont2" v-show="tabState==2">
+      <div class="cont_lecturer" id="teacherList" v-show="tabState==2" :style="height_cont">
+        <ul>
+            <li @click="jump_aboutInstructor(n.id)" v-for="(n,inx) in teacherList" :key="inx">
+              <div class="head_img">
+                <img :src="n.face_url" alt="">
+              </div>
+              <div class="study_b">
+                <div class="num_stu">{{ n.sell }}人学习</div>
+                <div class="common_number">共{{ n.lesson_count }}节</div>
+              </div>
+              <div class="lecturer_c_b">
+                <div class="name_b">
+                  <div class="name">{{n.name}}</div>
+                  <div class="fans">粉丝：{{n.attr_count}}</div>
+                </div>
+                <div class="popularity_b">
+                  <img src="../assets/buSchool/popularity_img.png" alt="">
+                  <span>人气值：{{ n.hit }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        <div class="nullBox" v-show="show_teacher">
+          <img src="../assets/buSchool/nullBoxImg1.png" alt="">
+        </div>
+      </div>
+      <div class="cont2" v-show="tabState==3">
         <div class="cont2Head">
 <!--          <van-tabs>-->
 <!--            <van-tab v-for="(n,index) in cont2HeadLi" :key="index" :title="n.name" @click="liAddCls(index,n.id)">-->
@@ -122,8 +148,11 @@ export default {
       isActive: '',
       isSelect:'',
       isliAddCls:'',
+      // buttonText:[
+      //     '课程','文章'
+      // ],
       buttonText:[
-          '课程','文章'
+        '课程','讲师团队'
       ],
       contContHead:[
           // '财税','法律','融资','股权','资本','人力'
@@ -142,6 +171,7 @@ export default {
       id:'',
       contContCont1:[],
       page:1,
+      // limit:16,
       list_type:1,
       scroll_element:"#contContCont",
       plus_height:359,
@@ -152,6 +182,8 @@ export default {
       desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
       imgUrl: 'https://m.tjqpjt.com/logo.png',
       id_set:'',
+      teacherList:[],
+      show_teacher:false,
     }
   },
   methods:{
@@ -173,9 +205,13 @@ export default {
     listGo(index){
       if(index == 0){
         this.title = '权鹏商学院，各领域实战经验干货课程在线分享，精彩不容错过。'
-      }else{
-        this.title = '文章'
       }
+      else{
+        this.title = '讲师团队'
+      }
+      // else{
+      //   this.title = '文章'
+      // }
       this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
       this.isActive = index;
@@ -192,8 +228,8 @@ export default {
         this.plus_height = 359;
       }else{
         this.list_type = 2;
-        this.scroll_element = "#contContCont1";
-        this.plus_height = 95;
+        this.scroll_element = "#teacherList";
+        this.plus_height = 98;
       }
 
 
@@ -249,25 +285,6 @@ export default {
       }
     },
     jumpCourDetails(id){
-      // if(!localStorage.getItem('token')){
-      //   this.$dialog.confirm({
-      //     title:'登录状态',
-      //     message:'未登录，请登录',
-      //   })
-      //       .then(()=>{
-      //         this.$router.push('/login')
-      //       })
-      //       .catch(()=>{
-      //         console.log('未登录')
-      //       });
-      // }else{
-      //   this.$router.push({
-      //     path:'courDetails',
-      //     query:{
-      //       id:id
-      //     }
-      //   })
-      // }
       this.$router.push({
         path:'courDetails',
         query:{
@@ -314,14 +331,15 @@ export default {
       var outerHeight = document.documentElement.clientHeight
       // 滚动条的位置高度
       var scrollTop = document.documentElement.scrollTop
-      // console.log(scrollTop + outerHeight );
-      // console.log(innerHeight + this.plus_height);
+      console.log(scrollTop + outerHeight );
+      console.log(innerHeight + this.plus_height);
       if(scrollTop + outerHeight == innerHeight + this.plus_height){
         this.page++;
         if(this.list_type == 1){
           this.get_clsList();
         }else{
-          this.get_clsTextList();
+          // this.get_clsTextList();
+          this.get_teacherList();
         }
 
       }
@@ -351,7 +369,7 @@ export default {
           }else{
               this.$toast.error('没有更多了!');
               res.data.list = ''
-              // window.removeEventListener("scroll",this.onScroll);
+              window.removeEventListener("scroll",this.onScroll);
           }
         }
       })
@@ -391,16 +409,52 @@ export default {
           }else{
             this.$toast.error('没有更多了!');
             res.data.list = ''
-            // window.removeEventListener("scroll1",this.onScroll1);
+            window.removeEventListener("scroll1",this.onScroll1);
           }
         }
       })
     },
+    // 获取讲师列表
+    get_teacherList(){
+      this.$post(localStorage.getItem('http') + 'teacher/get_list',{
+        token: localStorage.getItem('token'),
+        page:this.page,
+        limit:this.limit
+      }).then(res=>{
+        console.log(res)
+        if (res.data.list.length == 0 && this.page == 1){
+          this.show_teacher = true;
+        }else{
+          this.teacherList_list = res.data.list
+          this.show_teacher = false;
+          if (res.data.list.length != 0){
+            var arr = [];
+            arr = this.teacherList;
+            res.data.list.forEach(function(v){
+              arr.push(v);
+            })
+            this.teacherList = arr;
+          }else{
+            // this.$toast.error('没有更多了!');
+            res.data.list = ''
+            window.removeEventListener("scroll",this.onScroll);
+          }
+        }
+      })
+    },
+    // 跳转讲师介绍、讲师详情
+    jump_aboutInstructor(id){
+      this.$router.push({
+        path:'./aboutInstructor',
+        query:{
+          id:id,
+        }
+      });
+    }
   },
   created(){
     this.isSelect = 0
     this.isliAddCls = 0;
-    // window.addEventListener('scroll1', this.onScroll1);
     this.get_class();
     this.get_clsList();
     this.get_height_cont();
@@ -408,12 +462,10 @@ export default {
     this.hh1();
     this.get_classText();
     this.get_clsTextList();
-    window.addEventListener('scroll', this.onScroll );
+    window.addEventListener('scroll', this.onScroll);
     var wx = this.$wx
     wx.showOptionMenu();
-
-
-
+    this.get_teacherList();
   },
   beforeDestroy() {
     window.removeEventListener("scroll",this.onScroll);
@@ -619,22 +671,22 @@ export default {
         width: 100%;
         li{
           //width: 100%;
-          height: 110px;
+          //height: 110px;
           border-bottom: 1px solid rgba(220, 220, 220, 0.34);
           padding: 15px 0 14px;
           box-sizing: border-box;
           display: flex;
           justify-items: center;
           justify-content: flex-start;
+          align-items: center;
           img{
-            margin-right: 5px;
+            margin-right: 10px;
             width: 130px;
-            //height: 80px;
+            height: 100%;
             object-fit: cover;
           }
           .box1{
-            position: relative;
-            height: 80px;
+            flex: 1;
             .title{
               font-size: 15px;
               font-family: PingFang SC;
@@ -642,17 +694,14 @@ export default {
               color: #333333;
             }
             p{
-              height: 18px;
+              margin-top: 5px;
               font-size: 12px;
               font-family: PingFang SC;
               font-weight: 500;
               color: #999999;
             }
             .zhengshuBox{
-              position: absolute;
-              left: 0;
-              bottom: 0;
-              height: 18px;
+              margin-top: 5px;
               min-width: 150px;
               button{
                 float: left;
@@ -865,6 +914,96 @@ export default {
     //  }
     //}
 
+  }
+}
+.cont_lecturer{
+  width: 100%;
+  padding: 36px 15px 77px;
+  box-sizing: border-box;
+  overflow: auto;
+  ul{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    li{
+      margin-top: 15px;
+      width: 48%;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      .head_img{
+        width: 100%;
+        background: #CAD6E4;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        img{
+          display: block;
+          width: 100%;
+          //height: 154px;
+          height: 140px;
+          object-fit: cover;
+          border-top-right-radius: 10px;
+          border-top-left-radius: 10px;
+        }
+      }
+      .study_b{
+        width: 100%;
+        height: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        box-sizing: border-box;
+        font-size: 12px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        background-color: rgba(0, 0, 0, 0.57);
+        .num_stu{
+          color: #FFFFFF;
+        }
+        .common_number{
+          color: #C1B08A;
+        }
+      }
+      .lecturer_c_b{
+        padding: 10px;
+        box-sizing: border-box;
+        .name_b {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-family: PingFang SC;
+          font-weight: 400;
+          .name{
+            font-size: 14px;
+            color: #333333;
+          }
+          .fans{
+            font-size: 12px;
+            color: #666666;
+          }
+        }
+        .popularity_b{
+          width: 100%;
+          margin-top: 10px;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          img{
+            width: 12px;
+            height: 14px;
+            margin-right: 4px;
+          }
+          span{
+            font-size: 12px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #C1B08A;
+          }
+        }
+      }
+    }
   }
 }
 .nullBox{

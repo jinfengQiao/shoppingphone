@@ -1,13 +1,18 @@
 <template>
-  <div>
-    <div class="header">
-      <img src="../assets/center/money_icon1.png" alt="">
-      <p>我的余额</p>
-      <span>￥{{ balance }}</span>
+  <div class="bg" :style="height">
+    <div class="head_b">
+      <div class="img_b">
+        <img src="../assets/center/balance_logo.png" alt="">
+      </div>
+      <span>我的余额</span>
+      <p>￥{{ balance }}</p>
     </div>
-    <div class="footer">
-      <button type="button" class="chongzhi" @click="jumpChongzhi">充值</button>
-      <button type="button" class="mingxi" @click="jumpMoneyDetailed">零钱明细</button>
+    <div class="text_b">
+      尊敬的会员，感谢您对权鹏集团的信任，您的充值金额已到账，余额可用于购买商城中任意商品。
+    </div>
+    <div class="foot_b">
+            <button type="button" class="chongzhi" @click="jumpChongzhi">充值</button>
+            <button type="button" class="mingxi" @click="jumpMoneyDetailed">零钱明细</button>
     </div>
     <noSharing></noSharing>
   </div>
@@ -22,9 +27,16 @@ export default {
   data(){
     return{
       balance:'',
+      height:{
+        width:'',
+        height:'',
+      }
     }
   },
   methods:{
+    get_height(){
+      this.height.height = window.innerHeight + 'px';
+    },
     back:function(){
       this.$router.go(-1);
     },
@@ -45,84 +57,118 @@ export default {
           this.balance = 0;
         }
       })
-    }
+    },
+    fun(){
+      console.log("监听到了");
+      this.$router.push({path: '/center'});
+    },
 
   },
-
   created(){
+    this.get_height();
     this.get_money();
-    // let balance =this.$route.query.balance;
-    // this.balance = balance
-    // console.log(this.balance)
   },
   components: {
     noSharing
+  },
+  mounted(){
+    if (window.history && window.history.pushState) {
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.fun, false);//false阻止默认事件
+    }
+  },
+  destroyed(){
+    window.removeEventListener('popstate', this.fun, false);//false阻止默认事件
   }
 }
 </script>
 
 <style lang="less" scoped>
-.header{
-  float: left;
+.bg{
   width: 100%;
-  height: 260px;
-  background: #0596EB;
-  text-align: center;
-  img{
-    width: 65px;
-    height: 65px;
-    margin-top: 50px;
+  position: relative;
+  background-color: #ffffff;
+  padding: 12px 0 0;
+  box-sizing: border-box;
+}
+.head_b{
+  width: 100%;
+  height: 240px;
+  background: url("../assets/center/balance_bg.png") no-repeat;
+  background-size: 100% 100%;
+  padding: 0 50px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  //align-items: center;
+  flex-direction: column;
+  .img_b{
+    padding: 0 0 0 4px;
+    box-sizing: border-box;
+    width: 40px;
   }
-  p{
+  img{
+    width: 100%;
+    //height: 31px;
+    object-fit: cover;
+  }
+  span{
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 14px;
     font-family: PingFang SC;
     font-weight: 400;
     color: #FFFFFF;
+    padding: 0 0 0 4px;
+    box-sizing: border-box;
   }
-  span{
-    margin-bottom: 10px;
+  p{
+    //margin-top: 10px;
     font-size: 32px;
-    font-family: PingFang SC;
+    font-family: Microsoft YaHei;
     font-weight: bold;
     color: #FFFFFF;
   }
 }
-.footer{
+.text_b{
   width: 100%;
+  padding: 0 36px;
+  box-sizing: border-box;
+  font-size: 12px;
+  font-family: PingFang SC;
+  font-weight: 400;
+  color: #0481FF;
+  line-height: 24px;
+}
+.foot_b{
+  position: absolute;
+  bottom: 100px;
+  left: 0;
+  width: 100%;
+  padding: 0 15px;
   button{
     outline: none;
     border: 0;
-    border-radius: 5px;
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    letter-spacing: 2px;
+    width: 100%;
+    height: 40px;
+    border-radius: 31px;
   }
   .chongzhi{
-    position: fixed;
-    left: 50%;
-    margin-left: -80px;
-    bottom: 110px;
-    width: 160px;
-    height: 40px;
-    background: #0596EB;
-    font-size: 20px;
-    font-family: Source Han Sans CN;
-    font-weight: 400;
+    background: #0481FF;
     color: #FFFFFF;
   }
   .mingxi{
-    position: fixed;
-    left: 50%;
-    margin-left: -80px;
-    bottom: 50px;
-    width: 160px;
-    height: 40px;
-    background: #EAEAEA;
-    opacity: 1;
-    font-size: 20px;
-    font-family: Source Han Sans CN;
-    font-weight: 400;
-    color: #0596EB;
+    margin-top: 20px;
+    border: 1px solid #666666;
+    box-sizing: border-box;
+    color: #333333;
+    background: #FFFFFF;
   }
 }
+
 
 
 </style>

@@ -115,13 +115,13 @@ export default {
           this.$toast.error(res.msg);
         }
       });
-    }
+    },
   },
   created(){
   },
   components: {
     noSharing
-  }
+  },
 }
 </script>
 

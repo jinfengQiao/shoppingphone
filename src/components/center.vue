@@ -98,6 +98,10 @@ export default {
           text:'我的课程'
         },
         {
+          imgurl:require('../assets/center/ser_icon9.png'),
+          text:'我的关注'
+        },
+        {
           imgurl:require('../assets/center/ser_icon7.png'),
           text:'我的下级'
         },
@@ -227,6 +231,9 @@ export default {
         if(e.target.innerHTML == '我的课程'){
           this.$router.push("/lesson");
         }
+        if(e.target.innerHTML == '我的关注'){
+          this.$router.push("/follow");
+        }
         if(e.target.innerHTML == '我的下级'){
           this.$router.push("/subordinate");
         }
@@ -302,7 +309,7 @@ export default {
       if(!localStorage.getItem('token')){
         this.$toast.error('请登录!')
       }else{
-        window.sessionStorage.clear();
+        window.localStorage.clear();
         this.$toast.success('退出成功!')
         location.reload();
       }
@@ -509,7 +516,7 @@ export default {
       text-align: center;
       //border: 1px solid #000;
       img{
-        width: 40px;
+        //width: 40px;
         height: 45px;
         object-fit: cover;
       }

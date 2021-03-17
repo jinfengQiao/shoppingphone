@@ -19,6 +19,9 @@
           </div>
         </li>
       </ul>
+      <div class="de_b" v-show="de_b_show">
+        <img :src="details_img" alt="">
+      </div>
       <div class="nullBox" v-show="show12">
         <img src="../assets/buSchool/nullBoxImg1.png" alt="">
       </div>
@@ -142,6 +145,8 @@ export default {
       two_back:'',
       one_back:'',
       id_share:'',
+      details_img:'http://quanpeng.oss-cn-zhangjiakou.aliyuncs.com/of/img/1615882420/2ec1d187bb30ab8653331c5c5eeb86d6.png',
+      de_b_show:true,
     }
   },
   methods:{
@@ -179,9 +184,11 @@ export default {
         this.tabCont = res.data.list;
 
         if(res.data.list == '' || res.data.list == null){
-          this.show12 = true;
+          this.show12 = true
+          this.de_b_show = false
         }else{
-          this.show12 = false;
+          this.show12 = false
+          this.de_b_show = true
         }
       })
     },
@@ -485,16 +492,16 @@ export default {
       margin-bottom: 15px;
       width: 100%;
       height: 150px;
-      padding: 10px 30px;
+      padding: 10px 20px;
       box-sizing: border-box;
       display: flex;
       justify-content: space-between;
       align-items: center;
       img{
         float: left;
-        //width: 75px;
-        height: 76px;
-        max-width: 90px;
+        width: 50px;
+        //height: 76px;
+        //max-width: 90px;
         object-fit: cover;
       }
       .rightRi{
@@ -520,7 +527,7 @@ export default {
           margin-top: 5px;
           width: 100%;
           text-align: right;
-          font-size: 14px;
+          font-size: 12px;
           font-family: PingFang SC;
           font-weight: 500;
           color: #FFFFFF;
@@ -541,7 +548,14 @@ export default {
       background: url("../assets/center/consultation_bg3.png");
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      margin-bottom: 0;
+      //margin-bottom: 0;
+    }
+  }
+  .de_b{
+    width: 100%;
+    img{
+      width: 100%;
+      object-fit: cover;
     }
   }
   .nullBox{
