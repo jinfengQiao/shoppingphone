@@ -47,6 +47,8 @@ export default {
 
   created() {
 
+
+
     if(this.$route.query.openid) {
       // console.log('這是openid' + this.$route.query.openid)
       localStorage.setItem('invite_openid', this.$route.query.openid)
@@ -56,12 +58,12 @@ export default {
 
 
     // 手机商城
-    localStorage.setItem('http', 'http://of.kurohane.com/api/')
-    localStorage.setItem('url', 'http://192.168.1.244/official/public/api/')
+    // localStorage.setItem('http', 'http://of.kurohane.com/api/')
+    // localStorage.setItem('url', 'http://192.168.1.244/official/public/api/')
     // localStorage.setItem('http', 'http://of.kurohane.com/')
     // localStorage.setItem('url', 'http://192.168.1.244/official/public/')
-    // localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
-    // localStorage.setItem('url', 'https://of.tjqpjt.com')
+    localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
+    localStorage.setItem('url', 'https://of.tjqpjt.com')
 
 
     var ua = window.navigator.userAgent.toLowerCase();
@@ -90,8 +92,7 @@ export default {
     // id 是我需要获取的参数名，如果你要获取user等其他，自行更换即可
     // console.log(this.Utils.getUrlKey('openid'))
 
-
-  }
+  },
 }
 </script>
 

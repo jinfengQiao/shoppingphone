@@ -60,7 +60,7 @@ export default {
         id:id
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.title = res.data.title
         this.info = res.data.info
         this.content = res.data.content
@@ -79,7 +79,7 @@ export default {
   },
   created(){
     let id =this.$route.query.id;
-    console.log(id);
+    // console.log(id);
     this.hh();
     this.get_artiDetails(id);
 

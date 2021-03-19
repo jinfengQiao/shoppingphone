@@ -77,7 +77,7 @@
         },
       created() {
         this.order_obj = JSON.parse(this.$route.query.order)
-        console.log(this.order_obj)
+        // console.log(this.order_obj)
         this.price11 = (this.order_obj.price / 100).toFixed(2)
         // this.html= '<div class=\'title_van\'><p>退款金额</p><p>{{ this.order_obj.price }}</p></div>'
         this.data1 = '不可修改，最多￥'+this.price11
@@ -88,7 +88,7 @@
             reg_refund(y) {
               this.$post(localStorage.getItem('http') + 'order/reg_refund',y)
                   .then(res=> {
-                    console.log(res)
+                    // console.log(res)
                     if(res.code == 1) {
                         this.$router.push({
                           path: '/refund_page'

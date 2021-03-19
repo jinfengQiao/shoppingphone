@@ -134,7 +134,7 @@
                   id: this.$route.query.id
                 })
                     .then(res=> {
-                      console.log(res.data)
+                      // console.log(res.data)
                       this.id= res.data.id
                       this.form.name= res.data.name
                       this.form.address= res.data.address
@@ -194,7 +194,7 @@
 
             },
             onConfirm(values) {
-              console.log(values)
+              // console.log(values)
               this.form.province_id= values[0].code
               this.form.city_id= values[1].code
               this.form.area_id= values[2].code

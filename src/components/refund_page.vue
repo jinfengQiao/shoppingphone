@@ -84,7 +84,7 @@ export default {
         token: localStorage.getItem('token'),
         refund:1
       }).then(res=> {
-        console.log(res)
+        // console.log(res)
         this.list= res.data.list
         if(res.data.list == '' || res.data.list == null){
           this.show12 = true;
@@ -107,7 +107,7 @@ export default {
       this.$router.push({path: '/center'});
     },
     fun(){
-      console.log("监听到了");
+      // console.log("监听到了");
       this.$router.push({path: '/center'});
     },
     get_height(){

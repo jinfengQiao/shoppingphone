@@ -151,154 +151,169 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return{
-                goods_list: [],
-                openSimple: false,
-                value: 1,
-                radio: [],
-                spu: {},
-                obj_spu: {},
-                price: null,
-                price1:'',
-                attribute: [],
-                value_list: [],
-                attribute_list: [],
-                power_set: [],
-                sku_list: [],
-                title: '',
-                integrityurl:'',
-                // logo:'https://m.tjqpjt.com/logo.png',
-                desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
-                pic_url: '',
-                isDisabled:false,
-                priceShow:true,
-                bgcolor:2,
-                show:false,
-                existence_token:true,
-                show_share:false,
-                pic_url_share:'',
-                show_type:false,
-                course_id:'',
-                isActive:true,
-                show_cls_b:true,
-                active:'商品详情',
-                phone_buy_content:'',
-                phone_content:'',
-                one_back:'',
-                two_back:'',
-            }
-        },
-        created() {
-            this.get_data(this.$route.query.id);
-            this.get_goods();
-            var e = this.$route.query.id
-            console.log(e)
+export default {
+  data() {
+    return {
+      goods_list: [],
+      openSimple: false,
+      value: 1,
+      radio: [],
+      spu: {},
+      obj_spu: {},
+      price: null,
+      price1: '',
+      attribute: [],
+      value_list: [],
+      attribute_list: [],
+      power_set: [],
+      sku_list: [],
+      title: '',
+      integrityurl: '',
+      // logo:'https://m.tjqpjt.com/logo.png',
+      desc: '提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
+      pic_url: '',
+      isDisabled: false,
+      priceShow: true,
+      bgcolor: 2,
+      show: false,
+      existence_token: true,
+      show_share: false,
+      pic_url_share: '',
+      show_type: false,
+      course_id: '',
+      isActive: true,
+      show_cls_b: true,
+      active: '商品详情',
+      phone_buy_content: '',
+      phone_content: '',
+      one_back: '',
+      two_back: '',
+
+    }
+  },
+  created() {
+    this.get_data(this.$route.query.id);
+    this.get_goods();
+    var e = this.$route.query.id
+    console.log(e)
 
 
-            // this.isActive_cls = 0
+    // this.isActive_cls = 0
 
-            this.changeUrl();
-        },
-        watch: {
-          $route: {
-            handler() {
-              this.get_data(this.$route.query.id);
-            },
-            deep: true
-          }
-        },
-        methods: {
-        // 推荐商品
-        recom_click(e) {
-          this.$router.replace({
-            path: "/order/goods_deta",
-            query: {
-              id: e.id
-            }
-          })
-        },
-        // 提交确认
-        submit_click() {
+    this.changeUrl();
+    if(this.panduan=='index_y'){
+      // console.log('index_y')
+      this.$router.replace("/");
+    }else if(this.panduan=='index_d_1'){
+      // console.log('index_d_1')
+      this.$router.replace("/");
+    }else if(this.panduan=='index_d_2'){
+      // console.log('index_d_2')
+      this.$router.replace("/order_list");
+    }else if(this.panduan=='index_l'){
+      // console.log('index_l')
+      this.$router.replace("/order_list");
+    }
 
-          if (this.price) {
+  },
+  watch: {
+    $route: {
+      handler() {
+        this.get_data(this.$route.query.id);
+      },
+      deep: true
+    }
+  },
+  methods: {
+    // 推荐商品
+    recom_click(e) {
+      this.$router.replace({
+        path: "/order/goods_deta",
+        query: {
+          id: e.id
+        }
+      })
+    },
+    // 提交确认
+    submit_click() {
 
-            console.log(this.obj_spu)
-            console.log(this.price)
-            console.log(this.value)
+      if (this.price) {
 
-            let obj_spu_deta = {}
+        // console.log(this.obj_spu)
+        // console.log(this.price)
+        // console.log(this.value)
 
-            obj_spu_deta['obj_spus'] = this.obj_spu
-            obj_spu_deta['price'] = this.price
-            obj_spu_deta['num'] = this.value
-            obj_spu_deta['sku_id'] = this.sku_id
+        let obj_spu_deta = {}
 
-            localStorage.setItem('obj', JSON.stringify(obj_spu_deta))
+        obj_spu_deta['obj_spus'] = this.obj_spu
+        obj_spu_deta['price'] = this.price
+        obj_spu_deta['num'] = this.value
+        obj_spu_deta['sku_id'] = this.sku_id
 
-            this.$router.push({
-              path: '/orderDetails'
-            })
+        localStorage.setItem('obj', JSON.stringify(obj_spu_deta))
+
+        this.$router.push({
+          path: '/orderDetails'
+        })
+      } else {
+        this.$toast.error('请选择需要购买的商品');
+      }
+
+
+    },
+    // 单选框
+    van_radio(e, i) {
+      // console.log(e, i)
+      this.$forceUpdate();
+      i.check = true
+
+
+      let radio_arr = []
+      this.radio.forEach(item => {
+        radio_arr.push(item.attribute_value_id)
+      })
+
+      let radio = radio_arr,
+          arr = [];
+      for (let i = 0; i < radio.length; i++) {
+        if (radio[i] != undefined) {
+          arr.push(radio[i]);
+        }
+      }
+
+      // console.log(this.attribute.length);
+      // console.log(arr);
+
+
+      if (this.attribute.length == arr.length) {
+        for (let i = 0; i < this.sku_list.length; i++) {
+          var item = this.sku_list[i];
+          if (item.attribute_value_ids.toString() == arr.toString()) {
+            this.obj_spu.pic_url = item.pic_url
+            this.price = item.price
+            this.sku_id = item.id
+            this.isDisabled = false
+            this.priceShow = true
+            this.bgcolor = 2;
+            break;
           } else {
-            this.$toast.error('请选择需要购买的商品');
+            //未找到匹配商品 下单按钮置灰禁用 金额显示已下架
+            this.isDisabled = true
+            this.priceShow = false
+            this.bgcolor = 1
           }
+        }
+      }
 
-
-        },
-        // 单选框
-        van_radio(e, i) {
-          console.log(e, i)
-          this.$forceUpdate();
-          i.check = true
-
-
-          let radio_arr = []
-          this.radio.forEach(item => {
-            radio_arr.push(item.attribute_value_id)
-          })
-
-          let radio = radio_arr,
-              arr = [];
-          for (let i = 0; i < radio.length; i++) {
-            if (radio[i] != undefined) {
-              arr.push(radio[i]);
-            }
-          }
-
-          // console.log(this.attribute.length);
-          // console.log(arr);
-
-
-          if (this.attribute.length == arr.length) {
-            for (let i = 0; i < this.sku_list.length; i++) {
-              var item = this.sku_list[i];
-              if (item.attribute_value_ids.toString() == arr.toString()) {
-                this.obj_spu.pic_url = item.pic_url
-                this.price = item.price
-                this.sku_id = item.id
-                this.isDisabled = false
-                this.priceShow = true
-                this.bgcolor = 2;
-                break;
-              } else {
-                //未找到匹配商品 下单按钮置灰禁用 金额显示已下架
-                this.isDisabled = true
-                this.priceShow = false
-                this.bgcolor = 1
-              }
-            }
-          }
-
-        },
-        // 获取详情
-        get_data(e) {
-          this.$post(localStorage.getItem('http') + 'goods/get_detail', {
-            id: e,
-            token: localStorage.getItem('token'),
-          })
+    },
+    // 获取详情
+    get_data(e) {
+      this.$post(localStorage.getItem('http') + 'goods/get_detail', {
+        id: e,
+        token: localStorage.getItem('token'),
+      })
           .then(res => {
-            console.log(res)
+            // console.log(res)
             this.phone_content = res.data.spu.phone_content
             this.phone_buy_content = res.data.spu.phone_buy_content
             this.two_back = (res.data.two_back / 100).toFixed(2)
@@ -348,9 +363,9 @@
             // console.log(this.title)
             this.obj_spu = res.data.spu
 
-            if(res.data.spu.type == 2){
+            if (res.data.spu.type == 2) {
               this.show_type = true
-            }else{
+            } else {
               this.show_type = false
             }
             this.course_id = res.data.spu.id
@@ -359,169 +374,204 @@
             this.$wxShare(this.title, this.desc, location.href, res.data.spu.pic_url)
 
           })
-        },
-        // 点击跳转登录
-        jumpLogin(){
-          this.$router.push({path: '../login'});
-        },
-        // 立即下单 打开对话框
-        submit() {
-          if (!localStorage.getItem('token')) {
-            this.$dialog.confirm({
-              title: '登录状态',
-              message: '未登录，请登录',
+    },
+    // 点击跳转登录
+    jumpLogin() {
+      this.$router.push({path: '../login'});
+    },
+    // 立即下单 打开对话框
+    submit() {
+      if (!localStorage.getItem('token')) {
+        this.$dialog.confirm({
+          title: '登录状态',
+          message: '未登录，请登录',
+        })
+            .then(() => {
+              this.$router.push('/login')
             })
-                .then(() => {
-                  this.$router.push('/login')
-                })
-                .catch(() => {
-                  console.log('未登录')
-                });
-          } else {
-            this.openSimple = true
-          }
-        },
-        // 点击联系客服
-        cellKefu() {
-          this.show = true;
-          // if(!localStorage.getItem('token')){
-          //   this.$dialog.confirm({
-          //     title:'登录状态',
-          //     message:'未登录，请登录',
-          //   })
-          //       .then(()=>{
-          //         this.$router.push('/login')
-          //       })
-          //       .catch(()=>{
-          //         console.log('未登录')
-          //       });
-          // }else{
-          //   this.$toast.success('联系客服');
-          // }
-        },
-        // 关闭对话框
-        closeSimpleDialog() {
-          this.openSimple = false
-        },
-        // 获取推荐商品
-        get_goods() {
-          this.$post(localStorage.getItem('http') + 'goods/get_list', {
-            recommend: 1,
-            page: 1,
-            limit: 3
-          })
-              .then(res => {
-                console.log(res.data.list)
-                this.goods_list = res.data.list
-
-
-              })
-        },
-        // 返回首页
-        back_index() {
-          // this.$router.go(-2);
-          this.$router.replace('/')
-        },
-        // 邀请好友
-        get_invitationPoster(){
-          if(!localStorage.getItem('token')){
-            this.$dialog.confirm({
-              title:'登录状态',
-              message:'未登录，请登录',
-            })
-                .then(()=>{
-                  this.$router.push('/login')
-                })
-                .catch(()=>{
-                  console.log('未登录')
-                });
-          }else {
-            this.show_share = true
-            this.$post(localStorage.getItem('http') + 'goods/make_playbill', {
-              token: localStorage.getItem('token'),
-              id: this.id_share
-            }).then(res => {
-              console.log(res)
-              if (res.code == 1) {
-                // console.log(res)
-                this.pic_url_share = res.data.pic_url
-              }
-            })
-          }
-        },
-        // 关闭邀请海报弹窗
-        close_invitationPoster(){
-          this.show_share = false
-        },
-        // 增加积分
-        add_score(){
-          console.log(this.course_id)
-          this.$post(localStorage.getItem('http') + 'user_score/add', {
-            token: localStorage.getItem('token'),
-            source:2,
-            goods_id:this.course_id,
-            goods_type:1
-          }).then(res => {
-            console.log(res)
-            if(res.code == 1){
-              console.log('增加了')
-            }
-          })
-        },
-        // 转发增加积分
-        changeUrl(){
-          let currentUrl = location.href
-          let openidIndex_1 = currentUrl.indexOf('id=')
-          let openidLastIndex_1 = currentUrl.indexOf('&', openidIndex_1)
-          let openidIndex = currentUrl.indexOf('openid')
-          let openidLastIndex = currentUrl.indexOf('=', openidIndex)
-          // let short_course_id = ''
-          // let short_openid = ''
-          if(openidIndex > -1){
-            let leftStr = currentUrl.substring(openidIndex_1 + 3, openidLastIndex_1)
-            let rightStr = currentUrl.substring(openidLastIndex + 1);
-            // short_course_id = leftStr
-            // short_openid = rightStr
-            console.log('这是截取的course_id:'+ leftStr)
-            console.log('这是截取的openid:'+ rightStr)
-            this.$post(localStorage.getItem('http') + 'user_score/add', {
-              token: localStorage.getItem('token'),
-              source:3,
-              goods_id:leftStr,
-              goods_type:4,
-              openid: rightStr
-            }).then(res => {
-              console.log(res)
-              if (res.code == 1) {
-                console.log('转发积分增加了')
-              }
-            })
-          }
-        }
-        // 切换详情块
-        // choose_cls(index){
-        //   console.log(index)
-        //   this.isActive_cls = index;
-        //   if(index == 0){
-        //     this.show_cls_b = true
-        //   }else{
-        //     this.show_cls_b = false
-        //   }
-        // },
-      },
-      mounted() {
-        this.token = localStorage.getItem('token')
-        console.log(this.token)
-        if(this.token){
-          this.existence_token = true
-          this.isActive = false
-        }else{
-          this.existence_token = false
-          this.isActive = true
-        }
-
+            .catch(() => {
+              // console.log('未登录')
+            });
+      } else {
+        this.openSimple = true
       }
+    },
+    // 点击联系客服
+    cellKefu() {
+      this.show = true;
+      // if(!localStorage.getItem('token')){
+      //   this.$dialog.confirm({
+      //     title:'登录状态',
+      //     message:'未登录，请登录',
+      //   })
+      //       .then(()=>{
+      //         this.$router.push('/login')
+      //       })
+      //       .catch(()=>{
+      //         console.log('未登录')
+      //       });
+      // }else{
+      //   this.$toast.success('联系客服');
+      // }
+    },
+    // 关闭对话框
+    closeSimpleDialog() {
+      this.openSimple = false
+    },
+    // 获取推荐商品
+    get_goods() {
+      this.$post(localStorage.getItem('http') + 'goods/get_list', {
+        recommend: 1,
+        page: 1,
+        limit: 3
+      })
+          .then(res => {
+            // console.log(res.data.list)
+            this.goods_list = res.data.list
+
+
+          })
+    },
+    // 返回首页
+    back_index() {
+      // this.$router.go(-2);submit_left
+      this.$router.replace('/index_home')
+    },
+    // 邀请好友
+    get_invitationPoster() {
+      if (!localStorage.getItem('token')) {
+        this.$dialog.confirm({
+          title: '登录状态',
+          message: '未登录，请登录',
+        })
+            .then(() => {
+              this.$router.push('/login')
+            })
+            .catch(() => {
+              // console.log('未登录')
+            });
+      } else {
+        this.show_share = true
+        this.$post(localStorage.getItem('http') + 'goods/make_playbill', {
+          token: localStorage.getItem('token'),
+          id: this.id_share
+        }).then(res => {
+          // console.log(res)
+          if (res.code == 1) {
+            // console.log(res)
+            this.pic_url_share = res.data.pic_url
+          }
+        })
+      }
+    },
+    // 关闭邀请海报弹窗
+    close_invitationPoster() {
+      this.show_share = false
+    },
+    // 增加积分
+    add_score() {
+      // console.log(this.course_id)
+      this.$post(localStorage.getItem('http') + 'user_score/add', {
+        token: localStorage.getItem('token'),
+        source: 2,
+        goods_id: this.course_id,
+        goods_type: 1
+      }).then(res => {
+        // console.log(res)
+        if (res.code == 1) {
+          // console.log('增加了')
+        }
+      })
+    },
+    // 转发增加积分
+    changeUrl() {
+      let currentUrl = location.href
+      let openidIndex_1 = currentUrl.indexOf('id=')
+      let openidLastIndex_1 = currentUrl.indexOf('&', openidIndex_1)
+      let openidIndex = currentUrl.indexOf('openid')
+      let openidLastIndex = currentUrl.indexOf('=', openidIndex)
+      // let short_course_id = ''
+      // let short_openid = ''
+      if (openidIndex > -1) {
+        let leftStr = currentUrl.substring(openidIndex_1 + 3, openidLastIndex_1)
+        let rightStr = currentUrl.substring(openidLastIndex + 1);
+        // short_course_id = leftStr
+        // short_openid = rightStr
+        // console.log('这是截取的course_id:' + leftStr)
+        // console.log('这是截取的openid:' + rightStr)
+        this.$post(localStorage.getItem('http') + 'user_score/add', {
+          token: localStorage.getItem('token'),
+          source: 3,
+          goods_id: leftStr,
+          goods_type: 4,
+          openid: rightStr
+        }).then(res => {
+          // console.log(res)
+          if (res.code == 1) {
+            // console.log('转发积分增加了')
+          }
+        })
+      }
+    },
+    // 切换详情块
+    // choose_cls(index){
+    //   console.log(index)
+    //   this.isActive_cls = index;
+    //   if(index == 0){
+    //     this.show_cls_b = true
+    //   }else{
+    //     this.show_cls_b = false
+    //   }
+    // },
+
+  },
+  mounted() {
+    this.token = localStorage.getItem('token')
+    // console.log(this.token)
+    if (this.token) {
+      this.existence_token = true
+      this.isActive = false
+    } else {
+      this.existence_token = false
+      this.isActive = true
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.onScroll);
+  },
+  beforeRouteEnter (to, from, next) {
+    // console.log(to.name)
+    // console.log(from.name)
+    // console.log(next)
+    if(from.name == 'index_home'){
+      // console.log('首页');
+      next(vm=>{
+        // console.log(vm);
+        vm.panduan= 'index_y'
+      });
+    }else if(from.name == 'orderDetails' || from.name == 'index_home'){
+      // console.log('订单_首页');
+      next(vm=>{
+        // console.log(vm);
+        vm.panduan= 'index_d_1'
+      });
+    }else if(from.name == 'orderDetails' || from.name == 'order_list'){
+      // console.log('订单_列表');
+      next(vm=>{
+        // console.log(vm);
+        vm.panduan= 'index_d_2'
+      });
+    }else{
+      // console.log('列表');
+      next(vm=>{
+        // console.log(vm);
+        vm.panduan= 'index_l'
+      });
+    }
+  },
+
+
+};
 </script>
 
 <style lang="less" scoped>

@@ -76,7 +76,7 @@ export default {
         token: localStorage.getItem('token')
       })
       .then(res=> {
-        console.log(res);
+        // console.log(res);
         if(res.data.length == 0){
           this.show12 = true;
           this.tabCont = [];
@@ -87,7 +87,7 @@ export default {
       })
     },
     jumpLink(link){
-      console.log(link)
+      // console.log(link)
       window.location.href=link
     },
     get_height(){

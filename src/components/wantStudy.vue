@@ -57,7 +57,7 @@ export default {
         limit:limit
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         // this.monthList= res.data.price
         this.wantStudyList = res.data.list
         if(res.data.list.length == 0){

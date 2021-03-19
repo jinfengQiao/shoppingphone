@@ -91,7 +91,7 @@ export default {
     },
     getParams(index){
       this.stu = this.$route.query.stu;
-      console.log(this.stu)
+      // console.log(this.stu)
       if(this.stu == 2){
         this.imgPath = require('../assets/payPage/pay_fail.png'),
         this.sucTitle = '支付失败',

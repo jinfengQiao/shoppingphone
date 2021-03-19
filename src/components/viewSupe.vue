@@ -141,7 +141,7 @@ export default {
       this.shangji = false
     }
     let user_id =this.$route.query.id;
-    // console.log(user_id);
+    // console.log(user_id); 
     this.get_list(level,user_id);
   },
 }

@@ -90,7 +90,7 @@
             }
         },
         created() {
-          console.log(this.$route)
+          // console.log(this.$route)
           if(this.$route.query.quality) {
             // console.log(this.$route.query.quality)
             this.list_form.quality= this.$route.query.quality
@@ -123,7 +123,7 @@
             get_list( y) {
               this.$post(localStorage.getItem('http') + 'goods/get_list',y)
                 .then(res=> {
-                  console.log(res)
+                  // console.log(res)
                   this.goods_list = res.data.list
                   // if(res.data.list.length != 0){
                   //   var arr = [];
@@ -174,7 +174,7 @@
                 recommend: 0
               })
               .then(res=> {
-                console.log(res)
+                // console.log(res)
                 this.goods_list = res.data.list
               })
             },
@@ -207,7 +207,8 @@
             //   }
             // },
 
-        }
+        },
+
     }
 </script>
 

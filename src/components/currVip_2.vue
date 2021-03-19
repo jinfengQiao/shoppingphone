@@ -28,7 +28,7 @@ export default {
       this.height.height = window.innerHeight+'px'
     },
     listGo(index){
-      console.log(index)
+      // console.log(index)
       this.isActive = index;
     }
   },

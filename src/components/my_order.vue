@@ -175,7 +175,7 @@
                 id: e.id
               })
                 .then(res=> {
-                  console.log(res)
+                  // console.log(res)
                   if(res.code == 1) {
                     if(this.indexs == 0) {
                       this.get_list(this.form)
@@ -201,7 +201,7 @@
                 id: e.id
               })
               .then(res=> {
-                console.log(res)
+                // console.log(res)
                 if(res.code == 1) {
                   this.get_list(this.form)
                   this.$toast.success(res.msg);
@@ -213,14 +213,14 @@
             // 获取列表
             // get_list(y) {
             get_list() {
-              console.log(this.status)
+              // console.log(this.status)
               this.$post(localStorage.getItem('http') + 'order/get_list', {
                 token: localStorage.getItem('token'),
                 num:'',
                 refund:0,
                 status:this.status
               }).then(res=> {
-                console.log(res.data.list)
+                // console.log(res.data.list)
                 this.list= res.data.list
                 if(res.data.list == '' || res.data.list == null){
                   this.show12 = true;
@@ -260,7 +260,7 @@
             },
             listGo(index){
               this.isActive = index;
-              console.log(this.isActive)
+              // console.log(this.isActive)
               // var index1 = index + 1;
               // this.category_id = index1
               // console.log(this.isActive)
@@ -276,14 +276,14 @@
               this.$router.push({path: '/center'});
             },
             fun(){
-              console.log("监听到了");
+              // console.log("监听到了");
               this.$router.push({path: '/center'});
             }
         },
         created() {
           // this.get_list(this.form)
           this.status =this.$route.query.status;
-          console.log(this.status);
+          // console.log(this.status);
           // this.get_list()
           if(this.status == 0){
             this.isActive = 0

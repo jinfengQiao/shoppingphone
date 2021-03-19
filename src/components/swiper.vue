@@ -30,7 +30,7 @@
             get_swiper() {
                 this.$post(localStorage.getItem('http') + 'banner/get_shop_banner')
                     .then((res)=> {
-                        console.log(res)
+                        // console.log(res)
 
                         res.data.forEach((item,k)=> {
                             res.data[k].phone_pic_url= item.phone_pic_url

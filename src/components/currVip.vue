@@ -287,11 +287,9 @@ export default {
     changeCls2(index,id,n){
       this.isSelect2 = index;
       this.changeCls2Text = n.name
-      console.log(n)
       this.course_id = id
     },
     listGo(index){
-      console.log(index);
       this.idx = 0
 
       if(index == 0){
@@ -320,9 +318,7 @@ export default {
     },
     changeCls(index,id){
       this.isSelect = index;
-      console.log(id);
       this.category_id1 = id;
-      console.log(this.category_id1);
       this.get_clsList();
     },
     // changeCls1(index){
@@ -331,12 +327,9 @@ export default {
     son(idx,money){
       // this.inx = 0
       // this.idx = 0
-      console.log(idx)
-      // console.log(money);
       this.money = money
       this.index=idx;
       var index1 = idx + 1
-      // console.log(index1);
       this.time_long = index1
       if(index1 == 1){
         this.VipCode = '月卡'
@@ -350,26 +343,23 @@ export default {
 
     },
     toggleAddCls(index,id){
-      console.log(index)
-      console.log(id)
       // if(index == 0){
       //   this.get_courDetails();
       // }
       this.course_id = id
       this.get_courDetails(this.course_id)
-      console.log(this.course_id);
       this.isSelect11 = index+1
       this.$route.query.id = id
     },
     // 获取课程详情
     get_courDetails() {
-      console.log(this.course_id);
+      // console.log(this.course_id);
       this.$post(localStorage.getItem('http') + 'school/get_course_detail',{
         token: localStorage.getItem('token'),
         id:this.course_id
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         this.title = res.data.title
         this.content = res.data.content
         this.price = res.data.price
@@ -393,7 +383,7 @@ export default {
         type:1
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.monthList= res.data.price
         this.money = res.data.price[0].money
         this.two_back = res.data.price[0].two_back
@@ -406,7 +396,7 @@ export default {
         type:index1
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.monthList= res.data.price
         this.money = res.data.price[0].money
         this.card_id_share = index1
@@ -416,11 +406,11 @@ export default {
     get_class() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.contContHead= res.data
         this.title1 = res.data[0].name
         // this.category_id = res.data.id
-        console.log(this.title1)
+        // console.log(this.title1)
       })
     },
     // 获取课程列表
@@ -432,10 +422,10 @@ export default {
         keyword:this.keyword
       })
       .then(res=> {
-        console.log(res.data.list)
+        // console.log(res.data.list)
         this.contContCont= res.data.list
         // console.log(this.course_id);
-        console.log(this.contContCont);
+        // console.log(this.contContCont);
 
         if(res.data.list == '' || res.data.list == null){
           this.show12 = true;
@@ -457,17 +447,17 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         this.tcShow = true
         if(this.$route.query.id) {
-            console.log('单个详情跳转');
+            // console.log('单个详情跳转');
             this.course_id = this.$route.query.id
             this.get_courDetails(this.course_id)
 
         }else{
-          console.log('详情跳转');
+          // console.log('详情跳转');
           this.get_courDetails()
         }
       }
@@ -489,16 +479,16 @@ export default {
       // console.log('余额支付')
     },
     buyBtn(){
-      console.log(this.card_id)
-      console.log(this.time_long)
-      console.log(this.course_id)
-      console.log(this.category_id)
+      // console.log(this.card_id)
+      // console.log(this.time_long)
+      // console.log(this.course_id)
+      // console.log(this.category_id)
 
       this.$dialog.confirm({
         title:'是否确认购买',
       })
       .then(()=>{
-        console.log('支付中..')
+        // console.log('支付中..')
         this.$post(localStorage.getItem('http') + 'school/make_card_order',{
           token: localStorage.getItem('token'),
           card_id: this.card_id,
@@ -507,16 +497,16 @@ export default {
           category_id: this.category_id
         })
             .then(res=> {
-              console.log(res.data)
+              // console.log(res.data)
               if(res.code == 1){
                 // console.log('下单成功');
                 this.order_id = res.data.order_id
-                console.log(this.order_id);
+                // console.log(this.order_id);
                 this.order_type = res.data.order_type
-                console.log(this.order_type);
+                // console.log(this.order_type);
                 // 余额支付
                 if(this.weixinSelect == true){
-                  console.log('微信支付')
+                  // console.log('微信支付')
 
                   this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
                     token: localStorage.getItem('token'),
@@ -526,7 +516,7 @@ export default {
                     use_score: this.use_score
                   })
                       .then(res=> {
-                        console.log(res)
+                        // console.log(res)
                         window.WeixinJSBridge.invoke(
                             'getBrandWCPayRequest', res ,
                             function(res){
@@ -541,7 +531,7 @@ export default {
                             });
                       })
                 }else{
-                  console.log('余额支付')
+                  // console.log('余额支付')
                   this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
                     token: localStorage.getItem('token'),
                     order_id: this.order_id,
@@ -549,9 +539,8 @@ export default {
                     use_score: this.use_score
                   })
                       .then(res=> {
-                        console.log(res)
+                        // console.log(res)
                         if(res.code == 0){
-                          // console.log('余额不足')
                           this.$toast.error(res.msg)
                         }
                         if(res.code == 1){
@@ -566,7 +555,6 @@ export default {
             })
       })
       .catch(()=>{
-        console.log('未支付')
       });
     },
     // 邀请好友 海报
@@ -576,7 +564,6 @@ export default {
           token: localStorage.getItem('token'),
           card_id:this.card_id_share
         }).then(res => {
-          console.log(res)
           if(res.code == 1){
             // console.log(res)
             this.pic_url = res.data.pic_url
@@ -603,7 +590,7 @@ export default {
     // this.isSelect11 = ''
     var score = localStorage.getItem('score');
     this.score = score
-    console.log(this.score)
+    // console.log(this.score)
 
     var open_id = localStorage.getItem('openid')
     this.order_id = open_id

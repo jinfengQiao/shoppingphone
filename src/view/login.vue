@@ -219,7 +219,7 @@
 
         this.invite_openid = localStorage.getItem('invite_openid')
         // this.invite_openid = 'ouQXG1Ek07X-Rtl_aHj3GIvXgLi0'
-        console.log(this.invite_openid);
+        // console.log(this.invite_openid);
         this.get_Invitation_code();
 
       },
@@ -253,11 +253,11 @@
             // 登录接口
             user_login(y) {
               y.openid = localStorage.getItem('openid')
-              console.log(y.openid)
+              // console.log(y.openid)
               this.$post(localStorage.getItem('http') + 'user/login',y)
                 .then(res=> {
 
-                  console.log(res)
+                  // console.log(res)
                   if(res.code == 1) {
                     localStorage.setItem('token',res.data.token)
                     localStorage.setItem('phone',res.data.phone)
@@ -297,7 +297,7 @@
             user_reg(y) {
                 this.show_loading = true
                 this.$post(localStorage.getItem('http') + 'user/reg',y).then(res=> {
-                  console.log('获取到了'+ res)
+                  // console.log('获取到了'+ res)
                   if(res.code == 1) {
                     const TIME_COUNT = 2
                     if (!this.timer) {
@@ -351,7 +351,7 @@
             // 忘记密码确认
             confirm() {
               this.$refs.form.validate().then((result) => {
-                  console.log('form valid: ', result)
+                  // console.log('form valid: ', result)
                   if(result) {
                     if(this.validateForm.pass != this.validateForm.pass_two) {
                       this.error_text1= '两次密码不一致'
@@ -367,9 +367,9 @@
                 invite_openid: this.invite_openid
               })
               .then(res=> {
-                console.log(res)
+                // console.log(res)
                 this.validateForm.invite_code= res.data.invite_code
-                console.log(this.validateForm)
+                // console.log(this.validateForm)
               })
             },
 

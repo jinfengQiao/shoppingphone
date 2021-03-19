@@ -311,6 +311,15 @@
             // console.log(this.open_id)
             this.get_yue();
         },
+        mounted(){
+          if (window.history && window.history.pushState) {
+            history.pushState(null, null, document.URL);
+            window.addEventListener('popstate', this.goBack, false);
+          }
+        },
+        destroyed(){
+        window.removeEventListener('popstate', this.goBack, false);
+      },
         methods: {
             // 获取订单详情
             get_detail() {
@@ -843,6 +852,10 @@
               console.log(res.data)
               this.balance = res.data.balance
             })
+          },
+          goBack(){
+            this.$router.replace({path: '/center'});
+            //replace替换原路由，作用是避免回退死循环
           }
         },
         sockets: {

@@ -168,7 +168,7 @@ export default {
           num: this.num_money
         })
         .then(res=> {
-          console.log(res.data)
+          // console.log(res.data)
 
           if( res.code == 1){
             this.$toast.success(res.msg);
@@ -197,7 +197,7 @@ export default {
           openid: localStorage.getItem('openid'),
         })
         .then(res=> {
-          console.log(res.data)
+          // console.log(res.data)
           if(res.code == 1){
             this.tranShow1 = false
             this.$toast.success(res.msg);

@@ -100,7 +100,6 @@
           this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
         },
         methods: {
-
             // 列表跳转详情
             jumpDoods_deta(sku) {
               this.$router.push({
@@ -176,7 +175,40 @@
                   this.shujuList = res.data.list;
                 })
             },
+            // weixin_ClosePage(){
+            //   WeixinJSBridge.call('closeWindow');
+            // },
+            goBack (e) {
+              history.pushState(null, null, document.URL);
+              console.log(e)
+              // if(e.timeStamp != 0){
+              //   this.$dialog.confirm({
+              //     title: '',
+              //     message: '是否退出',
+              //   })
+              //   .then(() => {
+              //     // on confirm
+              //     WeixinJSBridge.call('closeWindow');
+              //   })
+              //   .catch(() => {
+              //     // on cancel
+              //   });
+              // }else{
+              //   WeixinJSBridge.call('closeWindow');
+              // }
+            },
 
+
+        },
+        mounted () {
+          if (window.history && window.history.pushState) {
+            // 向历史记录中插入了当前页
+            history.pushState(null, null, document.URL);
+            window.addEventListener('popstate', this.goBack, false);
+          }
+        },
+        destroyed () {
+          window.removeEventListener('popstate', this.goBack, false);
         },
         components: {
             swiper,

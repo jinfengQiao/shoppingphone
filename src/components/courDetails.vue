@@ -343,7 +343,7 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         this.$post(localStorage.getItem('http') + 'school/want_study',{
@@ -351,21 +351,19 @@ export default {
           token: localStorage.getItem('token')
         })
         .then(res=> {
-          console.log(res.data)
+          // console.log(res.data)
           var data = res.data
           console.log(data)
           if(res.data == 1){
-            console.log('添加成功');
             this.lay_type1 = 1
             this.data = 1
             this.want_study = 1
           }
           if(res.data == 0){
-            console.log('取消成功');
             this.lay_type1 = 0
             this.data = 0
             this.want_study = 0
-            console.log(this.want_study)
+            // console.log(this.want_study)
           }
         })
       }
@@ -379,7 +377,7 @@ export default {
         id:id
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.teacher_de = res.data.teacher
         this.have = res.data.have
         this.lessonId = res.data.id
@@ -415,14 +413,11 @@ export default {
           this.show_price = false
         }
         if(res.data.teacher_id == 0){
-          console.log('没有讲师')
           this.no_teacher = true
         }else{
-          console.log('有讲师')
           this.no_teacher = false
         }
 
-        console.log(location.href)
         // this.$wxShare(this.title_title,this.desc,location.href,res.data.video_cover,res.data.id,4)
         this.$wxShare(this.title_title,this.desc,location.href,res.data.video_cover)
       })
@@ -437,7 +432,6 @@ export default {
           id : this.id_set,
           token: localStorage.getItem('token'),
         }).then(res=> {
-          console.log(res)
           this.lesson = res.data.list
           this.title = res.data.list[0].title
           this.count = '课程目录 ' + '(' + res.data.count + ')'
@@ -450,7 +444,6 @@ export default {
         id : this.id_set,
         token: localStorage.getItem('token'),
       }).then(res=> {
-        console.log(res)
         this.lesson = res.data.list
         this.title = res.data.list[0].title
         this.count = '课程目录 ' + '(' + res.data.count + ')'
@@ -470,7 +463,7 @@ export default {
       //         console.log('未登录')
       //       });
       // }else{
-        console.log(this.course_id)
+      //   console.log(this.course_id)
         this.$router.push({
             path: './currVip',
             query:{
@@ -492,7 +485,7 @@ export default {
           this.$router.push('/login')
         })
         .catch(()=>{
-          console.log('未登录')
+          // console.log('未登录')
         });
       }else{
         this.tcShow = true
@@ -513,7 +506,7 @@ export default {
       // console.log('余额支付')
     },
     buyBtn(){
-      console.log(this.course_id)
+      // console.log(this.course_id)
       this.$dialog.confirm({
         title:'是否确认购买',
         // message:'取消，确认',
@@ -526,16 +519,16 @@ export default {
           lesson_id:0
         })
         .then(res=> {
-          console.log(res.data)
+          // console.log(res.data)
           if(res.code == 1){
             // console.log('下单成功');
             this.order_id = res.data.order_id
-            console.log(this.order_id);
+            // console.log(this.order_id);
             this.order_type = res.data.order_type
-            console.log(this.order_type);
+            // console.log(this.order_type);
             // 余额支付
             if(this.weixinSelect == true){
-              console.log('微信支付')
+              // console.log('微信支付')
               this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
                 token: localStorage.getItem('token'),
                 order_id: this.order_id,
@@ -548,7 +541,7 @@ export default {
                   window.WeixinJSBridge.invoke(
                     'getBrandWCPayRequest', res ,
                     function(res){
-                      console.log(res);
+                      // console.log(res);
                       if(res.err_msg == "get_brand_wcpay_request:ok"){
                         location.href = "/#/lesson";
                         // this.$router.push({
@@ -569,12 +562,12 @@ export default {
                   onBridgeReady(res);
                 }
 
-                console.log(res)
+                // console.log(res)
 
               })
 
             }else{
-              console.log('余额支付')
+              // console.log('余额支付')
               this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
                 token: localStorage.getItem('token'),
                 order_id: this.order_id,
@@ -582,7 +575,7 @@ export default {
                 use_score: this.use_score
               })
               .then(res=> {
-                console.log(res)
+                // console.log(res)
                 if(res.code == 0){
                   // console.log('余额不足')
                   this.$toast.error(res.msg)
@@ -599,13 +592,13 @@ export default {
         })
       })
       .catch(()=>{
-        console.log('未支付')
+        // console.log('未支付')
       });
 
     },
     // 播放视频
     playVideo(n){
-      console.log(n)
+      // console.log(n)
       this.lesson_id = n.id
       var video = document.getElementById("video");
       if(n.have == true){
@@ -616,11 +609,11 @@ export default {
         }
         this.viewing_times();
       }else{
-        console.log(this.rule)
+        // console.log(this.rule)
         if(n.rule == 1){
-          console.log(n)
+          // console.log(n)
           this.limit = n.try_see_time_s
-          console.log(this.limit)
+          // console.log(this.limit)
           this.video_url = n.video_url
           this.playVideoBox = true;
           if(video.pause){
@@ -658,7 +651,7 @@ export default {
     },
     // 返回首页
     back_index(){
-      this.$router.push({path:'/'});
+      this.$router.replace({path:'/index_home'});
     },
     // 邀请好友 海报
     get_invitationPoster(){
@@ -671,7 +664,7 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         this.show_share = true
@@ -679,7 +672,7 @@ export default {
           token: localStorage.getItem('token'),
           id:this.id_share
         }).then(res => {
-          console.log(res)
+          // console.log(res)
           if(res.code == 1){
             // console.log(res)
             this.pic_url = res.data.pic_url
@@ -693,7 +686,7 @@ export default {
     },
     // 观看拦截
     get_time(){
-      console.log(this.limit);
+      // console.log(this.limit);
       // let date = this.limit * 1000`
       //
       this.$refs.video.addEventListener('play', this.get_addevent1)
@@ -703,7 +696,7 @@ export default {
           this.$refs.video.pause();
           this.$refs.video.currentTime = this.limit
           this.tcShow = true
-          console.log('结束')
+          // console.log('结束')
         }
       })
     },
@@ -712,7 +705,7 @@ export default {
       this.$post(localStorage.getItem('http') + 'school/lesson_hit', {
         lesson_id:this.lesson_id
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         if(res.code == 1){
           // console.log(res)
           this.pic_url = res.data.pic_url
@@ -720,7 +713,7 @@ export default {
       })
     },
     get_addevent1(e) {
-      console.log(e.target.currentTime)
+      // console.log(e.target.currentTime)
       if(e.target.currentTime > this.limit){
         this.$refs.video.pause();
         this.$refs.video.currentTime = this.limit
@@ -728,7 +721,7 @@ export default {
       }else{
         const newDate = this.limit - e.target.currentTime
         this.timeout = setTimeout(() => {
-          console.log('结束')
+          // console.log('结束')
           exitFullscreen('#video');
           this.$refs.video.pause();
           clearTimeout(this.timeout)
@@ -737,7 +730,7 @@ export default {
       }
     },
     get_addevent(e){
-        console.log(e.target.currentTime)
+        // console.log(e.target.currentTime)
         if(e.target.currentTime > this.limit){
           this.$refs.video.pause();
           this.$refs.video.currentTime = this.limit
@@ -746,7 +739,7 @@ export default {
           // if(this.playVideoBox) {
           const newDate = this.limit - e.target.currentTime
           this.timeout = setTimeout(() => {
-            console.log('结束')
+            // console.log('结束')
             this.$refs.video.pause();
             clearTimeout(this.timeout)
             this.tcShow = true
@@ -756,16 +749,16 @@ export default {
     },
     // 浏览增加积分
     add_score(){
-      console.log(this.course_id)
+      // console.log(this.course_id)
       this.$post(localStorage.getItem('http') + 'user_score/add', {
         token: localStorage.getItem('token'),
         source:2,
         goods_id:this.course_id,
         goods_type:4
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         if(res.code == 1){
-          console.log('增加了')
+          // console.log('增加了')
         }
       })
     },
@@ -783,8 +776,8 @@ export default {
         let rightStr = currentUrl.substring(openidLastIndex + 1);
         // short_course_id = leftStr
         // short_openid = rightStr
-        console.log('这是截取的course_id:'+ leftStr)
-        console.log('这是截取的openid:'+ rightStr)
+        // console.log('这是截取的course_id:'+ leftStr)
+        // console.log('这是截取的openid:'+ rightStr)
         this.$post(localStorage.getItem('http') + 'user_score/add', {
           token: localStorage.getItem('token'),
           source:3,
@@ -792,9 +785,9 @@ export default {
           goods_type:4,
           openid: rightStr
         }).then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.code == 1) {
-            console.log('转发积分增加了')
+            // console.log('转发积分增加了')
           }
         })
       }
@@ -805,7 +798,7 @@ export default {
         token: localStorage.getItem('token'),
         id:id_follow
       }).then(res=>{
-        console.log(res)
+        // console.log(res)
         if(res.code == 1){
           this.get_courDetails(this.id_set);
         }
@@ -830,10 +823,10 @@ export default {
 
 
     let id = this.$route.query.id;
-    console.log(id);
+    // console.log(id);
 
     this.id_set = id
-    console.log(this.id_set);
+    // console.log(this.id_set);
     this.get_courDetails(id);
     this.get_lesson_list(id);
 
@@ -844,7 +837,7 @@ export default {
   },
   mounted() {
     this.token = localStorage.getItem('token')
-    console.log(this.token)
+    // console.log(this.token)
     if(this.token){
       this.existence_token = true
       this.isActive = false

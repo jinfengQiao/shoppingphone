@@ -78,8 +78,8 @@ export default {
       this.$router.push('./moneyDetailed');
     },
     listGo(index,name){
-      console.log(index)
-      console.log(name)
+      // console.log(index)
+      // console.log(name)
       this.isActive = index;
       // var index1 = index + 1;
       this.spanName = name
@@ -107,7 +107,7 @@ export default {
         category_id:this.category_id
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.lessonList = res.data
         if(this.lessonList == '' || this.lessonList == null){
           this.show12 = true;

@@ -114,7 +114,7 @@ export default {
         limit:this.limit
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         if (res.data.list.length != 0){
           var arr = [];
           arr = this.jifenList;

@@ -165,33 +165,6 @@ export default {
       show_type:true,
     }
   },
-  mounted() {
-    let obj_spu= {}
-      obj_spu= JSON.parse(localStorage.getItem('obj'))
-      this.order_info_show= false
-      this.harvest_address_show= true
-      this.obj_show= true
-      this.address_clicks= true
-
-      this.arr_spu.push(obj_spu);
-      this.showType = obj_spu.obj_spus.type
-      // console.log(this.showType);
-      if(this.showType == 2){
-        this.show_type = true
-      }else{
-        this.show_type = false
-      }
-      this.num_price = (parseFloat(obj_spu.price) * obj_spu.num).toFixed(2);
-
-      if(localStorage.getItem('token')) {
-        if(this.$route.query.address_id) {
-          this.user_address_get_detail()
-        }else{
-          this.user_address_get_list()
-        }
-      }
-
-  },
   methods: {
     pay_click() {
       // 下单
@@ -226,7 +199,6 @@ export default {
       else{
         return;
       }
-
     },
     // 返回上级
     cancel() {
@@ -236,14 +208,13 @@ export default {
     make_order(y) {
       this.$post(localStorage.getItem('http') + 'order/make_order',y)
           .then(res=> {
-              console.log(res)
+              // console.log(res)
             if(res.code == 1) {
               //携带order_id跳转到订单详情页面 进行支付 order_id为res.data
               this.$router.push({
                 path: '/deta',
                 query:{
                   id: res.data.order_id
-
                 }
               })
             }else{
@@ -295,7 +266,7 @@ export default {
         if(this.harvest_address_show) {
           //   console.log(localStorage.getItem('token'))
           if(localStorage.getItem('token')) {
-            this.$router.push({
+            this.$router.replace({
               path: '/order/add_address'
             })
           }else{
@@ -312,11 +283,56 @@ export default {
 
       }
     },
-
     // 返回
-    bank() {
-      this.$router.go(-1)
+    // bank() {
+    //   this.$router.go(-1)
+    // },
+    goBack(){
+      this.$router.replace({
+        path: '/order/goods_deta',
+        query: {
+          id: this.id
+        }
+      });
+      // console.log('点击了一下')
+      //replace替换原路由，作用是避免回退死循环
     },
+  },
+  destroyed(){
+    window.removeEventListener('popstate', this.goBack, false);
+  },
+  mounted() {
+    let obj_spu= {}
+    obj_spu= JSON.parse(localStorage.getItem('obj'))
+    this.order_info_show= false
+    this.harvest_address_show= true
+    this.obj_show= true
+    this.address_clicks= true
+
+    this.id = obj_spu.obj_spus.id
+    // console.log(this.id)
+
+    this.arr_spu.push(obj_spu);
+    this.showType = obj_spu.obj_spus.type
+    // console.log(this.showType);
+    if(this.showType == 2){
+      this.show_type = true
+    }else{
+      this.show_type = false
+    }
+    this.num_price = (parseFloat(obj_spu.price) * obj_spu.num).toFixed(2);
+
+    if(localStorage.getItem('token')) {
+      if(this.$route.query.address_id) {
+        this.user_address_get_detail()
+      }else{
+        this.user_address_get_list()
+      }
+    }
+    if (window.history && window.history.pushState) {
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', this.goBack, false);
+    }
 
   },
   components:{

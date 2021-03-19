@@ -9,8 +9,8 @@
             </div>
             <span>{{n.name}}</span>
           </div>
-          <div class="cli_follow_b" @click="cli_follow(n.id)">
-            <span class="follow_ok" v-if="follow_ok">已关注</span>
+          <div class="cli_follow_b" @click="cli_follow(n.id,inx)">
+            <span class="follow_ok" v-if="n.attr_a">已关注</span>
             <span class="follow_no" v-else>关注</span>
           </div>
         </div>
@@ -35,7 +35,6 @@ export default {
   name: "follow",
   data(){
     return{
-      follow_ok:true,
       show12:false,
       attr_teacher:[],
       height:{
@@ -46,18 +45,14 @@ export default {
   },
   methods: {
     // 点击关注
-    cli_follow(id) {
+    cli_follow(id,inx) {
       this.$post(localStorage.getItem('http') + 'teacher/attr', {
         token: localStorage.getItem('token'),
         id: id
       }).then(res => {
-        if (res.code == 1) {
-          if (this.follow_ok == true) {
-            this.follow_ok = false
-          } else {
-            this.follow_ok = true
-          }
-        }
+        console.log(res.data.attr)
+        this.attr_teacher[inx].attr_a = res.data.attr
+
       })
     },
     // 获取关注讲师
@@ -71,7 +66,7 @@ export default {
             this.show12 = true;
           } else {
             this.show12 = false
-            this.attr_teacher = res.data
+            this.attr_teacher = res.data.map(item =>({...item, attr_a: 1}))
           }
         }
       })
@@ -116,10 +111,10 @@ export default {
     li{
       width: 100%;
       //height: 371px;
-      padding: 10px 15px;
+      padding: 20px 15px;
       box-sizing: border-box;
       background-color: #ffffff;
-      border-bottom: 1px solid rgba(210, 210, 210, 1);
+      border-bottom: 1px solid rgba(210, 210, 210, 0.3);
       .li_h{
         display: flex;
         justify-content: space-between;
@@ -197,7 +192,7 @@ export default {
             }
             span{
               //margin-top: 12px;
-              display: inline;
+              display: inline-block;
               width: 100%;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -213,6 +208,9 @@ export default {
           display: none;
         }
       }
+    }
+    li:last-child{
+      border: none;
     }
   }
 }

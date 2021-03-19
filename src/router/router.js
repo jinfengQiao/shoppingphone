@@ -25,7 +25,6 @@ import buSchool from "../components/buSchool";
 import wantStudy from "../components/wantStudy";
 import lesson from "../components/lesson";
 import signIn from "../components/signIn";
-import aaaaa from "../components/aaaaa";
 import footer_bar from "../components/footer_bar";
 import subordinate from "../components/subordinate";
 import viewSupe from "../components/viewSupe";
@@ -62,6 +61,7 @@ const routes= [
             children: [
                 {
                     path: 'index_home',
+                    name:'index_home',
                     component: index_home,
                     meta: {
                         title: '首页',
@@ -71,6 +71,7 @@ const routes= [
                 {
                     path: 'order_list',
                     component: order_list,
+                    name:'order_list',
                     meta: {
                         title: '商品列表'
                     }
@@ -81,6 +82,7 @@ const routes= [
         {
             path: '/login',
             component: login,
+            name:'login',
             meta: {
                 title: '登录'
             }
@@ -88,10 +90,12 @@ const routes= [
         {
             path: '/order',
             component: order,
+            name:'order',
             children: [
                 {
                     path: 'all_service',
                     component: all_service,
+                    name:'all_service',
                     meta: {
                         title: '全部服务'
                     }
@@ -99,6 +103,7 @@ const routes= [
                 {
                     path: 'goods_deta',
                     component: goods_deta,
+                    name:'goods_deta',
                     meta: {
                         title: '商品详情'
                     }
@@ -106,6 +111,7 @@ const routes= [
                 {
                     path: 'my_order',
                     component: my_order,
+                    name:'my_order',
                     meta: {
                         title: '我的订单'
                     }
@@ -113,6 +119,7 @@ const routes= [
                 {
                     path: 'address',
                     component: address,
+                    name:'address',
                     meta: {
                         title: '收货地址'
                     }
@@ -120,6 +127,7 @@ const routes= [
                 {
                     path: 'add_address',
                     component: add_address,
+                    name:'add_address',
                     meta: {
                         title: '新增收货地址'
                     }
@@ -127,6 +135,7 @@ const routes= [
                 {
                     path: 'edit_address',
                     component: edit_address,
+                    name:'edit_address',
                     meta: {
                         title: '编辑收货地址'
                     }
@@ -134,6 +143,7 @@ const routes= [
                 {
                     path: 'apply_address',
                     component: apply_address,
+                    name:'apply_address',
                     meta: {
                         title: '申请退款'
                     }
@@ -141,6 +151,7 @@ const routes= [
                 {
                     path: '/payPage',
                     component: payPage,
+                    name:'payPage',
                     meta: {
                         title: '支付页'
                     }
@@ -151,6 +162,7 @@ const routes= [
         {
             path: '/deta',
             component: deta,
+            name:'deta',
             meta: {
                 title: '订单详情',
                 keepAlive:false
@@ -159,6 +171,7 @@ const routes= [
         {
             path: '/refund',
             component: refund,
+            name:'refund',
             meta: {
                 title: '退款详情'
             }
@@ -166,6 +179,7 @@ const routes= [
         {
             path: '/orderDetails',
             component: orderDetails,
+            name:'orderDetails',
             meta: {
                 title: '订单详情'
             }
@@ -173,6 +187,7 @@ const routes= [
         {
             path:'/center',
             component: center,
+            name:'center',
             meta: {
                 title: '个人中心'
             }
@@ -180,6 +195,7 @@ const routes= [
         {
             path:'/modifyPage',
             component: modifyPage,
+            name:'modifyPage',
             meta: {
                 title: '修改页'
             }
@@ -187,6 +203,7 @@ const routes= [
         {
             path:'/rebate',
             component: rebate,
+            name:'rebate',
             meta: {
                 title: '返利'
             }
@@ -194,6 +211,7 @@ const routes= [
         {
             path:'/rebate_rules',
             component: rebate_rules,
+            name:'rebate_rules',
             meta: {
                 title: '返利规则'
             }
@@ -201,6 +219,7 @@ const routes= [
         {
             path:'/integral',
             component: integral,
+            name:'integral',
             meta: {
                 title: '积分'
             }
@@ -208,6 +227,7 @@ const routes= [
         {
             path:'/recharge',
             component: recharge,
+            name:'recharge',
             meta: {
                 title: '充值'
             }
@@ -215,6 +235,7 @@ const routes= [
         {
             path:'/moneyDetailed',
             component: moneyDetailed,
+            name:'moneyDetailed',
             meta: {
                 title: '零钱明细'
             }
@@ -222,6 +243,7 @@ const routes= [
         {
             path:'/consultation',
             component: consultation,
+            name:'consultation',
             meta: {
                 title: '咨询卡'
             }
@@ -229,6 +251,7 @@ const routes= [
         {
             path:'/buSchool',
             component: buSchool,
+            name:'buSchool',
             meta: {
                 title: '商学院'
             }
@@ -236,6 +259,7 @@ const routes= [
         {
             path:'/wantStudy',
             component: wantStudy,
+            name:'wantStudy',
             meta: {
                 title: '我想学'
             }
@@ -243,6 +267,7 @@ const routes= [
         {
             path:'/lesson',
             component: lesson,
+            name:'lesson',
             meta: {
                 title: '我的课程'
             }
@@ -250,6 +275,7 @@ const routes= [
         {
             path:'/follow',
             component: follow,
+            name:'follow',
             meta: {
                 title: '我的关注'
             }
@@ -257,20 +283,15 @@ const routes= [
         {
             path:'/signIn',
             component: signIn,
+            name:'signIn',
             meta: {
                 title: '签到'
             }
         },
         {
-            path:'/aaaaa',
-            component: aaaaa,
-            meta: {
-                title: '日历签到测试'
-            }
-        },
-        {
             path:'/footer_bar',
             component: footer_bar,
+            name:'footer_bar',
             meta: {
                 title: '公共脚'
             }
@@ -278,6 +299,7 @@ const routes= [
         {
             path:'/subordinate',
             component: subordinate,
+            name:'subordinate',
             meta: {
                 title: '我的下级'
             }
@@ -285,6 +307,7 @@ const routes= [
         {
             path:'/viewSupe',
             component: viewSupe,
+            name:'viewSupe',
             meta: {
                 title: '查看上级'
             }
@@ -292,6 +315,7 @@ const routes= [
         {
             path:'/member',
             component: member,
+            name: 'member',
             meta: {
                 title: '会员等级'
             }
@@ -299,6 +323,7 @@ const routes= [
         {
             path:'/consul',
             component: consul,
+            name: 'consul',
             meta: {
                 title: '咨询卡'
             }
@@ -306,6 +331,7 @@ const routes= [
         {
             path:'/currVip',
             component: currVip,
+            name: 'currVip',
             meta: {
                 title: '课程vip'
             }
@@ -313,6 +339,7 @@ const routes= [
         {
             path:'/search',
             component: search,
+            name: 'search',
             meta: {
                 title: '搜索页'
             }
@@ -320,6 +347,7 @@ const routes= [
         {
             path:'/courDetails',
             component: courDetails,
+            name: 'courDetails',
             meta: {
                 title: '课程详情'
             }
@@ -327,6 +355,7 @@ const routes= [
         {
             path:'/artiDetails',
             component: artiDetails,
+            name: 'artiDetails',
             meta: {
                 title: '文章详情'
             }
@@ -334,6 +363,7 @@ const routes= [
         {
             path:'/payComp',
             component: payComp,
+            name: 'payComp',
             meta: {
                 title: '支付组件'
             }
@@ -341,6 +371,7 @@ const routes= [
         {
             path:'/balance',
             component: balance,
+            name: 'balance',
             meta: {
                 title: '余额'
             }
@@ -348,6 +379,7 @@ const routes= [
         {
             path:'/refund_page',
             component: refund_page,
+            name: 'refund_page',
             meta: {
                 title: '售后服务'
             }
@@ -355,11 +387,15 @@ const routes= [
         {
             path:'/aboutInstructor',
             component: aboutInstructor,
+            name:'aboutInstructor',
             meta: {
                 title: '讲师介绍'
             }
         },
     ]
+
+
+
 
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
@@ -367,10 +403,19 @@ Router.prototype.push = function push(location) {
 }
 
 const router = new Router({
+    // mode:'history',
     routes: routes
 })
 
-
+// router.beforeEach((to, from, next) => {
+//     console.log('开始页面切换');
+//     console.log(from.fullPath)
+//     if(from.fullPath == '/index_home'){
+//         // window.location.href = '/';
+//         console.log(to.name)
+//     }
+//     next();
+// });
 
 router.beforeEach((to,form,next) => {
     if (window._hmt) {
@@ -384,15 +429,6 @@ router.beforeEach((to,form,next) => {
     next();
 
 
-    // // 监听路由变化，阻止首页后退
-    // this.allowBack = true; // 设置默认值
-    // if (to.meta.allowBack !== undefined) {
-    //     this.allowBack = to.meta.allowBack;
-    // }
-    // if (!to.meta.allowBack) {
-    //     history.pushState(null, null, location.href);
-    // }
-    // next()
 })
 
 

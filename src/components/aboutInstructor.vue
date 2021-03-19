@@ -72,6 +72,7 @@ export default {
         attr:'',
         pic_url:'',
         info:'',
+        face_url:'',
       },
       page:1,
       limit:15,
@@ -83,6 +84,7 @@ export default {
 
     }
   },
+
   methods:{
     // 关注
     cli_follow(){
@@ -91,15 +93,15 @@ export default {
         id:this.teacher_id
       }).then(res=>{
         if(res.code == 1){
-          this.get_teacherDetail();
+          this.get_teacherDetail(this.teacher_id);
           this.isSel = 0
         }
       })
     },
     // 切换课程类
     listGo(inx,id){
-      console.log(inx);
-      console.log(id);
+      // console.log(inx);
+      // console.log(id);
       this.isSel = inx
       this.category_id = id
       this.get_clsList(this.category_id);
@@ -110,7 +112,7 @@ export default {
         token: localStorage.getItem('token'),
         id:teacher_id
       }).then(res=>{
-        console.log(res)
+        // console.log(res)
         this.teacher_detail = res.data
         this.list_curr = res.data.category
         if(res.data.category == ''){
@@ -131,10 +133,11 @@ export default {
         page:this.page,
         limit:this.limit,
         category_id:this.category_id,
-        keyword:this.keyword
+        keyword:this.keyword,
+        teacher_id:this.teacher_id,
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.clsList = res.data.list
       })
     },
@@ -285,7 +288,10 @@ export default {
         //display: flex;
         //justify-content: center;
         //align-items: center;
-        width: 75px;
+        //margin-right: 15px;
+        margin-right: 2%;
+        //padding: 4px 18px;
+        width: 23.5%;
         //height: 35px;
         height: 32px;
         line-height: 32px;
@@ -296,10 +302,9 @@ export default {
         font-weight: 400;
         color: #68A0FF;
         //margin-bottom: 10px;
-        margin-right: 15px;
       }
       li:last-child{
-        margin-right: 0;
+        margin-right: 0!important;
       }
     }
   }

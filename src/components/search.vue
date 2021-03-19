@@ -67,16 +67,16 @@ export default {
     },
 
     searchBtn(){
-      console.log(this.keyword)
+      // console.log(this.keyword)
       this.$post(localStorage.getItem('http') + 'school/get_article',{
         page:1,
         limit:10,
         keyword:this.keyword
       })
       .then(res=> {
-        console.log(res.data.list)
+        // console.log(res.data.list)
         this.contContCont1 = res.data.list
-        console.log(this.keyword)
+        // console.log(this.keyword)
 
         if(this.keyword == '' || this.keyword == null){
           this.contContCont1 = ''

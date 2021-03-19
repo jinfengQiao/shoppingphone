@@ -165,7 +165,7 @@ export default {
           header:{'Content-Type':'multipart/form-data'},
           data:formData,
         }).then((res)=>{
-          console.log(res)
+          // console.log(res)
           if(res.data.code == 1){
             this.face_url = res.data.data.save_name
           }else{
@@ -220,7 +220,7 @@ export default {
       }, 500)
     },
     confirmPicker1(e){
-      console.log(e);
+      // console.log(e);
       // console.log(e[0].name);
       let province_list = e[0].name;
       let city_list = e[1].name;
@@ -235,7 +235,7 @@ export default {
       var da = new Date();
       var birth = da.getFullYear(this.birth) +  "/" + da.getMonth(this.birth) +  "/" + da.getDay(this.birth);
 
-      console.log(this.zhuangtai)
+      // console.log(this.zhuangtai)
       this.$post(localStorage.getItem('http') + 'user_info/edit',{
         token: localStorage.getItem('token'),
         nickname: this.zhuangtai,
@@ -248,7 +248,7 @@ export default {
       })
       .then(res=> {
         if(res.code == 1){
-          console.log(res.data)
+          // console.log(res.data)
           // console.log(res.data.save_name)
           this.$toast.success('修改成功');
           this.$router.push('./center');
@@ -266,9 +266,9 @@ export default {
     })
     .then(res=> {
 
-      console.log(res)
+      // console.log(res)
       this.face_url = res.data.face_url
-      console.log(this.face_url)
+      // console.log(this.face_url)
       this.zhuangtai = res.data.nickname
       if(res.data.birth){
         let arr = res.data.birth.split("/");
@@ -281,8 +281,8 @@ export default {
 
       this.province_name = res.data.province_name
       this.city_name = res.data.city_name
-      console.log(this.province_name)
-      console.log(this.city_name)
+      // console.log(this.province_name)
+      // console.log(this.city_name)
 
       if(!this.province_name || !this.city_name){
         this.areaValue = '请选择'
@@ -291,8 +291,8 @@ export default {
       }
       this.province_id = res.data.province_id
       this.city_id = res.data.city_id
-      console.log(this.province_id)
-      console.log(this.city_id)
+      // console.log(this.province_id)
+      // console.log(this.city_id)
 
 
 
@@ -310,7 +310,7 @@ export default {
     }),
     this.$post(localStorage.getItem('http') + 'region/get_region_list',{})
     .then(res=> {
-      console.log(res.data)
+      // console.log(res.data)
       this.areaList = res.data
       this.province_list = res.data.province_list
       this.city_list = res.data.city_list

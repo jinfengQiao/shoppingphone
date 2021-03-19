@@ -41,7 +41,7 @@
           get_list() {
             this.$post(localStorage.getItem('http') + 'goods_category/get_nav')
               .then(res=> {
-                  // console.log(res.data)
+                  // console.log(res.data) 
                   this.list= res.data
               })
           },

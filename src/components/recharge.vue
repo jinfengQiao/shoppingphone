@@ -83,7 +83,7 @@ export default {
         token: localStorage.getItem('token'),
         total: this.moneyNum
       }).then(res=> {
-        // console.log(res);
+        // console.log(res); 
         this.order_id = res.data.order_id
         this.order_type = res.data.order_type
         // console.log(this.order_id);

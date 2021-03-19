@@ -56,7 +56,7 @@ export default {
         token: localStorage.getItem('token'),
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         if(res.data.length == 0){
           this.show12 = true;
           this.getList = [];

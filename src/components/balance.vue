@@ -59,7 +59,7 @@ export default {
       })
     },
     fun(){
-      console.log("监听到了");
+      // console.log("监听到了");
       this.$router.push({path: '/center'});
     },
 

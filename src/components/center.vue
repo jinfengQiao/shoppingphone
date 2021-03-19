@@ -195,7 +195,7 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         if(e.target.innerHTML == '返利'){
@@ -259,10 +259,10 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
-        console.log(inx)
+        // console.log(inx)
         if(inx == 0){
           this.status = 0
           this.$router.push({
@@ -321,7 +321,7 @@ export default {
       }else{
         this.isWeixin = true
       }
-    }
+    },
   },
   components: {
     footer_nav,
@@ -488,7 +488,7 @@ export default {
   z-index: 1;
   width: 100%;
   margin-top: 310px;
-  padding: 30px 30px 72px 30px;
+  padding: 30px 15px 72px;
   box-sizing: border-box;
   background-color: #ffffff;
   overflow: auto;
@@ -508,15 +508,12 @@ export default {
     //flex-wrap: wrap;
     //padding: 0 0 30px 0;
     //box-sizing: border-box;
-    li:nth-child(4n){
-      margin-right: 0;
-    }
     li{
       position: relative;
       float: left;
-      margin-right: 9px;
+      margin-right: 1%;
       margin-top: 24px;
-      width: 72px;
+      width: 24.25%;
       height: 68px;
       text-align: center;
       //border: 1px solid #000;
@@ -540,6 +537,9 @@ export default {
         text-align: center;
         line-height: 120px;
       }
+    }
+    li:nth-child(4n){
+      margin-right: 0!important;
     }
   }
 }

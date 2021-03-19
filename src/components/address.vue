@@ -44,13 +44,13 @@
         methods: {
             // 选中收货地址跳转等待支付页面
             address_click(i) {
-              this.$router.push({
+              this.$router.replace({
                 path: '/orderDetails',
                 query: {
                   address_id: i.id
                 }
               })
-              console.log(this.address_id)
+              // console.log(this.address_id)
             },
             // 获取收货地址列表
             get_list() {
@@ -58,7 +58,7 @@
                 token: localStorage.getItem('token')
               })
                   .then(res=> {
-                      console.log(res.data.list)
+                      // console.log(res.data.list)
                       this.address_list= res.data.list
                   })
             },

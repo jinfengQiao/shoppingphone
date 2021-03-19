@@ -78,7 +78,21 @@ export default {
         this.isSelect11 = index;
         this.$router.replace(path);
       },
-    }
+      goBack(){
+        this.$router.replace({path: '/'});
+        // console.log('点击了一下')
+        //replace替换原路由，作用是避免回退死循环
+      }
+    },
+    mounted(){
+      if (window.history && window.history.pushState) {
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', this.goBack, false);
+      }
+    },
+    destroyed(){
+      window.removeEventListener('popstate', this.goBack, false);
+    },
 }
 </script>
 

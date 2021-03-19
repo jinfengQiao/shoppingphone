@@ -131,7 +131,7 @@
 
             },
             onConfirm(values) {
-              console.log(values[0])
+              // console.log(values[0])
               this.form.province_id= values[0].code
               this.form.city_id= values[1].code
               this.form.area_id= values[2].code

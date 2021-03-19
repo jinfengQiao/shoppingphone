@@ -104,7 +104,7 @@
               order_goods_id: this.$route.query.id
             })
                 .then(res=> {
-                  console.log(res.data)
+                  // console.log(res.data)
                   if(res.data.status == 0) {
                     this.refund_title= '待处理'
                   }else if(res.data.status == 1) {

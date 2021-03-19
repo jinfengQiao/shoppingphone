@@ -49,8 +49,9 @@
           </div>
         </div>
       </div>
-      <div class="cont_lecturer" id="teacherList" v-show="tabState==2" :style="height_cont">
-        <ul>
+      <div class="cont_lecturer" v-show="tabState==2" :style="height_cont">
+        <div class="teacherList_b" id="teacherList">
+          <ul>
             <li @click="jump_aboutInstructor(n.id)" v-for="(n,inx) in teacherList" :key="inx">
               <div class="head_img">
                 <img :src="n.face_url" alt="">
@@ -71,6 +72,7 @@
               </div>
             </li>
           </ul>
+        </div>
         <div class="nullBox" v-show="show_teacher">
           <img src="../assets/buSchool/nullBoxImg1.png" alt="">
         </div>
@@ -145,7 +147,7 @@ export default {
       show12:false,
       show13:false,
       tabState: 1,
-      isActive: '',
+      isActive: 0,
       isSelect:'',
       isliAddCls:'',
       // buttonText:[
@@ -171,7 +173,7 @@ export default {
       id:'',
       contContCont1:[],
       page:1,
-      // limit:16,
+      // limit:8,
       list_type:1,
       scroll_element:"#contContCont",
       plus_height:359,
@@ -247,7 +249,7 @@ export default {
     liAddCls(index,id){
       this.isliAddCls = index;
       this.category_id1 = id;
-      console.log(this.category_id1);
+      // console.log(this.category_id1);
       this.contContCont1 = [];
       this.page = 1;
       this.get_clsTextList();
@@ -278,7 +280,7 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         this.$router.push('/search');
@@ -302,7 +304,7 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         this.$router.push({
@@ -317,7 +319,7 @@ export default {
     get_class() {
       this.$post(localStorage.getItem('http') + 'school/get_category',{})
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.contContHead= res.data
         this.contContHead_id = res.data[0].id
         // this.category_id = res.data.id
@@ -331,8 +333,8 @@ export default {
       var outerHeight = document.documentElement.clientHeight
       // 滚动条的位置高度
       var scrollTop = document.documentElement.scrollTop
-      console.log(scrollTop + outerHeight );
-      console.log(innerHeight + this.plus_height);
+      // console.log(scrollTop + outerHeight );
+      // console.log(innerHeight + this.plus_height);
       if(scrollTop + outerHeight == innerHeight + this.plus_height){
         this.page++;
         if(this.list_type == 1){
@@ -351,7 +353,7 @@ export default {
         page:this.page,
         limit:15,
         category_id:this.category_id,
-        keyword:this.keyword
+        keyword:this.keyword,
       })
       .then(res=> {
         // console.log(res.data.list)
@@ -421,11 +423,10 @@ export default {
         page:this.page,
         limit:this.limit
       }).then(res=>{
-        console.log(res)
+        // console.log(res)
         if (res.data.list.length == 0 && this.page == 1){
           this.show_teacher = true;
         }else{
-          this.teacherList_list = res.data.list
           this.show_teacher = false;
           if (res.data.list.length != 0){
             var arr = [];
@@ -450,8 +451,34 @@ export default {
           id:id,
         }
       });
+    },
+  },
+
+  beforeRouteEnter (to, from, next) {
+    // console.log(to.name)
+    // console.log(from.name)
+    if(from.name == 'aboutInstructor'){
+      next(vm=>{
+        vm.isActive=1
+        vm.tabState=2
+      });
+    }else{
+      next(vm=>{
+        vm.isActive=0
+      });
     }
   },
+  // beforeRouteLeave (to, from, next){
+  //   // console.log(to.name)
+  //   // console.log(from.name)
+  //   // console.log(next)
+  //   next(vm=>{
+  //     vm.to.name = 'index_home'
+  //
+  //     next(false)
+  //   });
+  // },
+
   created(){
     this.isSelect = 0
     this.isliAddCls = 0;
@@ -642,9 +669,9 @@ export default {
         li{
           float: left;
           margin-top: 15px;
-          margin-right: 15px;
+          margin-right: 2%;
           //padding: 4px 18px;
-          width: 75px;
+          width: 23.5%;
           height: 32px;
           line-height: 32px;
           text-align: center;
@@ -657,11 +684,11 @@ export default {
           color: #666666;
         }
         li:nth-child(4n){
-          margin-right: 0;
+          margin-right: 0!important;
         }
       }
       //ul:after {content: "";width: 163px;}
-      ul:after {content: "";width: 204px;}
+      //ul:after {content: "";width: 204px;}
     }
     .contContHeadAdd{
       background: rgba(13, 104, 255, 0.27)!important;
@@ -930,6 +957,10 @@ export default {
   padding: 36px 15px 77px;
   box-sizing: border-box;
   overflow: auto;
+  .teacherList_b{
+    width: 100%;
+    //height: 100%;
+  }
   ul{
     width: 100%;
     display: flex;

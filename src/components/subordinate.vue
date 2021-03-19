@@ -196,7 +196,7 @@ export default {
       this.$post(localStorage.getItem('http') + 'user_info/get_invite_code', {
         token: localStorage.getItem('token'),
       }).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.yaoqingCode = res.data.invite_code
       })
     },

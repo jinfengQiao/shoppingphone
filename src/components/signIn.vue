@@ -94,7 +94,7 @@ export default {
       this.currentMonth = date.getMonth() + 1;
     },
     isVerDate (v) {
-      // console.log(v)
+      // console.log(v) 
       return this.arrDate.includes(v)
     },
     pickPre: function(year, month) {

@@ -161,7 +161,7 @@ export default {
     },
     listGo(index,id){
       this.isActive = index;
-      console.log(id);
+      // console.log(id);
       this.category_id = id;
       this.tab_Cont();
     },
@@ -180,7 +180,7 @@ export default {
         category_id:this.category_id,
       })
       .then(res=> {
-        console.log(res)
+        // console.log(res)
         this.tabCont = res.data.list;
 
         if(res.data.list == '' || res.data.list == null){
@@ -202,11 +202,11 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         this.show_showQy = true;
-        console.log(n);
+        // console.log(n);
         this.price = (n.price/100).toFixed(2);
         this.name = n.name;
         this.card_id = n.id;
@@ -229,28 +229,28 @@ export default {
     },
     // 立即购买
     buyBtn(){
-      console.log(this.card_id)
+      // console.log(this.card_id)
 
       this.$dialog.confirm({
         title:'是否确认购买',
       })
       .then(()=>{
-        console.log('支付中..')
+        // console.log('支付中..')
         this.$post(localStorage.getItem('http') + 'card/to_pay',{
           token: localStorage.getItem('token'),
           card_id: this.card_id,
         })
             .then(res=> {
-              console.log(res.data)
+              // console.log(res.data)
               if(res.code == 1){
                 // console.log('下单成功');
                 this.order_id = res.data.order_id
-                console.log(this.order_id);
+                // console.log(this.order_id);
                 this.order_type = res.data.order_type
-                console.log(this.order_type);
+                // console.log(this.order_type);
                 // 余额支付
                 if(this.weixinSelect == true){
-                  console.log('微信支付')
+                  // console.log('微信支付')
                   this.$post(localStorage.getItem('http') + 'pay/wechat_pay',{
                     token: localStorage.getItem('token'),
                     order_id: this.order_id,
@@ -259,7 +259,7 @@ export default {
                     use_score: this.use_score
                   })
                       .then(res=> {
-                        console.log(res)
+                        // console.log(res)
                         window.WeixinJSBridge.invoke(
                             'getBrandWCPayRequest', res ,
                             function(res){
@@ -274,7 +274,7 @@ export default {
                             });
                       })
                 }else{
-                  console.log('余额支付')
+                  // console.log('余额支付')
                   this.$post(localStorage.getItem('http') + 'pay/balance_pay',{
                     token: localStorage.getItem('token'),
                     order_id: this.order_id,
@@ -282,7 +282,7 @@ export default {
                     use_score: this.use_score
                   })
                       .then(res=> {
-                        console.log(res)
+                        // console.log(res)
                         if(res.code == 0){
                           // console.log('余额不足')
                           this.$toast.error(res.msg)
@@ -299,7 +299,7 @@ export default {
             })
       })
       .catch(()=>{
-        console.log('未支付')
+        // console.log('未支付')
       });
 
 
@@ -318,8 +318,7 @@ export default {
         wx.ready(function(){
           wx.checkJsApi({
             jsApiList: res.data.jsApiList, // 需要检测的JS接口列表，所有JS接口列表见附录2,
-            success: function(res) {
-              console.log(res);
+            success: function() {
               // 以键值对的形式返回，可用的api值true，不可用为false
               // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
             }
@@ -363,7 +362,7 @@ export default {
               this.$router.push('/login')
             })
             .catch(()=>{
-              console.log('未登录')
+              // console.log('未登录')
             });
       }else{
         this.show_share = true
@@ -371,7 +370,7 @@ export default {
           token: localStorage.getItem('token'),
           id:this.id_share
         }).then(res => {
-          console.log(res)
+          // console.log(res)
           if(res.code == 1){
             this.pic_url_share = res.data.pic_url
           }
