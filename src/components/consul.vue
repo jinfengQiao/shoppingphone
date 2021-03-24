@@ -1,15 +1,11 @@
 <template>
-  <div class="bg" :style="height">
-<!--    <div class="head">-->
-<!--&lt;!&ndash;      <img src="../assets/center/back_icon1.png" alt="" @click="back">&ndash;&gt;-->
-<!--      <span>咨询卡</span>-->
-<!--    </div>-->
+  <div class="bg">
     <div class="tab">
       <ul>
         <li v-for="(n,index) in tabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index,n.id)">{{n.name}}</li>
       </ul>
     </div>
-    <div class="cont">
+    <div class="cont" :style="height" v-bind:class="{cont_top:is_headerBarShow}">
       <ul>
         <li v-for="(n,inx) in tabCont" :key="inx" @click="showQyBox(n)">
           <img :src="n.pic_url" alt="">
@@ -147,6 +143,7 @@ export default {
       id_share:'',
       details_img:'http://quanpeng.oss-cn-zhangjiakou.aliyuncs.com/of/img/1615882420/2ec1d187bb30ab8653331c5c5eeb86d6.png',
       de_b_show:true,
+      is_headerBarShow:true
     }
   },
   methods:{
@@ -154,7 +151,7 @@ export default {
     //   this.$router.go(-1);
     // },
     get_height(){
-      this.height.height = window.innerHeight +'px'
+      this.height.height = window.innerHeight - 52 +'px'
     },
     jumpMoneyDetailed:function (){
       this.$router.push('./moneyDetailed');
@@ -399,6 +396,12 @@ export default {
     wx.showOptionMenu();
     this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   components: {
     footer_nav
@@ -408,12 +411,13 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  float: left;
+  position: relative;
+  //float: left;
   width: 100%;
   background-color: #f3f4f6;
 }
 .head{
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -440,12 +444,12 @@ export default {
 }
 .tab{
   z-index: 2;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   //margin-top: 70px;
   width: 100%;
-  height: 52px;
+  //height: 52px;
   line-height: 52px;
   background-color: #FFFFFF;
   padding: 0 15px;
@@ -479,11 +483,11 @@ export default {
 .cont{
   position: relative;
   z-index: 1;
-  margin-top: 52px;
+  //margin-top: 52px;
   width: 100%;
-  padding: 15px 15px 77px 15px;
+  padding:  67px 15px 25px;
   box-sizing: border-box;
-  //background-color: #f3f4f6;
+  overflow: auto;
   ul{
     width: 100%;
     li{
@@ -570,6 +574,9 @@ export default {
       object-fit: cover;
     }
   }
+}
+.cont_top{
+  padding:  67px 15px 77px!important;
 }
 .showQy{
   position: fixed;

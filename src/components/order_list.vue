@@ -1,6 +1,6 @@
 <template>
-    <div class="bg" :style="height">
-        <div class="posi_b">
+    <div class="bg">
+      <div class="posi_b">
           <div class="search_b" >
             <input type="text" placeholder="请输入您想搜索的名称" v-model="search_t" @change="search_btn">
             <img src="../assets/my_order/search_icon.png" alt="">
@@ -29,24 +29,24 @@
             </li>
           </ul>
         </div>
-
-
+      <div class="goods_list_b" :style="height">
         <ul class="goods_list">
-            <li v-for="item in goods_list" :key="item.id" @click="goods_list_deta(item)" >
-                <img :src="item.pic_url" alt="">
-                <div class="goods_list_li">
-                    <h2>{{ item.name }}</h2>
-                    <div class="goods_list_li_price_num">
-                        <div class="goods_list_li_price">
-<!--                            <p>￥</p>-->
-<!--                            <p>1965</p>-->
-                          <p>{{ item.price }}</p>
-                        </div>
-                        <span>{{ item.sell }}人付款</span>
-                    </div>
+          <li v-for="item in goods_list" :key="item.id" @click="goods_list_deta(item)" >
+            <img :src="item.pic_url" alt="">
+            <div class="goods_list_li">
+              <h2>{{ item.name }}</h2>
+              <div class="goods_list_li_price_num">
+                <div class="goods_list_li_price">
+                  <!--                            <p>￥</p>-->
+                  <!--                            <p>1965</p>-->
+                  <p>{{ item.price }}</p>
                 </div>
-            </li>
+                <span>{{ item.sell }}人付款</span>
+              </div>
+            </div>
+          </li>
         </ul>
+      </div>
       <div class="nullBox" v-show="show13">
         <img src="../assets/buSchool/nullBoxImg2.png" alt="">
       </div>
@@ -161,7 +161,7 @@
 
             },
             get_height(){
-              this.height.height = window.innerHeight +'px'
+              this.height.height = window.innerHeight - 100 +'px'
             },
             search_btn(){
               this.$post(localStorage.getItem('http') + 'goods/get_list',{
@@ -192,20 +192,6 @@
                 }
               }
             },
-            // onScroll () {
-            //   // 内容元素的总高度
-            //   let innerHeight = document.querySelector('#app').clientHeight
-            //   // 浏览器可见区域高度
-            //   let outerHeight = document.documentElement.clientHeight
-            //   // 滚动条的位置高度
-            //   let scrollTop = document.documentElement.scrollTop
-            //   console.log(scrollTop + outerHeight );
-            //   console.log(innerHeight + 238);
-            //   if(scrollTop + outerHeight == innerHeight + 238){
-            //     this.page++;
-            //     this.get_list();
-            //   }
-            // },
 
         },
 
@@ -215,85 +201,137 @@
 <style lang="less" scoped>
 .bg{
   width: 100%;
-  padding: 136px 0 0 0;
   background-color: #ffffff;
   .posi_b {
     width: 100%;
     position: fixed;
     left: 0;
-    top: 56px;
+    top: 0;
     background-color: #ffffff;
-  }
-}
-.search_b{
-  position: relative;
-  width: 100%;
-  padding: 0 16px;
-  box-sizing: border-box;
-  input{
-    width: 100%;
-    height: 32px;
-    background: #F4F3F8;
-    opacity: 1;
-    border-radius: 5px;
-    outline: none;
-    border: 0;
-    padding: 0 36px;
+    padding: 20px 0 0;
     box-sizing: border-box;
-  }
-  img{
-    position: absolute;
-    left: 26px;
-    top: 50%;
-    margin-top: -8px;
-    width: 16px;
-    height: 16px;
-  }
-}
-.sort{
-    //position: fixed;
-    //top: 56px;
-    //left: 0;
-    width: 100%;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    background: white;
-    border-bottom: 1px solid #DDDDDD;
-  padding: 0 25px;
-    li{
+    height: 100px;
+    .search_b{
+      position: relative;
+      width: 100%;
+      padding: 0 16px;
+      box-sizing: border-box;
+      input{
+        width: 100%;
+        height: 32px;
+        background: #F4F3F8;
+        opacity: 1;
+        border-radius: 5px;
+        outline: none;
+        border: 0;
+        padding: 0 36px;
+        box-sizing: border-box;
+      }
+      img{
+        position: absolute;
+        left: 26px;
+        top: 50%;
+        margin-top: -8px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+    .sort{
+      //position: fixed;
+      //top: 56px;
+      //left: 0;
+      width: 100%;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      background: white;
+      border-bottom: 1px solid #DDDDDD;
+      padding: 0 25px;
+      li{
         flex: 1;
         display: flex;
         justify-content: center;
         //align-items: flex-end;
         align-items: center;
         p{
-            font-size: 12px;
-            color: #999999;
-            display: inline;
+          font-size: 12px;
+          color: #999999;
+          display: inline;
         }
         .iconfont{
-            font-size: 12px;
-            line-height: 18px;
-            color: #999999;
+          font-size: 12px;
+          line-height: 18px;
+          color: #999999;
         }
-    }
-    .blue{
+      }
+      .blue{
         p{
-            color: #1672F9;
+          color: #1672F9;
         }
         .iconfont{
-            color: #1672F9;
+          color: #1672F9;
         }
-    }
-}
-.nullBox{
-      width: 100%;
-      text-align: center;
-      img{
-        width: 50%;
-        height: 50%;
-        object-fit: cover;
       }
     }
+  }
+}
+.nullBox {
+  width: 100%;
+  text-align: center;
+  img {
+    width: 50%;
+    height: 50%;
+    object-fit: cover;
+  }
+}
+.goods_list_b{
+  width: 100%;
+  margin-top: 100px;
+  overflow: auto;
+  .goods_list{
+    padding: 16px 16px 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    li{
+      width: 47%;
+      box-shadow:0px 0px 10px rgba(0,0,0,0.16);
+      margin-bottom: 16px;
+      img{
+        width: 100%;
+        height: 178px;
+        object-fit: cover;
+      }
+      .goods_list_li{
+        padding: 10px 8px;
+        h2{
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+        .goods_list_li_price_num{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .goods_list_li_price{
+            display: flex;
+            align-items: center;
+            p{
+              color: #EA610E;
+            }
+          }
+          .goods_list_li_price p:nth-child(1){
+            font-size: 12px;
+          }
+          .goods_list_li_price p:nth-child(2){
+            font-size: 18px;
+          }
+          span{
+            font-size: 12px;
+            color: #999999;
+          }
+        }
+      }
+    }
+  }
+}
 </style>

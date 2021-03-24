@@ -35,8 +35,8 @@
         </div>
       </div>
     </div>
-    <div class="service">
-      <div class="serTitle">我的服务</div>
+    <div class="service" :style="height">
+      <div class="serTitle" @click="jump_selection">我的服务</div>
       <ul>
         <li v-for="(n,inx) in serList" :key="inx" @click="jumpJ">
           <img :src="n.imgurl" alt="">
@@ -57,6 +57,10 @@ export default {
   name: "center",
   data() {
     return{
+      height_bg:{
+        wdith:'',
+        height:'',
+      },
       height:{
         wdith:'',
         height:'',
@@ -137,7 +141,6 @@ export default {
     this.hh();
     var token = localStorage.getItem('token');
     // console.log(token)
-
     // 判断token
     if(!token){
         this.nojumpCodeLogin=true
@@ -322,6 +325,11 @@ export default {
         this.isWeixin = true
       }
     },
+    // 跳转到讲师评选
+    jump_selection(){
+      // this.$router.push('/selection_page')
+      console.log('跳转讲师评选')
+    }
   },
   components: {
     footer_nav,
@@ -488,7 +496,7 @@ export default {
   z-index: 1;
   width: 100%;
   margin-top: 310px;
-  padding: 30px 15px 72px;
+  padding: 30px 15px 0;
   box-sizing: border-box;
   background-color: #ffffff;
   overflow: auto;
@@ -502,7 +510,9 @@ export default {
     overflow: auto;
   }
   ul{
+    float: left;
     width: 100%;
+    margin-bottom: 72px;
     //display: flex;
     //justify-content: space-between;
     //flex-wrap: wrap;

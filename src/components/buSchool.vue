@@ -1,18 +1,14 @@
 <template>
   <div class="bg" id="app">
-<!--    <div class="head">-->
-<!--&lt;!&ndash;      <img src="../assets/center/back_icon1.png" alt="" @click="back">&ndash;&gt;-->
-<!--      <span>商学院</span>-->
-<!--    </div>-->
     <div class="contHead">
       <div class="toggle">
         <button type="button" class="kecheng" :class="{cur:index==isActive}" @click="listGo(index)" v-for="(n,index) in buttonText" :key="index">{{n}}</button>
       </div>
     </div>
-    <div class="cont" :style="height_cont">
-      <div class="cont1" v-show="tabState==1">
+<!--    <div class="cont" :style="height_cont">-->
+      <div class="cont1" v-show="tabState==1" :style="height">
         <div class="banner">
-        <div class="bannerBox">
+          <div class="bannerBox">
           <div class="bannerBoxLeft">
             <span>课程入门VIP</span>
             <p>可任选一系列课程观看学习,不断更新中</p>
@@ -22,6 +18,7 @@
           </div>
         </div>
         </div>
+<!--        <div class="null_b" style="height: 156px;"></div>-->
         <div class="contCont" id="contCont_box">
           <div class="contContHead" id="contContHead">
             <ul>
@@ -29,7 +26,7 @@
               <li v-for="(n,index) in contContHead" :key="index" :class="{contContHeadAdd:index===isSelect}" @click="changeCls(index,n.id)">{{n.name}}</li>
             </ul>
           </div>
-          <div class="contContCont" id="contContCont" :style="height">
+          <div class="contContCont" id="contContCont">
             <ul>
               <li @click="jumpCourDetails(n.id)" v-for="(n,index) in contContCont" :key="index">
                 <img :src="n.video_cover" alt="">
@@ -119,7 +116,7 @@
 <!--          </div>-->
         </div>
       </div>
-    </div>
+<!--    </div>-->
     <footer_nav></footer_nav>
   </div>
 </template>
@@ -193,7 +190,7 @@ export default {
       this.height_cont.height = window.innerHeight +'px'
     },
     hh(){
-      // this.height.height = window.innerHeight +'px'
+      this.height.height = window.innerHeight +'px'
     },
     hh1(){
       this.height1.height = window.innerHeight +'px'
@@ -505,12 +502,14 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  float: left;
+  position: relative;
+  //float: left;
   width: 100%;
   background-color: #ffffff;
+  overflow:hidden;
 }
 .head{
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -536,7 +535,7 @@ export default {
   }
 }
 .contHead{
-  position: fixed;
+  position: absolute;
   //top: 70px;
   top: 0;
   left: 0;
@@ -576,22 +575,20 @@ export default {
   }
 }
 .cont1{
-  float: left;
-  width: 100%;
-  //display: none;
-}
-.cont{
-  float: left;
+  //float: left;
   position: relative;
   width: 100%;
-  //padding: 0 0 0 0;
+  z-index: 1;
+  padding: 36px 0 0;
   box-sizing: border-box;
+  overflow: auto;
   .banner{
-    position: fixed;
+    position: absolute;
     top: 36px;
     left: 0;
     float: left;
     width: 100%;
+    height: 120px;
     padding: 15px;
     box-sizing: border-box;
     background-color: #f3f4f6;
@@ -645,13 +642,13 @@ export default {
     }
   }
   .contCont{
-    position: relative;
-    float: left;
+    //position: relative;
+    //float: left;
     width: 100%;
     background-color: #ffffff;
-    padding: 156px 15px 0;
+    padding: 120px 15px 77px;
     box-sizing: border-box;
-    //overflow: auto;
+    overflow: auto;
     .contContHead{
       //padding: 0 15px;
       box-sizing: border-box;
@@ -700,7 +697,7 @@ export default {
     .contContCont{
       width: 100%;
       overflow: auto;
-      padding: 0 0 62px 0;
+      //padding: 0 0 62px 0;
       box-sizing: border-box;
 
       ul{
@@ -953,6 +950,7 @@ export default {
   }
 }
 .cont_lecturer{
+  //margin-top: 36px;
   width: 100%;
   padding: 36px 15px 77px;
   box-sizing: border-box;

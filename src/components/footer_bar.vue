@@ -21,7 +21,7 @@
 <script>
 export default {
     name: "footer_bar",
-    props:['tabName'],
+    // props:['tabName'],
     data() {
       return{
         num:true,

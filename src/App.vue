@@ -1,11 +1,18 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <head_bar></head_bar>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
 import {getUrlCode} from './utils/getUrlCode'
-
 export default {
+  data(){
+    return{
+
+    }
+  },
   methods:{
     auto_login(openid){
       //自动登录接口
@@ -46,16 +53,11 @@ export default {
   },
 
   created() {
-
-
-
     if(this.$route.query.openid) {
       // console.log('這是openid' + this.$route.query.openid)
       localStorage.setItem('invite_openid', this.$route.query.openid)
       // this.$notify(localStorage.getItem('invite_openid'));
     }
-
-
 
     // 手机商城
     // localStorage.setItem('http', 'http://of.kurohane.com/api/')
@@ -84,15 +86,14 @@ export default {
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
-
-
-
   },
   mounted () {
     // id 是我需要获取的参数名，如果你要获取user等其他，自行更换即可
     // console.log(this.Utils.getUrlKey('openid'))
-
   },
+  component:{
+
+  }
 }
 </script>
 
@@ -129,51 +130,51 @@ export default {
     background-color: #ffffff;
   }
   /*共用商品列表*/
-  .goods_list{
-    padding: 16px 16px 0;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    li{
-      width: 47%;
-      box-shadow:0px 0px 10px rgba(0,0,0,0.16);
-      margin-bottom: 16px;
-      img{
-        width: 100%;
-        height: 178px;
-        object-fit: cover;
-      }
-      .goods_list_li{
-        padding: 10px 8px;
-        h2{
-          font-size: 14px;
-          margin-bottom: 8px;
-        }
-        .goods_list_li_price_num{
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          .goods_list_li_price{
-            display: flex;
-            align-items: center;
-            p{
-              color: #EA610E;
-            }
-          }
-          .goods_list_li_price p:nth-child(1){
-            font-size: 12px;
-          }
-          .goods_list_li_price p:nth-child(2){
-            font-size: 18px;
-          }
-          span{
-            font-size: 12px;
-            color: #999999;
-          }
-        }
-      }
-    }
-  }
+  //.goods_list{
+  //  padding: 16px 16px 0;
+  //  display: flex;
+  //  justify-content: space-between;
+  //  flex-wrap: wrap;
+  //  li{
+  //    width: 47%;
+  //    box-shadow:0px 0px 10px rgba(0,0,0,0.16);
+  //    margin-bottom: 16px;
+  //    img{
+  //      width: 100%;
+  //      height: 178px;
+  //      object-fit: cover;
+  //    }
+  //    .goods_list_li{
+  //      padding: 10px 8px;
+  //      h2{
+  //        font-size: 14px;
+  //        margin-bottom: 8px;
+  //      }
+  //      .goods_list_li_price_num{
+  //        display: flex;
+  //        justify-content: space-between;
+  //        align-items: center;
+  //        .goods_list_li_price{
+  //          display: flex;
+  //          align-items: center;
+  //          p{
+  //            color: #EA610E;
+  //          }
+  //        }
+  //        .goods_list_li_price p:nth-child(1){
+  //          font-size: 12px;
+  //        }
+  //        .goods_list_li_price p:nth-child(2){
+  //          font-size: 18px;
+  //        }
+  //        span{
+  //          font-size: 12px;
+  //          color: #999999;
+  //        }
+  //      }
+  //    }
+  //  }
+  //}
 
   // 弹出框
   .dio{

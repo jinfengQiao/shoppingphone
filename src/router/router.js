@@ -40,7 +40,8 @@ import refund_page from "../components/refund_page";
 import rebate_rules from "../components/rebate_rules";
 import follow from "../components/follow";
 import aboutInstructor from "../components/aboutInstructor";
-
+import selection_page from "../components/selection_page";
+import aboutInstructor_ranking from "../components/aboutInstructor_ranking";
 
 import deta from "../view/deta";
 import refund from "../view/refund";
@@ -392,6 +393,22 @@ const routes= [
                 title: '讲师介绍'
             }
         },
+        {
+            path:'/selection_page',
+            component: selection_page,
+            name:'selection_page',
+            meta: {
+                title: '讲师评选'
+            }
+        },
+        {
+            path:'/aboutInstructor_ranking',
+            component: aboutInstructor_ranking,
+            name:'aboutInstructor_ranking',
+            meta: {
+                title: '讲师详情-排行榜'
+            }
+        },
     ]
 
 
@@ -427,6 +444,8 @@ router.beforeEach((to,form,next) => {
         document.title = to.meta.title
     }
     next();
+
+
 
 
 })

@@ -220,7 +220,7 @@
                 refund:0,
                 status:this.status
               }).then(res=> {
-                // console.log(res.data.list)
+                console.log(res.data.list)
                 this.list= res.data.list
                 if(res.data.list == '' || res.data.list == null){
                   this.show12 = true;
@@ -377,10 +377,11 @@
     .my_list{
         padding: 64px 15px 70px 15px;
         li{
-            border-radius: 4px;
-            background: white;
             padding: 12px;
             margin-bottom: 12px;
+            background: #FFFFFF;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
             .my_list_title{
                 display: flex;
                 justify-content: space-between;

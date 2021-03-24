@@ -15,11 +15,11 @@
               </div>
             </div>
             <div class="follow_b" @click="cli_follow">
-              <template v-if="teacher_detail.attr == 0">
-                <div class="follow_n">关注</div>
+              <template v-if="this.teacher_detail_count == 0">
+                <div class="follow_n">投票</div>
               </template>
               <template v-else>
-                <div class="follow_o">已关注</div>
+                <div class="follow_o">已投票</div>
               </template>
             </div>
           </div>
@@ -28,9 +28,7 @@
           </div>
         </div>
       </van-sticky>
-      <div class="instructor_h_c">
-        <pre>{{teacher_detail.info}}</pre>
-      </div>
+      <div class="instructor_h_c" v-html="teacher_detail.info"></div>
     </div>
     <div class="instructor_c_b">
       <van-sticky :offset-top="200">
@@ -55,12 +53,21 @@
         </ul>
       </div>
     </div>
+<!--    公众号弹窗-->
+    <div class="official_b" v-show="official_account">
+      <img src="../assets/buSchool/official_b_img.png" alt="" class="official_b_img">
+      <p>请先关注公众号</p>
+      <img src="../assets/buSchool/close_img.png" alt="" class="close_img" @click="close_official_account">
+    </div>
+
+
+
   </div>
 </template>
 
 <script>
 export default {
-  name: "aboutInstructor",
+  name: "aboutInstructor_ranking",
   data(){
     return{
       follow_no:true,
@@ -83,20 +90,33 @@ export default {
       title: '',
       desc:'',
       imgUrl:'',
+      teacher_detail_count:'',
+      official_account:false,
 
     }
   },
 
   methods:{
-    // 关注
+    // 投票
     cli_follow(){
-      this.$post(localStorage.getItem('http') + 'teacher/attr',{
-        token: localStorage.getItem('token'),
-        id:this.teacher_id
+      this.$post(localStorage.getItem('http') + 'school/vote',{
+        openid: localStorage.getItem('openid'),
+        teacher_id:this.teacher_id
       }).then(res=>{
+        // console.log('点击投票的结果' + res)
         if(res.code == 1){
-          this.get_teacherDetail(this.teacher_id);
-          this.isSel = 0
+          // console.log('投票成功');
+          this.get_whethervote();
+          this.$toast.success(res.msg);
+        }else if(res.code == 2){
+          this.$toast.error('请先关注公众号');
+        }else{
+          // if(this.teacher_detail_count == 0){
+          //   this.$toast.error('您的票数已用完，请明天再来吧~');
+          // }else{
+          //   this.$toast.error('您今天已经为Ta投过票啦~');
+          // }
+          this.$toast.error(res.msg);
         }
       })
     },
@@ -138,10 +158,10 @@ export default {
         keyword:this.keyword,
         teacher_id:this.teacher_id,
       })
-      .then(res=> {
-        // console.log(res)
-        this.clsList = res.data.list
-      })
+          .then(res=> {
+            // console.log(res)
+            this.clsList = res.data.list
+          })
     },
     // 点击跳转课程详情
     jump_courseDetails(id){
@@ -152,15 +172,31 @@ export default {
         }
       })
     },
-
-
-
+    // 获取是否可以为讲师投票
+    get_whethervote(){
+      this.$post(localStorage.getItem('http') + 'school/get_vote_count',{
+        openid: localStorage.getItem('openid'),
+        teacher_id:this.teacher_id,
+      })
+      .then(res=> {
+        if(res.code == 1){
+          this.teacher_detail_count = res.data.count
+        }else{
+          this.teacher_detail_count = 0
+        }
+      })
+    },
+    // 关闭公众号弹窗
+    close_official_account(){
+      this.official_account = false
+    }
   },
   created() {
     this.isSel = 0
     let teacher_id = this.$route.query.id;
     this.teacher_id = teacher_id
     this.get_teacherDetail(teacher_id);
+    this.get_whethervote();
   }
 }
 </script>
@@ -375,5 +411,45 @@ export default {
 .addCls_instructor{
   background: #1A6EFF!important;
   color: #FFFFFF!important;
+}
+.official_b{
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 101;
+  .official_b_img{
+    width: 134px;
+    height: 134px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -67px;
+    margin-top: -97px;
+  }
+  p{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-top: 50px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    font-family: PingFang SC;
+    font-weight: 500;
+    color: #FFFFFF;
+    letter-spacing: 2px;
+  }
+  .close_img{
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -16px;
+    margin-top: 120px;
+  }
 }
 </style>

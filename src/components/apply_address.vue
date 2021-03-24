@@ -80,7 +80,7 @@
         // console.log(this.order_obj)
         this.price11 = (this.order_obj.price / 100).toFixed(2)
         // this.html= '<div class=\'title_van\'><p>退款金额</p><p>{{ this.order_obj.price }}</p></div>'
-        this.data1 = '不可修改，最多￥'+this.price11
+        this.data1 = '退款金额最多￥'+this.price11
         this.data2 = '退款金额不可超过￥'+this.price11+'元'
       },
         methods: {

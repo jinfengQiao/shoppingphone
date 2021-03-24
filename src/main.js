@@ -5,7 +5,7 @@ import { get, post } from './utils/http';
 import 'lib-flexible/flexible.js'
 import MuseUI from 'muse-ui';
 import 'muse-ui/dist/muse-ui.css';
-import Loadings from './components/common/loading';
+import loadings from './components/common/loading';
 import theme from 'muse-ui/lib/theme';
 import * as colors from 'muse-ui/lib/theme/colors';
 import './assets/icon/iconfont.css'
@@ -55,10 +55,11 @@ Vue.directive('preventReClick', {
 
 
 // 公共组件
-Vue.use(Loadings);
+Vue.use(loadings);
 Vue.use(Vant);
 Vue.use(MuseUI);
 Vue.use(Toast);
+
 
 
 Vue.prototype.$get = get
@@ -76,10 +77,5 @@ import utils from './utils/utils'
 let openid = utils.getUrlKey('openid')
 
 console.log(openid);
-
-
-// import Mui from 'vue-awesome-mui';
-// Vue.use(Mui);
-
 
 

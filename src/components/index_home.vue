@@ -1,66 +1,63 @@
 <template>
     <div>
-        <swiper style="margin-top: 56px;"></swiper>
-        <ul class="two_list">
-            <li @click="details_list(item)" v-for="item in nav_list" :key="item.id" >
-                <img :src="item.phone_icon" alt="">
-                <p>{{ item.name }}</p>
-            </li>
-            <li @click="all_list">
-                <img src="../assets/index/index_two5.png" alt="">
-                <p>更多服务</p>
-            </li>
-        </ul>
-        <swiper_two></swiper_two>
-
+      <swiper></swiper>
+      <ul class="two_list">
+          <li @click="details_list(item)" v-for="item in nav_list" :key="item.id" >
+              <img :src="item.phone_icon" alt="">
+              <p>{{ item.name }}</p>
+          </li>
+          <li @click="all_list">
+              <img src="../assets/index/index_two5.png" alt="">
+              <p>更多服务</p>
+          </li>
+      </ul>
+      <swiper_two></swiper_two>
 <!--    优势服务-->
-        <div class="fuwuBox" v-for="(n,inx) in shujuList" :key="inx">
-          <div class="fuwuHeadBox">
-            <div class="fuwuHead">
-              <span>{{n.title}}</span>
-              <img src="../assets/index/fuwuHeadIcon.png" alt="">
-            </div>
-          </div>
-          <div class="fuwuCont">
-            <ul>
-              <li v-for="(spu,k) in n.spu_info" :key="k" @click="jumpDoods_deta(spu)">
-
-                <template v-if="k == 3 || k == 4">
-                  <div class="title">{{ spu.name }}</div>
-                  <div class="text">{{ spu.info }}</div>
-                  <span>{{ spu.price }}</span>
-                  <img :src="spu.pic_url" alt="">
-                </template>
-
-                <template v-else>
-                  <img  :src="spu.pic_url" alt="">
-                  <p>{{spu.name}}</p>
-                  <span>{{spu.price}}</span>
-                </template>
-
-              </li>
-            </ul>
+      <div class="fuwuBox" v-for="(n,inx) in shujuList" :key="inx">
+        <div class="fuwuHeadBox">
+          <div class="fuwuHead">
+            <span>{{n.title}}</span>
+            <img src="../assets/index/fuwuHeadIcon.png" alt="">
           </div>
         </div>
+        <div class="fuwuCont">
+          <ul>
+            <li v-for="(spu,k) in n.spu_info" :key="k" @click="jumpDoods_deta(spu)">
 
+              <template v-if="k == 3 || k == 4">
+                <div class="title">{{ spu.name }}</div>
+                <div class="text">{{ spu.info }}</div>
+                <span>{{ spu.price }}</span>
+                <img :src="spu.pic_url" alt="">
+              </template>
 
-        <ul class="goods_list">
-            <li v-for="item in list " :key="item.id" @click="goods_item_click(item)" >
-                <img :src="item.pic_url" alt="">
-                <div class="goods_list_li">
-                    <h2>{{ item.name }}</h2>
-                    <div class="goods_list_li_price_num">
-                        <div class="goods_list_li_price">
+              <template v-else>
+                <img  :src="spu.pic_url" alt="">
+                <p>{{spu.name}}</p>
+                <span>{{spu.price}}</span>
+              </template>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+      <ul class="goods_list">
+          <li v-for="item in list " :key="item.id" @click="goods_item_click(item)" >
+              <img :src="item.pic_url" alt="">
+              <div class="goods_list_li">
+                  <h2>{{ item.name }}</h2>
+                  <div class="goods_list_li_price_num">
+                      <div class="goods_list_li_price">
 <!--                            <p>￥</p>-->
 <!--                            <p>1965</p>-->
-                          <p>{{ item.price }}</p>
-                        </div>
-                        <span>{{ item.sell }}人付款</span>
-                    </div>
-                </div>
-            </li>
-        </ul>
-        <footer_nav></footer_nav>
+                        <p>{{ item.price }}</p>
+                      </div>
+                      <span>{{ item.sell }}人付款</span>
+                  </div>
+              </div>
+          </li>
+      </ul>
+      <footer_nav></footer_nav>
     </div>
 </template>
 
@@ -68,154 +65,156 @@
     import swiper from "./swiper";
     import swiper_two from "./swiper_two";
     import footer_nav from "./footer_bar";
+
     export default {
-        data() {
-            return{
-                active1: 0,
-                goods_buttons_list: [],
-                indexs: 0,
-                nav_list: [],
-                list: [],
-                shujuList:[],
-                list_form: {
-                  category_pid: null
-                },
-                show: true,
-                title: '权鹏集团-企业服务国际知名品牌',
-                integrityurl:'',
-                // logo:'https://m.tjqpjt.com/logo.png',
-                desc:'助力企业快速成长，为企业提供财税筹划、工商注册、软件开发等服务。',
-                imgUrl: 'https://m.tjqpjt.com/logo.png'
-            }
-        },
-        created() {
-
-          // 获取导航
-          this.get_nav();
-          this.get_nav_recom();
-          this.get_List();
-
-          var wx = this.$wx
-          wx.showOptionMenu();
-          this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
-        },
-        methods: {
-            // 列表跳转详情
-            jumpDoods_deta(sku) {
-              this.$router.push({
-                path: '/order/goods_deta',
-                query: {
-                  id: sku.id
-                }
-              })
-            },
-            // 获取导航
-            get_nav() {
-              this.$post(localStorage.getItem('http') + 'goods_category/get_parent_nav',{
-                limit: 4
-              })
-                .then(res=> {
-                  this.nav_list= res.data
-                })
-            },
-            // 为您推荐
-            get_nav_recom() {
-              this.$post(localStorage.getItem('http') + 'goods_category/get_parent_nav',{
-                limit: 0
-              })
-                .then(res=> {
-                  // console.log(res)
-
-                  this.list_form.category_pid= res.data[0].id
-
-                  // this.get_list(this.list_form)
-
-                  this.goods_buttons_list= res.data
-                })
-            },
-            details_list(e) {
-              // if(!localStorage.getItem('token')){
-              //   this.$dialog.confirm({
-              //     title:'登录状态',
-              //     message:'未登录，请登录',
-              //   })
-              //       .then(()=>{
-              //         this.$router.push('/login')
-              //       })
-              //       .catch(()=>{
-              //         console.log('未登录')
-              //       });
-              // }else{
-              // var query = {}
-                this.$router.push({
-                  path: '/order_list',
-                  query: {
-                    pid: e.id
-                  }
-                })
-              // }
-            },
-            all_list() {
-              this.$router.push({
-                path: '/order/all_service'
-              })
-            },
-            // 点击滑动导航
-            goods_buttons_click(e,y) {
-                this.indexs= e;
-
-                this.list_form.category_pid= y.id
-                this.get_list(this.list_form)
-            },
-            // 获取列表
-            get_List(){
-              this.$post(localStorage.getItem('http') + 'module/get_shop_home_show',{})
-                .then(res=> {
-                  // console.log(res.data)
-                  this.shujuList = res.data.list;
-                })
-            },
-            // weixin_ClosePage(){
-            //   WeixinJSBridge.call('closeWindow');
-            // },
-            goBack (e) {
-              history.pushState(null, null, document.URL);
-              console.log(e)
-              // if(e.timeStamp != 0){
-              //   this.$dialog.confirm({
-              //     title: '',
-              //     message: '是否退出',
-              //   })
-              //   .then(() => {
-              //     // on confirm
-              //     WeixinJSBridge.call('closeWindow');
-              //   })
-              //   .catch(() => {
-              //     // on cancel
-              //   });
-              // }else{
-              //   WeixinJSBridge.call('closeWindow');
-              // }
-            },
-
-
-        },
-        mounted () {
-          if (window.history && window.history.pushState) {
-            // 向历史记录中插入了当前页
-            history.pushState(null, null, document.URL);
-            window.addEventListener('popstate', this.goBack, false);
-          }
-        },
-        destroyed () {
-          window.removeEventListener('popstate', this.goBack, false);
-        },
-        components: {
-            swiper,
-            swiper_two,
-            footer_nav
+      data() {
+        return {
+          active1: 0,
+          goods_buttons_list: [],
+          indexs: 0,
+          nav_list: [],
+          list: [],
+          shujuList: [],
+          list_form: {
+            category_pid: null
+          },
+          show: true,
+          title: '权鹏集团-企业服务国际知名品牌',
+          integrityurl: '',
+          // logo:'https://m.tjqpjt.com/logo.png',
+          desc: '助力企业快速成长，为企业提供财税筹划、工商注册、软件开发等服务。',
+          imgUrl: 'https://m.tjqpjt.com/logo.png',
+          show_headBar:false
         }
-    }
+      },
+      created() {
+
+        // 获取导航
+        this.get_nav();
+        this.get_nav_recom();
+        this.get_List();
+
+        var wx = this.$wx
+        wx.showOptionMenu();
+        this.$wxShare(this.title, this.desc, location.href, this.imgUrl)
+      },
+      methods: {
+        // 列表跳转详情
+        jumpDoods_deta(sku) {
+          this.$router.push({
+            path: '/order/goods_deta',
+            query: {
+              id: sku.id
+            }
+          })
+        },
+        // 获取导航
+        get_nav() {
+          this.$post(localStorage.getItem('http') + 'goods_category/get_parent_nav', {
+            limit: 4
+          })
+              .then(res => {
+                this.nav_list = res.data
+              })
+        },
+        // 为您推荐
+        get_nav_recom() {
+          this.$post(localStorage.getItem('http') + 'goods_category/get_parent_nav', {
+            limit: 0
+          })
+              .then(res => {
+                // console.log(res)
+
+                this.list_form.category_pid = res.data[0].id
+
+                // this.get_list(this.list_form)
+
+                this.goods_buttons_list = res.data
+              })
+        },
+        details_list(e) {
+          // if(!localStorage.getItem('token')){
+          //   this.$dialog.confirm({
+          //     title:'登录状态',
+          //     message:'未登录，请登录',
+          //   })
+          //       .then(()=>{
+          //         this.$router.push('/login')
+          //       })
+          //       .catch(()=>{
+          //         console.log('未登录')
+          //       });
+          // }else{
+          // var query = {}
+          this.$router.push({
+            path: '/order_list',
+            query: {
+              pid: e.id
+            }
+          })
+          // }
+        },
+        all_list() {
+          this.$router.push({
+            path: '/order/all_service'
+          })
+        },
+        // 点击滑动导航
+        goods_buttons_click(e, y) {
+          this.indexs = e;
+
+          this.list_form.category_pid = y.id
+          this.get_list(this.list_form)
+        },
+        // 获取列表
+        get_List() {
+          this.$post(localStorage.getItem('http') + 'module/get_shop_home_show', {})
+              .then(res => {
+                // console.log(res.data)
+                this.shujuList = res.data.list;
+              })
+        },
+        // weixin_ClosePage(){
+        //   WeixinJSBridge.call('closeWindow');
+        // },
+        goBack(e) {
+          history.pushState(null, null, document.URL);
+          console.log(e)
+          // if(e.timeStamp != 0){
+          //   this.$dialog.confirm({
+          //     title: '',
+          //     message: '是否退出',
+          //   })
+          //   .then(() => {
+          //     // on confirm
+          //     WeixinJSBridge.call('closeWindow');
+          //   })
+          //   .catch(() => {
+          //     // on cancel
+          //   });
+          // }else{
+          //   WeixinJSBridge.call('closeWindow');
+          // }
+        },
+
+
+      },
+      mounted() {
+        if (window.history && window.history.pushState) {
+          // 向历史记录中插入了当前页
+          history.pushState(null, null, document.URL);
+          window.addEventListener('popstate', this.goBack, false);
+        }
+      },
+      destroyed() {
+        window.removeEventListener('popstate', this.goBack, false);
+      },
+      components: {
+        swiper,
+        swiper_two,
+        footer_nav,
+      }
+    };
 </script>
 
 <style lang="less" scoped>

@@ -5,18 +5,16 @@
 <!--      <span>课程详情</span>-->
 <!--    </div>-->
     <div class="videoBox">
-      <template v-if="this.video">
-        <video id="myVideo"
+        <video id="video"
+           ref="video"
            class="video-js"
-           controls
+           controls="controls"
            preload="auto"
            :poster="video_cover"
            :src="video"
+           x5-playsinline="true" playsinline="true" webkit-playsinline="true"
         />
-      </template>
-      <template v-else>
-        <img :src="video_cover" alt="">
-      </template>
+<!--      muted-->
     </div>
     <div class="cont">
       <div class="titleBox">
@@ -79,7 +77,9 @@
             </div>
             <div class="lecturer_c">
               <span>讲师介绍</span>
-              <div class="lecturer_text" v-html="teacher_de.info"></div>
+              <div class="lecturer_text">
+                <pre>{{teacher_de.info}}</pre>
+              </div>
             </div>
           </div>
         </van-tab>
@@ -218,12 +218,12 @@
         </div>
       </div>
     </div>
-    <div class="playVideoBox" v-show="playVideoBox">
-      <div class="video11">
-        <video ref="video" id="video" :src="video_url" autoplay="autoplay" controls="controls"></video>
-        <img src="../assets/center/zhifuTancTuichu.png" alt="" @click="guanbiViode">
-      </div>
-    </div>
+<!--    <div class="playVideoBox" v-show="playVideoBox">-->
+<!--      <div class="video11">-->
+<!--        <video ref="video" id="video" :src="video_url" autoplay="autoplay" controls="controls"></video>-->
+<!--        <img src="../assets/center/zhifuTancTuichu.png" alt="" @click="guanbiViode">-->
+<!--      </div>-->
+<!--    </div>-->
 <!--    <payComp></payComp>-->
 
     <div class="grey_background" v-show="show_share" @click="close_invitationPoster">
@@ -317,7 +317,7 @@ export default {
   },
   methods:{
     get_height(){
-      this.height.height = window.innerHeight +'px'
+      this.height.height = window.innerHeight - 62 +'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -377,7 +377,7 @@ export default {
         id:id
       })
       .then(res=> {
-        // console.log(res)
+        console.log(res)
         this.teacher_de = res.data.teacher
         this.have = res.data.have
         this.lessonId = res.data.id
@@ -397,7 +397,7 @@ export default {
         }
         this.old_price = (res.data.old_price/100).toFixed(2)
         this.special = res.data.special
-        this.video = res.data.video
+        // this.video = res.data.video
         this.video_cover = res.data.video_cover
         this.want_study = res.data.want_study
         // console.log(this.want_study)
@@ -444,7 +444,9 @@ export default {
         id : this.id_set,
         token: localStorage.getItem('token'),
       }).then(res=> {
+        console.log(res)
         this.lesson = res.data.list
+        this.playVideo(this.lesson[0])
         this.title = res.data.list[0].title
         this.count = '课程目录 ' + '(' + res.data.count + ')'
       })
@@ -598,12 +600,13 @@ export default {
     },
     // 播放视频
     playVideo(n){
-      // console.log(n)
-      this.lesson_id = n.id
+      console.log(n)
       var video = document.getElementById("video");
+      console.log(video)
+      this.lesson_id = n.id
       if(n.have == true){
-        this.video_url = n.video_url
-        this.playVideoBox = true;
+        this.video = n.video_url
+        // this.playVideoBox = true;
         if(video.pause){
           video.play();
         }
@@ -614,20 +617,17 @@ export default {
           // console.log(n)
           this.limit = n.try_see_time_s
           // console.log(this.limit)
-          this.video_url = n.video_url
-          this.playVideoBox = true;
+          this.video = n.video_url
           if(video.pause){
             video.play();
-          }else{
-            video.pause();
           }
           this.get_time();
           this.viewing_times();
         }
         if(n.rule == 2){
           // console.log('免费')
-          this.video_url = n.video_url
-          this.playVideoBox = true;
+          this.video = n.video_url
+          // this.playVideoBox = true;
           if(video.pause){
             video.play();
           }else{
@@ -641,14 +641,14 @@ export default {
       }
     },
     // 关闭视频播放
-    guanbiViode(){
-      this.playVideoBox = false;
-      this.$refs.video.removeEventListener('pause',this.get_addevent)
-      this.$refs.video.removeEventListener('play',this.get_addevent1)
-      this.$refs.video.currentTime = 0
-      this.$refs.video.pause();
-      clearTimeout(this.timeout);
-    },
+    // guanbiViode(){
+    //   this.playVideoBox = false;
+    //   this.$refs.video.removeEventListener('pause',this.get_addevent)
+    //   this.$refs.video.removeEventListener('play',this.get_addevent1)
+    //   this.$refs.video.currentTime = 0
+    //   this.$refs.video.pause();
+    //   clearTimeout(this.timeout);
+    // },
     // 返回首页
     back_index(){
       this.$router.replace({path:'/index_home'});
@@ -713,7 +713,7 @@ export default {
       })
     },
     get_addevent1(e) {
-      // console.log(e.target.currentTime)
+      console.log(e.target.currentTime)
       if(e.target.currentTime > this.limit){
         this.$refs.video.pause();
         this.$refs.video.currentTime = this.limit
@@ -722,7 +722,7 @@ export default {
         const newDate = this.limit - e.target.currentTime
         this.timeout = setTimeout(() => {
           // console.log('结束')
-          exitFullscreen('#video');
+          exitFullscreen('video');
           this.$refs.video.pause();
           clearTimeout(this.timeout)
           this.tcShow = true
@@ -730,13 +730,12 @@ export default {
       }
     },
     get_addevent(e){
-        // console.log(e.target.currentTime)
+        console.log(e.target.currentTime)
         if(e.target.currentTime > this.limit){
           this.$refs.video.pause();
           this.$refs.video.currentTime = this.limit
           this.tcShow = true
         }else{
-          // if(this.playVideoBox) {
           const newDate = this.limit - e.target.currentTime
           this.timeout = setTimeout(() => {
             // console.log('结束')
@@ -744,7 +743,6 @@ export default {
             clearTimeout(this.timeout)
             this.tcShow = true
           },newDate * 1000)
-          // }
         }
     },
     // 浏览增加积分
@@ -820,17 +818,15 @@ export default {
     var score = localStorage.getItem('score');
     this.score = score
     // console.log(this.score)
-
-
     let id = this.$route.query.id;
     // console.log(id);
-
     this.id_set = id
     // console.log(this.id_set);
     this.get_courDetails(id);
     this.get_lesson_list(id);
 
     this.changeUrl();
+
   },
   components: {
     // payComp
@@ -855,10 +851,11 @@ export default {
 
 <style lang="less" scoped>
 .big_b{
-  padding: 0 0 62px;
-  box-sizing: border-box;
+  //padding: 0 0 62px;
+  //box-sizing: border-box;
   overflow: auto;
   background-color: white;
+  margin-bottom: 62px;
 }
 .head{
   position: fixed;
@@ -894,6 +891,7 @@ export default {
   height: 201px;
   //background: url("../assets/buSchool/videoBox_bg.png") no-repeat;
   //background-size: 100% 100%;
+  z-index: 6;
   img{
     object-fit: cover;
     width: 100%;
@@ -1717,7 +1715,6 @@ export default {
 }
 video{
   position: relative;
-  z-index: 2000;
   width: 100%;
   height: 100%;
 }
