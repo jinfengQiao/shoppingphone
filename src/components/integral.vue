@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg">
     <div class="posiBox">
 <!--      <div class="head">-->
 <!--        <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="cont" id="cont" :style="height">
+    <div class="cont" id="cont" :style="height" :class="{cont_top:is_headerBarShow}">
       <ul>
         <li v-for="(n,inx) in jifenList" :key="inx">
           <div class="left">
@@ -69,6 +69,7 @@ export default {
       page:1,
       limit:15,
       show12:false,
+      is_headerBarShow:true,
     }
   },
   methods:{
@@ -155,6 +156,12 @@ export default {
     this.get_money();
     window.addEventListener('scroll', this.onScroll);
 
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
 
   },
   components: {
@@ -165,13 +172,12 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  background-color: #f3f4f6;
-  padding: 0 0 62px 0;
-  box-sizing: border-box;
+  position: relative;
+  width: 100%;
 }
 .posiBox{
   width: 100%;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   background-color: #ffffff;
@@ -248,9 +254,11 @@ export default {
   width: 100%;
   padding: 212px 0 0 0;
   box-sizing: border-box;
-  //margin-top: 212px;
-  //margin-bottom: 76px;
   background-color: #ffffff;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
+  overflow: auto;
+
   ul{
     width: 100%;
     padding: 0 15px;
@@ -303,6 +311,10 @@ export default {
       }
     }
   }
+}
+.cont_top{
+  min-height: calc(100vh - 50px)!important;
+  max-height: calc(100vh - 50px)!important;
 }
 .btnBox{
   position: fixed;

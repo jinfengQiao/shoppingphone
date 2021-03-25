@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="bg">
     <div class="posiBox">
 <!--      <div class="head">-->
 <!--        <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="cont">
+    <div class="cont" :class="{cont_top:is_headerBarShow}">
       <ul>
         <li v-for="(n,inx) in contList" :key="inx">
           <div class="left">
@@ -103,6 +103,7 @@ export default {
       num_money1:'',
       isAble:false,
       isAble1:false,
+      is_headerBarShow:true,
     }
   },
   methods:{
@@ -274,6 +275,13 @@ export default {
 
     var open_id = localStorage.getItem('openid')
     this.order_id = open_id
+
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   components: {
     noSharing
@@ -283,13 +291,15 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  background-color: #f3f4f6;
-  padding: 0 0 62px 0;
-  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  //overflow: auto;
+  //padding: 0 0 62px 0;
+  //box-sizing: border-box;
 }
 .posiBox{
   width: 100%;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   background-color: #ffffff;
@@ -347,34 +357,44 @@ export default {
     }
   }
 }
-.cont{
+.cont {
   width: 100%;
-  margin-top: 162px;
-  margin-bottom: 76px;
+  //margin-top: 162px;
+  //margin-bottom: 76px;
+  padding: 162px 0 21px;
+  overflow: auto;
   background-color: #ffffff;
-  ul{
+  min-height: calc(100vh - 50px);
+  max-height: calc(100vh - 50px);
+
+  ul {
     width: 100%;
     padding: 0 15px;
     box-sizing: border-box;
-    li:last-child{
+
+    li:last-child {
       border: 0;
     }
-    li{
+
+    li {
       width: 100%;
       height: 83px;
       border-bottom: 1px solid #DCDCDC;
       box-sizing: border-box;
       padding: 15px 20px;
-      .left{
+
+      .left {
         float: left;
-        span{
+
+        span {
           width: 100%;
           font-size: 16px;
           font-family: PingFang SC;
           font-weight: 500;
           color: #333333;
         }
-        p{
+
+        p {
           margin-top: 10px;
           width: 100%;
           font-size: 12px;
@@ -383,21 +403,25 @@ export default {
           color: #999999;
         }
       }
-      .right{
+
+      .right {
         float: right;
         text-align: right;
-        span{
+
+        span {
           width: 100%;
           font-size: 20px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #F53033;
         }
+
         //     -减
-        .spanAdd{
+        .spanAdd {
           color: #0596EB;
         }
-        .time{
+
+        .time {
           margin-top: 5px;
           width: 100%;
           font-size: 12px;
@@ -506,6 +530,8 @@ export default {
     outline: none;
   }
 }
-
+.cont_top{
+  padding: 162px 0 76px!important;
+}
 
 </style>

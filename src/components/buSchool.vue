@@ -6,7 +6,7 @@
       </div>
     </div>
 <!--    <div class="cont" :style="height_cont">-->
-      <div class="cont1" v-show="tabState==1" :style="height">
+      <div class="cont1" v-show="tabState==1">
         <div class="banner">
           <div class="bannerBox">
           <div class="bannerBoxLeft">
@@ -19,14 +19,14 @@
         </div>
         </div>
 <!--        <div class="null_b" style="height: 156px;"></div>-->
-        <div class="contCont" id="contCont_box">
+        <div class="contCont" id="contCont_box" :style="height">
           <div class="contContHead" id="contContHead">
             <ul>
 <!--              <li>全部</li>-->
               <li v-for="(n,index) in contContHead" :key="index" :class="{contContHeadAdd:index===isSelect}" @click="changeCls(index,n.id)">{{n.name}}</li>
             </ul>
           </div>
-          <div class="contContCont" id="contContCont">
+          <div class="contContCont" id="contContCont" v-bind:class="{cont_top:is_headerBarShow}">
             <ul>
               <li @click="jumpCourDetails(n.id)" v-for="(n,index) in contContCont" :key="index">
                 <img :src="n.video_cover" alt="">
@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-      <div class="cont_lecturer" v-show="tabState==2" :style="height_cont">
+      <div class="cont_lecturer" v-show="tabState==2" :style="height_cont" :class="{cont_lecturer_top:is_headerBarShow}">
         <div class="teacherList_b" id="teacherList">
           <ul>
             <li @click="jump_aboutInstructor(n.id)" v-for="(n,inx) in teacherList" :key="inx">
@@ -183,14 +183,15 @@ export default {
       id_set:'',
       teacherList:[],
       show_teacher:false,
+      is_headerBarShow:true,
     }
   },
   methods:{
     get_height_cont(){
-      this.height_cont.height = window.innerHeight +'px'
+      this.height_cont.height = window.innerHeight - 62 +'px'
     },
     hh(){
-      this.height.height = window.innerHeight +'px'
+      this.height.height = window.innerHeight - 156 +'px'
     },
     hh1(){
       this.height1.height = window.innerHeight +'px'
@@ -490,6 +491,14 @@ export default {
     var wx = this.$wx
     wx.showOptionMenu();
     this.get_teacherList();
+
+
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   beforeDestroy() {
     window.removeEventListener("scroll",this.onScroll);
@@ -506,7 +515,7 @@ export default {
   //float: left;
   width: 100%;
   background-color: #ffffff;
-  overflow:hidden;
+  //overflow:hidden;
 }
 .head{
   position: absolute;
@@ -541,11 +550,12 @@ export default {
   left: 0;
   width: 100%;
   z-index: 3;
+  line-height: 36px;
   background-color: #f3f4f6;
   //padding: 0 15px;
   //box-sizing: border-box;
   .toggle{
-    float: left;
+    //float: left;
     width: 100%;
     button{
       float: left;
@@ -579,14 +589,14 @@ export default {
   position: relative;
   width: 100%;
   z-index: 1;
-  padding: 36px 0 0;
+  //padding: 36px 0 77px;
   box-sizing: border-box;
   overflow: auto;
   .banner{
     position: absolute;
     top: 36px;
     left: 0;
-    float: left;
+    //float: left;
     width: 100%;
     height: 120px;
     padding: 15px;
@@ -646,9 +656,11 @@ export default {
     //float: left;
     width: 100%;
     background-color: #ffffff;
-    padding: 120px 15px 77px;
+    //padding: 0 15px 77px;
+    padding: 52px 15px 0;
     box-sizing: border-box;
     overflow: auto;
+    margin-top: 105px;
     .contContHead{
       //padding: 0 15px;
       box-sizing: border-box;
@@ -697,7 +709,7 @@ export default {
     .contContCont{
       width: 100%;
       overflow: auto;
-      //padding: 0 0 62px 0;
+      padding:  0 0 12px 0;
       box-sizing: border-box;
 
       ul{
@@ -950,9 +962,9 @@ export default {
   }
 }
 .cont_lecturer{
-  //margin-top: 36px;
   width: 100%;
-  padding: 36px 15px 77px;
+  position: relative;
+  padding: 36px 15px 0;
   box-sizing: border-box;
   overflow: auto;
   .teacherList_b{
@@ -1056,8 +1068,12 @@ export default {
     height: 181px;
   }
 }
-
-
+.cont_top{
+  padding: 0 0 62px 0!important;
+}
+.cont_lecturer_top{
+  padding: 36px 15px 62px!important;
+}
 
 
 

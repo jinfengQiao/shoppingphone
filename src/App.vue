@@ -90,6 +90,8 @@ export default {
   mounted () {
     // id 是我需要获取的参数名，如果你要获取user等其他，自行更换即可
     // console.log(this.Utils.getUrlKey('openid'))
+
+
   },
   component:{
 

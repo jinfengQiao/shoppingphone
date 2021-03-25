@@ -416,32 +416,32 @@ export default {
   width: 100%;
   background-color: #f3f4f6;
 }
-.head{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  line-height: 70px;
-  background-color: #ffffff;
-  z-index: 1999;
-  img{
-    position: absolute;
-    left: 15px;
-    top: 26px;
-    width: 10px;
-    height: 18px;
-  }
-  span{
-    text-align: center;
-    width: 100%;
-    display: block;
-    font-size: 19px;
-    font-family: PingFang SC;
-    font-weight: bold;
-    color: #333333;
-  }
-}
+//.head{
+//  position: absolute;
+//  top: 0;
+//  left: 0;
+//  width: 100%;
+//  height: 70px;
+//  line-height: 70px;
+//  background-color: #ffffff;
+//  z-index: 1999;
+//  img{
+//    position: absolute;
+//    left: 15px;
+//    top: 26px;
+//    width: 10px;
+//    height: 18px;
+//  }
+//  span{
+//    text-align: center;
+//    width: 100%;
+//    display: block;
+//    font-size: 19px;
+//    font-family: PingFang SC;
+//    font-weight: bold;
+//    color: #333333;
+//  }
+//}
 .tab{
   z-index: 2;
   position: absolute;

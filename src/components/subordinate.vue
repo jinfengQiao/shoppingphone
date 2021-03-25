@@ -22,7 +22,7 @@
           </ul>
         </div>
       </div>
-      <div class="contCont" :style="height1">
+      <div class="contCont" :style="height1" :class="{contCont_top:is_headerBarShow}">
         <div class="contCont1" v-show="tabState==1">
           <ul>
             <li v-for="(n,inx) in yijiList" :key="inx" @click="jumpViewSupe1(n.id)">
@@ -113,7 +113,7 @@ export default {
         // { name: '二维码', icon: 'qrcode' },
       ],
       tabState: 1,
-      isActive: '',
+      isActive: 0,
       height: {
         width: '',
         height: '',
@@ -132,6 +132,7 @@ export default {
       yaoqingCode: 0,
       show:false,
       pic_url:'',
+      is_headerBarShow:true,
     }
   },
   methods: {
@@ -139,10 +140,10 @@ export default {
       this.$router.go(-1);
     },
     hh() {
-      this.height.height = window.innerHeight - 285 + 'px'
+      // this.height.height = window.innerHeight - 285 + 'px'
     },
     hh1() {
-      this.height1.height = window.innerHeight - 377 + 'px'
+      this.height1.height = window.innerHeight + 'px'
     },
     toggle(inx) {
       this.isActive = inx;
@@ -231,24 +232,59 @@ export default {
 
     // var wx = this.$wx
     // wx.showOptionMenu();
+
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
+
   },
   components: {
     noSharing
-  }
+  },
+  // beforeRouteEnter (to, from, next) {
+  //   console.log(to.name)
+  //   console.log(from.name)
+  //   // if(to.name == 'viewSipe'){
+  //   //   console.log('是一级')
+  //   //   next();
+  //   // }else{
+  //   //   console.log('是二级');
+  //   //   next();
+  //   // }
+  //   if(from.name == 'viewSupe'){
+  //     next(vm=>{
+  //       if(vm.level == 2){
+  //         vm.isActive=1
+  //         vm.tabState=2
+  //       }else {
+  //         vm.isActive=0
+  //         vm.tabState=1
+  //       }
+  //     });
+  //   }else{
+  //     next(vm=>{
+  //       vm.isActive=0
+  //       vm.tabState=1
+  //     });
+  //   }
+  // },
 };
 
 </script>
 
 <style lang="less" scoped>
 .bg{
-  float: left;
+  position: relative;
   width: 100%;
   background-color: rgba(78, 119, 235, 1);
   //padding: 0 0 62px 0;
   //box-sizing: border-box;
 }
 .head{
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
@@ -378,10 +414,12 @@ export default {
   }
   .contCont{
     width: 100%;
-    margin-top: 67px;
-    overflow: auto;
     background: #FFFFFF;
     border-radius: 5px;
+    padding: 67px 0 0 0;
+    min-height: calc(100vh - 310px);
+    max-height: calc(100vh - 310px);
+    overflow: auto;
     .cont_left_b{
       display: flex;
       justify-content: flex-start;
@@ -524,6 +562,10 @@ export default {
       }
     }
   }
+  .contCont_top{
+    min-height: calc(100vh - 360px)!important;
+    max-height: calc(100vh - 360px)!important;
+  }
 }
 .grey_background {
   position: fixed;
@@ -531,7 +573,8 @@ export default {
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: 9;
+  //z-index: 9;
+  z-index: 2000;
   background-color: rgba(0, 0, 0, 0.4);
   .invitationPoster_b {
     width: 100%;

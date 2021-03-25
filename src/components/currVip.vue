@@ -9,7 +9,7 @@
         <li v-for="(n,index) in tabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index)">{{n}}</li>
       </ul>
     </div>
-    <div class="cont">
+    <div class="cont" :class="{cont_top:is_headerBarShow}">
       <div class="cont1" v-show="tabState==1">
         <div class="bgImg">
           <img src="../assets/buSchool/vipBgImg1.png" alt="">
@@ -272,11 +272,12 @@ export default {
       pic_url:'',
       card_id_share:1,
       course_id_j:'',
+      is_headerBarShow:true,
     }
   },
   methods:{
     hh(){
-      this.height.height = window.innerHeight+'px'
+      // this.height.height = window.innerHeight+'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -599,12 +600,20 @@ export default {
       this.isSelect11 = 0
       // this.course_id_1 = this.$route.query.id
     }
+
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
 }
 </script>
 
 <style lang="less" scoped>
 .bg{
+  position: relative;
   float: left;
   width: 100%;
   background-color: #f3f4f6;
@@ -637,7 +646,7 @@ export default {
 }
 .tab{
   z-index: 2;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   //margin-top: 70px;
@@ -669,15 +678,16 @@ export default {
 .cont{
   position: relative;
   z-index: 1;
-  margin-top: 35px;
+  //margin-top: 35px;
   width: 100%;
-  padding: 15px 0;
+  padding: 50px 0 15px;
   box-sizing: border-box;
   background-color: #f3f4f6;
+  min-height: calc(100vh - 50px);
+  max-height: calc(100vh - 50px);
+  overflow: auto;
   .cont1{
     width: 100%;
-    padding: 0 0 45px 0;
-    box-sizing: border-box;
     .bgImg{
       width: 100%;
       height: 143px;
@@ -1506,5 +1516,8 @@ export default {
       //height: 100%;
     }
   }
+}
+.cont_top{
+  padding: 50px 0 65px!important;
 }
 </style>

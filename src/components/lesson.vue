@@ -1,5 +1,5 @@
 <template>
-  <div class="bg" :style="height">
+  <div class="bg">
 <!--    <div class="head">-->
 <!--      <img src="../assets/center/back_icon1.png" alt="" @click="back">-->
 <!--      <span>我的课程</span>-->
@@ -9,7 +9,7 @@
         <li v-for="(n,index) in tabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index,n.name)">{{n.name}}</li>
       </ul>
     </div>
-    <div class="cont">
+    <div class="cont" :class="{cont_top:is_headerBarShow}">
       <div class="firstLi">
         <span>课程VIP卡</span>
         <div class="btnBox" @click="jump_currVip">
@@ -52,10 +52,6 @@ export default {
   name: "lesson",
   data(){
     return{
-      height:{
-        width:'',
-        height:'',
-      },
       isActive:'',
       tabList:[
           // '财税','法律','融资','股权','资本','人力'
@@ -64,13 +60,11 @@ export default {
       category_id:0,
       show12:false,
       spanName:'',
+      is_headerBarShow:true,
 
     }
   },
   methods:{
-    hh(){
-      this.height.height = window.innerHeight +'px'
-    },
     back:function(){
       this.$router.go(-1);
     },
@@ -131,10 +125,15 @@ export default {
     }
   },
   created(){
-    this.hh();
     this.get_class();
     this.get_user_lesson();
 
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   components: {
     noSharing
@@ -144,7 +143,7 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  float: left;
+  position: relative;
   width: 100%;
   background-color: #f3f4f6;
 }
@@ -176,7 +175,7 @@ export default {
 }
 .tab{
   z-index: 2;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   //margin-top: 70px;
@@ -216,11 +215,13 @@ export default {
   float: left;
   position: relative;
   z-index: 1;
-  margin-top: 52px;
   width: 100%;
-  padding: 15px;
+  padding: 67px 15px 15px;
   box-sizing: border-box;
   background-color: #f3f4f6;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
+  overflow: auto;
   .firstLi{
     position: relative;
     background: url("../assets/center/lessonImg1.png") no-repeat;
@@ -375,6 +376,9 @@ export default {
     }
   }
 }
-
+.cont_top{
+  min-height: calc(100vh - 50px)!important;
+  max-height: calc(100vh - 50px)!important;
+}
 
 </style>

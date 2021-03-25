@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="cont">
+    <div class="cont" :class="{cont_top:is_headerBarShow}">
       <ul>
         <li>
           <img src="../assets/center/modify_icon1.png" alt="">姓名
@@ -82,9 +82,9 @@
         </li>
 
       </ul>
-    </div>
-    <div class="btnBox">
-      <button type="button" @click="preservation">保存</button>
+      <div class="btnBox">
+        <button type="button" @click="preservation">保存</button>
+      </div>
     </div>
     <noSharing></noSharing>
 
@@ -126,12 +126,13 @@ export default {
       province_id:'',
       city_id:'',
       file:"",
+      is_headerBarShow:true,
 
     }
   },
   methods:{
     hh(){
-      this.height.height = window.innerHeight +'px'
+      // this.height.height = window.innerHeight +'px'
     },
     back:function(){
       this.$router.go(-1);
@@ -316,6 +317,13 @@ export default {
       this.city_list = res.data.city_list
     })
 
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
+
 
   },
   components: {
@@ -326,12 +334,12 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  float: left;
+  position: relative;
   width: 100%;
   background-color: #f3f4f6;
 }
 .head{
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
@@ -414,9 +422,12 @@ export default {
 .cont{
   position: relative;
   //z-index: 1;
-  margin-top: 230px;
   width: 100%;
   background-color: #ffffff;
+  padding: 230px 0 0;
+  overflow: auto;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
   ul{
     width: 100%;
 
@@ -490,15 +501,18 @@ export default {
 
 
 }
+.cont_top{
+  min-height: calc(100vh - 50px)!important;
+  max-height: calc(100vh - 50px)!important;
+}
 .btnBox{
-  margin-top: 40px;
-  position: relative;
   width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   button{
-    position: absolute;
-    left: 50%;
-    top: 0;
-    margin-left: -68px;
     width: 136px;
     height: 36px;
     line-height: 36px;

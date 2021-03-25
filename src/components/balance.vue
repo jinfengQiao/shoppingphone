@@ -1,5 +1,5 @@
 <template>
-  <div class="bg" :style="height">
+  <div class="bg" :class="{bg_top:is_headerBarShow}">
     <div class="head_b">
       <div class="img_b">
         <img src="../assets/center/balance_logo.png" alt="">
@@ -30,13 +30,11 @@ export default {
       height:{
         width:'',
         height:'',
-      }
+      },
+      is_headerBarShow:true,
     }
   },
   methods:{
-    get_height(){
-      this.height.height = window.innerHeight + 'px';
-    },
     back:function(){
       this.$router.go(-1);
     },
@@ -65,8 +63,14 @@ export default {
 
   },
   created(){
-    this.get_height();
     this.get_money();
+
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   components: {
     noSharing
@@ -90,6 +94,12 @@ export default {
   background-color: #ffffff;
   padding: 12px 0 0;
   box-sizing: border-box;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
+}
+.bg_top{
+  min-height: calc(100vh - 50px)!important;
+  max-height: calc(100vh - 50px)!important;
 }
 .head_b{
   width: 100%;
@@ -139,13 +149,15 @@ export default {
   color: #0481FF;
   line-height: 24px;
 }
-.foot_b{
+.foot_b {
   position: absolute;
-  bottom: 100px;
+  //bottom: 100px;
+  bottom: 30px;
   left: 0;
   width: 100%;
   padding: 0 15px;
-  button{
+
+  button {
     outline: none;
     border: 0;
     font-size: 16px;
@@ -156,11 +168,13 @@ export default {
     height: 40px;
     border-radius: 31px;
   }
-  .chongzhi{
+
+  .chongzhi {
     background: #0481FF;
     color: #FFFFFF;
   }
-  .mingxi{
+
+  .mingxi {
     margin-top: 20px;
     border: 1px solid #666666;
     box-sizing: border-box;

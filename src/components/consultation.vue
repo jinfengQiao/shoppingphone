@@ -9,7 +9,7 @@
         <li v-for="(n,index) in tabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index,n.id)">{{n.name}}</li>
       </ul>
     </div>
-    <div class="cont" :style="height">
+    <div class="cont" :class="{cont_top:is_headerBarShow}">
       <ul>
         <li v-for="(n,inx) in tabCont" :key="inx" @click="jumpLink(n.card_info.link)">
           <img :src="n['card_info'].pic_url" alt="">
@@ -40,10 +40,7 @@ export default {
       tabCont:[],
       show12:false,
       category_id:0,
-      height:{
-        width:'',
-        height: ''
-      }
+      is_headerBarShow:true,
     }
   },
   methods:{
@@ -90,13 +87,16 @@ export default {
       // console.log(link)
       window.location.href=link
     },
-    get_height(){
-      this.height.height = window.innerHeight-52 +'px'
-    }
   },
   created(){
     this.tab_List();
-    this.get_height();
+
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   components: {
     noSharing
@@ -107,6 +107,8 @@ export default {
 <style lang="less" scoped>
 .bg{
   //background-color: #f3f4f6;
+  width: 100%;
+  position: relative;
 }
 .head{
   position: fixed;
@@ -136,7 +138,7 @@ export default {
 }
 .tab{
   z-index: 2;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   //margin-top: 70px;
@@ -175,11 +177,13 @@ export default {
 .cont{
   position: relative;
   z-index: 1;
-  margin-top: 52px;
+  //margin-top: 52px;
   width: 100%;
-  padding: 15px;
+  padding: 67px 15px 15px;
   box-sizing: border-box;
-  //background-color: #f3f4f6;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
+  overflow: auto;
   ul{
     width: 100%;
     li{
@@ -258,5 +262,9 @@ export default {
       object-fit: cover;
     }
   }
+}
+.cont_top{
+  min-height: calc(100vh - 50px)!important;
+  max-height: calc(100vh - 50px)!important;
 }
 </style>

@@ -132,7 +132,7 @@ export default {
         this.lever11 = '一级'
         this.shangji = false
       })
-    }
+    },
   },
   created(){
     let level =this.$route.query.level;

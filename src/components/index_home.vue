@@ -180,21 +180,28 @@
         goBack(e) {
           history.pushState(null, null, document.URL);
           console.log(e)
-          // if(e.timeStamp != 0){
-          //   this.$dialog.confirm({
-          //     title: '',
-          //     message: '是否退出',
-          //   })
-          //   .then(() => {
-          //     // on confirm
-          //     WeixinJSBridge.call('closeWindow');
-          //   })
-          //   .catch(() => {
-          //     // on cancel
-          //   });
-          // }else{
-          //   WeixinJSBridge.call('closeWindow');
-          // }
+          if(e.timeStamp != 0){
+            this.$dialog.confirm({
+              title: '',
+              message: '是否退出',
+            })
+            .then(() => {
+              // on confirm
+              // WeixinJSBridge.call('closeWindow');
+              //
+              // // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
+              // window.onbeforeunload = function (e) {
+              //   console.log(e)
+              //   var storage = window.localStorage.invite_openid;
+              //   storage.clear()
+              // }
+            })
+            .catch(() => {
+              // on cancel
+            });
+          }else{
+            // WeixinJSBridge.call('closeWindow');
+          }
         },
 
 

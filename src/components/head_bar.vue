@@ -4,9 +4,9 @@
     <div class="head_b">
       <div class="left_b">
         <div class="img_b">
-          <img src="../assets/center/headImg.png" alt="">
+          <img :src="wechat_b_val.face_url" alt="">
         </div>
-        <span>李四邀您进入商城</span>
+        <span>{{wechat_b_val.nickname}}<br/>邀您进入商城</span>
       </div>
       <div class="right_b">
         <div class="liuyan_b" @click="click_leaving_b">
@@ -87,6 +87,15 @@ export default {
     },
     click_wechat_b(){
       this.webchat_b_s = true
+      // this.$post(localStorage.getItem('http') + 'user/share_info',{
+      // })
+      // .then(res=> {
+      //   // console.log(res)
+      //   this.wechat_b_val = res.data
+      // })
+    },
+    // 获取微信信息
+    get_wechat_info(){
       this.$post(localStorage.getItem('http') + 'user/share_info',{
       })
       .then(res=> {
@@ -178,6 +187,7 @@ export default {
   },
   created() {
     this.changeUrl();
+    this.get_wechat_info();
   }
 }
 </script>
@@ -206,6 +216,8 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    flex: 1;
+    margin-right: 10px;
     .img_b{
       width: 30px;
       height: 30px;
@@ -224,7 +236,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 500;
       color: rgba(9, 101, 255, 1);
-      letter-spacing: 2px;
+      //letter-spacing: 2px;
     }
   }
   .right_b{

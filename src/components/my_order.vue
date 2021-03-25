@@ -1,10 +1,10 @@
 <template>
-    <div style="border-top: 1px solid #DDDDDD;background-color: #ffffff">
-        <ul class="my_order_title" style="display: none;">
-            <li :class="[ indexs == index? 'span_blue' : '' ]" v-for="(item,index) in my_order_title" :key="item.id" @click="my_order_list_click(index)" >
-                <span>{{ item.name }}</span>
-            </li>
-        </ul>
+    <div style="border-top: 1px solid #DDDDDD;background-color: #ffffff" class="bg">
+<!--        <ul class="my_order_title" style="display: none;">-->
+<!--            <li :class="[ indexs == index? 'span_blue' : '' ]" v-for="(item,index) in my_order_title" :key="item.id" @click="my_order_list_click(index)" >-->
+<!--                <span>{{ item.name }}</span>-->
+<!--            </li>-->
+<!--        </ul>-->
         <!--切换的头tab-->
         <ul class="headTab">
           <li v-for="(n,index) in headTabList" :class="{cur:index==isActive}" :key="index" @click="listGo(index)">{{n}}</li>
@@ -13,7 +13,7 @@
           <img src="../assets/buSchool/nullBoxImg1.png" alt="">
         </div>
         <!--订单信息-->
-        <ul class="my_list">
+        <ul class="my_list" :class="{my_list_top:is_headerBarShow}">
             <li v-for="item in list" :key="item.id">
                 <div class="my_list_title">
                     <span>订单编号：{{ item.num }}</span>
@@ -66,9 +66,9 @@
                 </div>
             </li>
         </ul>
-      <div class="back_index">
-        <button type="button" @click="back_index">返回个人中心</button>
-      </div>
+        <div class="back_index">
+          <button type="button" @click="back_index">返回个人中心</button>
+        </div>
 
       <noSharing></noSharing>
 
@@ -113,6 +113,7 @@
               isActive:'',
               status:'',
               show12:false,
+              is_headerBarShow:true,
             }
         },
         methods: {
@@ -229,35 +230,35 @@
                 }
               })
             },
-            my_order_list_click(e) {
-                this.indexs= e
-                if(e == 0) {
-                  let obj= {}
-
-                  obj['token']= localStorage.getItem('token')
-                  obj['refund']= 0
-
-                  this.get_list(obj)
-
-
-                }else if(e == 1) {
-
-                  let obj= {}
-
-                  obj['token']= localStorage.getItem('token')
-                  obj['status']= 0
-
-                  this.get_list(obj)
-
-                }else if(e == 2) {
-                  let obj= {}
-
-                  obj['token']= localStorage.getItem('token')
-                  obj['refund']= 1
-
-                  this.get_list(obj)
-                }
-            },
+            // my_order_list_click(e) {
+            //     this.indexs= e
+            //     if(e == 0) {
+            //       let obj= {}
+            //
+            //       obj['token']= localStorage.getItem('token')
+            //       obj['refund']= 0
+            //
+            //       this.get_list(obj)
+            //
+            //
+            //     }else if(e == 1) {
+            //
+            //       let obj= {}
+            //
+            //       obj['token']= localStorage.getItem('token')
+            //       obj['status']= 0
+            //
+            //       this.get_list(obj)
+            //
+            //     }else if(e == 2) {
+            //       let obj= {}
+            //
+            //       obj['token']= localStorage.getItem('token')
+            //       obj['refund']= 1
+            //
+            //       this.get_list(obj)
+            //     }
+            // },
             listGo(index){
               this.isActive = index;
               // console.log(this.isActive)
@@ -295,6 +296,13 @@
             this.isActive = 2
           }
           this.get_list();
+
+          var openid_bar = localStorage.getItem('invite_openid');
+          if(!openid_bar){
+            this.is_headerBarShow = false
+          }else{
+            this.is_headerBarShow = true
+          }
         },
         components: {
           noSharing
@@ -312,6 +320,11 @@
 </script>
 
 <style lang="less" scoped>
+.bg{
+  position: relative;
+  background-color: #fff;
+  width: 100%;
+}
     .my_order_title{
         padding: 15px 16px 0;
         display: flex;
@@ -336,7 +349,7 @@
 
     .headTab{
       z-index: 2;
-      position: fixed;
+      position: absolute;
       //top: 70px;
       left: 0;
       top: 0;
@@ -350,6 +363,8 @@
       display: flex;
       justify-content: space-between;
       justify-items: center;
+      border-bottom: 1px solid rgb(211,211,211);
+      z-index: 2;
       li{
         cursor: pointer;
         font-size: 14px;
@@ -375,7 +390,12 @@
       color: #5D80FC!important;
     }
     .my_list{
-        padding: 64px 15px 70px 15px;
+      position: relative;
+      width: 100%;
+      overflow: auto;
+        padding: 64px 15px 20px 15px;
+        min-height: calc(100vh - 52px);
+        max-height: calc(100vh - 52px);
         li{
             padding: 12px;
             margin-bottom: 12px;
@@ -514,5 +534,9 @@
         border: 0;
         letter-spacing: 1px;
       }
+    }
+
+    .my_list_top{
+      padding: 64px 15px 70px 15px!important;
     }
 </style>

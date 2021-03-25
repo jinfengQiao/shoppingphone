@@ -1,5 +1,5 @@
 <template>
-  <div class="bg">
+  <div class="bg" :style="height_bg">
     <div class="headBox">
       <div class="head">
 <!--        <div class="headTitle">个人中心</div>-->
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div class="service" :style="height">
+    <div class="service" :style="height" :class="{service_top:is_headerBarShow}">
       <div class="serTitle" @click="jump_selection">我的服务</div>
       <ul>
         <li v-for="(n,inx) in serList" :key="inx" @click="jumpJ">
@@ -135,9 +135,11 @@ export default {
         },
       ],
       score:'',
+      is_headerBarShow:true,
     }
   },
   created() {
+    this.get_height_bg();
     this.hh();
     var token = localStorage.getItem('token');
     // console.log(token)
@@ -176,10 +178,19 @@ export default {
     }
     this.is_Weixin();
 
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   methods: {
     hh(){
-      this.height.height = window.innerHeight-310 +'px'
+      this.height.height = window.innerHeight - 62 +'px'
+    },
+    get_height_bg(){
+      this.height.height = window.innerHeight +'px'
     },
     jumpMember(){
       this.$router.push('/member');
@@ -340,6 +351,7 @@ export default {
 
 <style lang="less" scoped>
 .bg{
+  position: relative;
   width: 100%;
   background-color: #ffffff;
 }
@@ -347,7 +359,7 @@ export default {
   width: 100%;
   height: 310px;
   background-color: #f3f4f6;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
@@ -495,8 +507,8 @@ export default {
   position: relative;
   z-index: 1;
   width: 100%;
-  margin-top: 310px;
-  padding: 30px 15px 0;
+  //margin-top: 310px;
+  padding: 340px 15px 24px;
   box-sizing: border-box;
   background-color: #ffffff;
   overflow: auto;
@@ -512,7 +524,7 @@ export default {
   ul{
     float: left;
     width: 100%;
-    margin-bottom: 72px;
+    //margin-bottom: 72px;
     //display: flex;
     //justify-content: space-between;
     //flex-wrap: wrap;
@@ -552,5 +564,8 @@ export default {
       margin-right: 0!important;
     }
   }
+}
+.service_top{
+  padding: 340px 15px 62px!important;
 }
 </style>

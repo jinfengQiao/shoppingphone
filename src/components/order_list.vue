@@ -29,7 +29,7 @@
             </li>
           </ul>
         </div>
-      <div class="goods_list_b" :style="height">
+      <div class="goods_list_b" :class="{goods_list_b_top:is_headerBarShow}">
         <ul class="goods_list">
           <li v-for="item in goods_list" :key="item.id" @click="goods_list_deta(item)" >
             <img :src="item.pic_url" alt="">
@@ -73,10 +73,6 @@
                 // logo:'https://m.tjqpjt.com/logo.png',
                 desc:'提供企业发展全周期服务。主要包括：工商服务、财税服务、知识产权、企业咨询。',
                 imgUrl: 'https://m.tjqpjt.com/logo.png',
-                height:{
-                    width: '',
-                    height: '',
-                },
                 search_t:'',
                 showPopover: false,
                 actions: [{ text: '升序' }, { text: '降序' }],
@@ -86,6 +82,7 @@
                 },
                 page:1,
                 limit:8,
+                is_headerBarShow:true,
 
             }
         },
@@ -107,7 +104,13 @@
             this.get_list(this.list_form)
           }
           this.$wxShare(this.title, this.desc, location.href, this.imgUrl);
-          this.get_height();
+
+          var openid_bar = localStorage.getItem('invite_openid');
+          if(!openid_bar){
+            this.is_headerBarShow = false
+          }else{
+            this.is_headerBarShow = true
+          }
         },
         methods: {
             // 跳转商品详情
@@ -160,9 +163,6 @@
 
 
             },
-            get_height(){
-              this.height.height = window.innerHeight - 100 +'px'
-            },
             search_btn(){
               this.$post(localStorage.getItem('http') + 'goods/get_list',{
                 page: this.page,
@@ -200,11 +200,12 @@
 
 <style lang="less" scoped>
 .bg{
+  position: relative;
   width: 100%;
   background-color: #ffffff;
   .posi_b {
     width: 100%;
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
     background-color: #ffffff;
@@ -286,8 +287,11 @@
 }
 .goods_list_b{
   width: 100%;
-  margin-top: 100px;
+  padding: 100px 0 0 0;
+  box-sizing: border-box;
   overflow: auto;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
   .goods_list{
     padding: 16px 16px 0;
     display: flex;
@@ -333,5 +337,9 @@
       }
     }
   }
+}
+.goods_list_b_top{
+  min-height: calc(100vh - 50px)!important;
+  max-height: calc(100vh - 50px)!important;
 }
 </style>

@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="instructor_c_b">
-      <van-sticky :offset-top="200">
+      <van-sticky :offset-top="offset_height">
         <div class="instructor_c_h">
           <ul>
             <li v-for="(n,inx) in list_curr" :key="inx" :class="{addCls_instructor:inx == isSel}" @click="listGo(inx,n.id)">{{n.name}}</li>
@@ -83,6 +83,7 @@ export default {
       title: '',
       desc:'',
       imgUrl:'',
+      offset_height:'200',
 
     }
   },
