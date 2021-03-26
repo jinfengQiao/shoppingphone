@@ -19,7 +19,8 @@ import VueSocketIO from 'vue-socket.io'
 import wx from 'weixin-js-sdk';
 import { wxShare } from './utils/share'
 
-
+// import Mui from 'vue-awesome-mui';
+// Vue.use(Mui);
 // socket * 3.0.7 必须是这个版本
 Vue.use(new VueSocketIO({
   debug: true,

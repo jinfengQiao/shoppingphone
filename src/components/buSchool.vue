@@ -212,8 +212,8 @@ export default {
       // else{
       //   this.title = '文章'
       // }
-      this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
+      this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
       this.isActive = index;
       // console.log(index + 1);
       var index1 = index + 1
@@ -492,6 +492,7 @@ export default {
     wx.showOptionMenu();
     this.get_teacherList();
 
+    this.$wxShare(this.title,this.desc,location.href,this.imgUrl)
 
     var openid_bar = localStorage.getItem('invite_openid');
     if(!openid_bar){

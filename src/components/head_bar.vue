@@ -171,14 +171,7 @@ export default {
       //   this.isabsolute = false
       //   // this.is_headerBarShow = false
       // }
-      var openid_bar = localStorage.getItem('invite_openid');
-      if(!openid_bar){
-        this.show_headBar = false
-        this.isabsolute = false
-      }else{
-        this.show_headBar = true
-        this.isabsolute = true
-      }
+
     },
 
 
@@ -186,8 +179,19 @@ export default {
 
   },
   created() {
-    this.changeUrl();
+    // this.changeUrl();
     this.get_wechat_info();
+
+
+    var openid_bar = sessionStorage.getItem('invite_openid');
+    // console.log('拿到的父级openid:' + openid_bar)
+    if(!openid_bar){
+      this.show_headBar = false
+      this.isabsolute = false
+    }else{
+      this.show_headBar = true
+      this.isabsolute = true
+    }
   }
 }
 </script>

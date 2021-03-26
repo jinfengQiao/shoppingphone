@@ -113,9 +113,9 @@
           this.$post(localStorage.getItem('http') + 'goods_category/get_parent_nav', {
             limit: 4
           })
-              .then(res => {
-                this.nav_list = res.data
-              })
+          .then(res => {
+            this.nav_list = res.data
+          })
         },
         // 为您推荐
         get_nav_recom() {
@@ -180,28 +180,33 @@
         goBack(e) {
           history.pushState(null, null, document.URL);
           console.log(e)
-          if(e.timeStamp != 0){
-            this.$dialog.confirm({
-              title: '',
-              message: '是否退出',
-            })
-            .then(() => {
-              // on confirm
-              // WeixinJSBridge.call('closeWindow');
-              //
-              // // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
-              // window.onbeforeunload = function (e) {
-              //   console.log(e)
-              //   var storage = window.localStorage.invite_openid;
-              //   storage.clear()
-              // }
-            })
-            .catch(() => {
-              // on cancel
-            });
-          }else{
-            // WeixinJSBridge.call('closeWindow');
-          }
+
+          // $wx.closeWindow();
+          // var storage = window.localStorage.invite_openid;
+          // storage.clear()
+          // if(e.timeStamp != 0){
+          //   this.$dialog.confirm({
+          //     title: '',
+          //     message: '是否退出',
+          //   })
+          //   .then(() => {
+          //     WeixinJSBridge.call('closeWindow');
+          //
+          //     // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
+          //     window.onbeforeunload = function (e) {
+          //       console.log(e)
+          //       var storage = window.localStorage.invite_openid;
+          //       storage.clear()
+          //     }
+          //   })
+          //   .catch(() => {
+          //     // on cancel
+          //   });
+          // }else{
+          //   WeixinJSBridge.call('closeWindow');
+          //   var storage = window.localStorage.invite_openid;
+          //   storage.clear()
+          // }
         },
 
 

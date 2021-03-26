@@ -157,7 +157,7 @@ export default {
         path: '/viewSupe',
         query: {
           level: 1,
-          id: id
+          id: id,
         }
       })
     },
@@ -244,33 +244,48 @@ export default {
   components: {
     noSharing
   },
-  // beforeRouteEnter (to, from, next) {
-  //   console.log(to.name)
-  //   console.log(from.name)
-  //   // if(to.name == 'viewSipe'){
-  //   //   console.log('是一级')
-  //   //   next();
-  //   // }else{
-  //   //   console.log('是二级');
-  //   //   next();
-  //   // }
-  //   if(from.name == 'viewSupe'){
-  //     next(vm=>{
-  //       if(vm.level == 2){
-  //         vm.isActive=1
-  //         vm.tabState=2
-  //       }else {
-  //         vm.isActive=0
-  //         vm.tabState=1
-  //       }
-  //     });
-  //   }else{
-  //     next(vm=>{
-  //       vm.isActive=0
-  //       vm.tabState=1
-  //     });
-  //   }
-  // },
+  beforeRouteEnter (to, from, next) {
+    // console.log(to)
+    // console.log(from)
+      next(vm=>{
+        // console.log(vm)
+        if(from.query.level == 2){
+          // console.log('二级')
+          vm.isActive=1
+          vm.tabState=2
+        }else{
+          // console.log('一级')
+          vm.isActive=0
+          vm.tabState=1
+        }
+      });
+
+
+
+    // if(to.name == 'viewSipe'){
+    //   console.log('是一级')
+    //   next();
+    // }else{
+    //   console.log('是二级');
+    //   next();
+    // }
+    // if(from.name == 'viewSupe'){
+    //   next(vm=>{
+    //     if(vm.level == 2){
+    //       vm.isActive=1
+    //       vm.tabState=2
+    //     }else {
+    //       vm.isActive=0
+    //       vm.tabState=1
+    //     }
+    //   });
+    // }else{
+    //   next(vm=>{
+    //     vm.isActive=0
+    //     vm.tabState=1
+    //   });
+    // }
+  },
 };
 
 </script>

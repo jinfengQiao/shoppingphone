@@ -50,22 +50,67 @@ export default {
         this.auto_login(res.data);
       })
     },
+
+    get_url_openid(){
+      let currentUrl = location.href
+      let openidIndex_1 = currentUrl.indexOf('id=')
+      let openidLastIndex_1 = currentUrl.indexOf('&', openidIndex_1)
+      let openidIndex = currentUrl.indexOf('openid')
+      let openidLastIndex = currentUrl.indexOf('=', openidIndex)
+      if(openidIndex > -1){
+        let leftStr = currentUrl.substring(openidIndex_1 + 3, openidLastIndex_1)
+        let rightStr = currentUrl.substring(openidLastIndex + 1);
+        console.log('这是截取的course_id:'+ leftStr)
+        console.log('这是截取的openid:'+ rightStr)
+
+        sessionStorage.setItem('invite_openid', rightStr)
+
+      }else {
+        console.log('没有拿到openid')
+      }
+    }
   },
 
   created() {
-    if(this.$route.query.openid) {
-      // console.log('這是openid' + this.$route.query.openid)
-      localStorage.setItem('invite_openid', this.$route.query.openid)
-      // this.$notify(localStorage.getItem('invite_openid'));
+
+    var openid_bar = sessionStorage.getItem('invite_openid');
+    // console.log('这是查看本地的openid:：：：：' + openid_bar)
+    if(!openid_bar){
+      this.get_url_openid();
+    }else{
+      openid_bar = ''
+      this.get_url_openid();
     }
 
+
+
+
+
+
+
+    // if(this.$route.query.openid) {
+    //   // console.log('這是openid' + this.$route.query.openid)
+    //   localStorage.setItem('invite_openid', this.$route.query.openid)
+    //   // this.$notify(localStorage.getItem('invite_openid'));
+    // }
+
     // 手机商城
+
+    // 本地
     // localStorage.setItem('http', 'http://of.kurohane.com/api/')
     // localStorage.setItem('url', 'http://192.168.1.244/official/public/api/')
+
+    // 废弃
     // localStorage.setItem('http', 'http://of.kurohane.com/')
     // localStorage.setItem('url', 'http://192.168.1.244/official/public/')
+
+    // 线上
     localStorage.setItem('http', 'https://of.tjqpjt.com/api/')
     localStorage.setItem('url', 'https://of.tjqpjt.com')
+
+    // 李景志
+    // localStorage.setItem('http', 'http://192.168.1.165/official/public/api/')
+    // localStorage.setItem('url', 'http://192.168.1.165')
 
 
     var ua = window.navigator.userAgent.toLowerCase();

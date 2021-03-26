@@ -1,5 +1,5 @@
 <template>
-  <div class="bg" :style="height">
+  <div class="bg" :class="{bg_top:is_headerBarShow}">
     <div class="head">
 <!--      <div class="headTitle">-->
 <!--        <img src="../assets/center/back_icon.png" alt="" @click="back">-->
@@ -77,8 +77,8 @@ export default {
       days: [],
       //选中日期
       arrDate: [],
-
       lastDay:'',
+      is_headerBarShow:true,
     }
   },
   methods: {
@@ -86,7 +86,7 @@ export default {
       this.$router.go(-1);
     },
     hh(){
-      this.height.height = window.innerHeight+'px'
+      // this.height.height = window.innerHeight+'px'
     },
     initData: function() {
       var date = new Date();
@@ -167,6 +167,13 @@ export default {
     this.initData();
     this.get_calendar(this.currentYear,this.currentMonth);
     this.get_signIn();
+
+    var openid_bar = localStorage.getItem('invite_openid');
+    if(!openid_bar){
+      this.is_headerBarShow = false
+    }else{
+      this.is_headerBarShow = true
+    }
   },
   components: {
     noSharing
@@ -176,15 +183,21 @@ export default {
 
 <style lang="less" scoped>
 .bg{
-  float: left;
+  position: relative;
   width: 100%;
   background-color: rgba(78, 119, 235, 1);
   //padding: 0 0 62px 0;
   //box-sizing: border-box;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
   overflow: auto;
 }
+.bg_top{
+  min-height: calc(100vh - 50px)!important;
+  max-height: calc(100vh - 50px)!important;
+}
 .head{
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
@@ -263,14 +276,17 @@ export default {
     }
   }
 }
-.cont{
-  position: relative;
-  z-index: 1;
-  margin-top: 230px;
+.cont {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
   width: 100%;
+  //padding: 230px 15px 0;
   padding: 0 15px;
   box-sizing: border-box;
-  .contBox{
+  z-index: 3;
+
+  .contBox {
     width: 100%;
     height: 388px;
     background: url("../assets/center/calendar_bg.png") no-repeat;

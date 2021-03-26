@@ -192,10 +192,11 @@ export default {
 </script>
 
 <style scoped lang="less">
-.cont_b{
+.cont_b {
   width: 100%;
   overflow: auto;
-  padding: 0 0 51px;
+  //padding: 0 0 51px;
+  padding: 0 0 57px;
   box-sizing: border-box;
 }
 .lecturer_b{
@@ -494,6 +495,7 @@ export default {
             height: 34px;
             margin-right: 15px;
             border-radius: 50%;
+            object-fit: cover;
           }
         }
       }
@@ -513,11 +515,12 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  button{
+  button {
     float: left;
     width: 50%;
-    height: 36px;
-    line-height: 32px;
+    //height: 36px;
+    height: 42px;
+    //line-height: 32px;
     border-radius: 2px 0px 0px 2px;
     outline: none;
     font-size: 18px;
@@ -527,6 +530,9 @@ export default {
     box-sizing: border-box;
     color: #0596EB;
     background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 .addcls{

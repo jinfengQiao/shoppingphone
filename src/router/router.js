@@ -406,7 +406,7 @@ const routes= [
             component: aboutInstructor_ranking,
             name:'aboutInstructor_ranking',
             meta: {
-                title: '讲师详情-排行榜'
+                title: '讲师详情'
             }
         },
     ]

@@ -108,8 +108,9 @@ export default {
           // console.log('投票成功');
           this.get_whethervote();
           this.$toast.success(res.msg);
-        }else if(res.code == 2){
-          this.$toast.error('请先关注公众号');
+        }else if(res.code == 2) {
+          // this.$toast.error('请先关注公众号');
+          this.official_account = true;
         }else{
           // if(this.teacher_detail_count == 0){
           //   this.$toast.error('您的票数已用完，请明天再来吧~');
